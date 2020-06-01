@@ -1,27 +1,27 @@
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { parse } from 'url';
-
-function setUrl(code: string) {
-  const url = new URL('https://www.strava.com/api/v3/oauth/token');
-  url.search = new URLSearchParams({
-    client_id: process.env.REACT_APP_STRAVA_CLIENT_ID!,
-    client_secret: process.env.REACT_APP_STRAVA_CLIENT_SECRET!,
-    code: code,
-    grant_type: 'authorization_code',
-  }).toString();
-  return url;
-}
+import { setUserInfo } from '../../toolbox/setUserToken';
 
 export function LoginCallback() {
   const { query } = parse(window.location.href, true);
-  const url = setUrl(query.code as string);
+  const { replace } = useHistory();
   React.useEffect(() => {
-    fetch(url.toString(), {
-      method: 'POST',
-    })
+    fetch(
+      `${
+        process.env.URL! ?? process.env.REACT_APP_URL!
+      }/.netlify/functions/authenticate-user`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ code: query.code, scope: query.scope }),
+      }
+    )
       .then((resp) => resp.json())
-      .then((resp) => console.log(resp));
-  });
+      .then((resp) => {
+        setUserInfo(resp);
+        replace('/');
+      });
+  }, [query.code, query.scope, replace]);
   return <CircularProgress />;
 }

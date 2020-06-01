@@ -1,0 +1,12 @@
+{
+  "name": "strava-personal-leaderboard-functions",
+  "version": "0.1.0",
+  "keywords": [
+    "serverless",
+    "strava",
+    "hasura"
+  ],
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
