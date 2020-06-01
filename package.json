@@ -57,6 +57,7 @@
       "prettier --write"
     ],
     "functions/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "eslint",
       "prettier --write"
     ]
   }
