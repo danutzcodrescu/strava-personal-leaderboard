@@ -9,9 +9,7 @@ export function LoginCallback() {
   const { replace } = useHistory();
   React.useEffect(() => {
     fetch(
-      `${
-        process.env.URL! ?? process.env.REACT_APP_URL!
-      }/.netlify/functions/authenticate-user`,
+      `${process.env.REACT_APP_URL!}/.netlify/functions/authenticate-user`,
       {
         method: 'POST',
         body: JSON.stringify({ code: query.code, scope: query.scope }),

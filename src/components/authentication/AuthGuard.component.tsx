@@ -12,9 +12,7 @@ export function AuthGuard({ children }: Props) {
     const user = localStorage.getItem('user');
     if (user) {
       fetch(
-        `${
-          process.env.URL! ?? process.env.REACT_APP_URL!
-        }/.netlify/functions/refresh_user_token`,
+        `${process.env.REACT_APP_URL!}/.netlify/functions/refresh_user_token`,
         {
           method: 'POST',
           body: JSON.stringify({ user }),
