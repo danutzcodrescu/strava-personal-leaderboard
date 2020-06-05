@@ -1,5 +1,4 @@
-const axios = require('axios');
-const { hasuraEndpoint } = require('../constants');
+const graphql = require('../graphql');
 const checkForExistingUser = require('./check-for-existing-user');
 const { authenticateOnStrava, getAthleteProfile } = require('../strava');
 
@@ -33,7 +32,8 @@ exports.handler = async (event, context) => {
     const existingUser = await checkForExistingUser(
       athlete.id,
       access_token,
-      refresh_token
+      refresh_token,
+      expires_at
     );
     if (existingUser) {
       return {
@@ -53,11 +53,8 @@ exports.handler = async (event, context) => {
       scope: request.scope,
       ...athleteProfile,
     };
-    const user = await axios.post(hasuraEndpoint, {
-      query: insertUserMutation,
-      variables: {
-        object: variables,
-      },
+    const user = await graphql(insertUserMutation, {
+      object: variables,
     });
     const {
       data: { insert_users_one },

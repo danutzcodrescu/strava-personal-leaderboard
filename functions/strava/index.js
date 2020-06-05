@@ -75,8 +75,41 @@ async function refreshToken(token) {
   return { access_token, refresh_token, expires_at, token_type };
 }
 
+async function getActivity(token, activity_id) {
+  const activity = await instance.get(`/activities/${activity_id}`, {
+    params: {
+      include_all_efforts: true,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return activity.data;
+}
+
+async function getGearDetails(token, gear_id) {
+  const activity = await instance.get(`/gear/${gear_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return activity.data;
+}
+
+async function getSegmentDetails(token, segment_id) {
+  const segment = await instance.get(`/segments/${segment_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return segment.data;
+}
+
 module.exports = {
   authenticateOnStrava,
   getAthleteProfile,
   refreshToken,
+  getActivity,
+  getGearDetails,
+  getSegmentDetails,
 };
