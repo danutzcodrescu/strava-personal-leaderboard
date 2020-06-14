@@ -1,5 +1,6 @@
-import ApolloClient from 'apollo-boost';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
 export const client = new ApolloClient({
-  uri: process.env.REACT_APP_HASURA_ENDPOINT,
+  cache: new InMemoryCache(),
+  link: new HttpLink({ uri: process.env.REACT_APP_HASURA_ENDPOINT }),
 });

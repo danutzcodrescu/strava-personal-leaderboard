@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const GET_RECENT_ACTIVITIES = gql`
   query getRecentActivities {
@@ -13,6 +13,15 @@ export const GET_RECENT_ACTIVITIES = gql`
         map
       }
       pr_count
+      external_id
+      type
+      start_date_local
+      segment_efforts(where: { pr_rank: { _is_null: false } }, limit: 3) {
+        id
+        elapsed_time
+        moving_time
+        name
+      }
     }
   }
 `;

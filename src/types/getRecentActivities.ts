@@ -12,6 +12,14 @@ export interface getRecentActivities_activities_map {
   map: string;
 }
 
+export interface getRecentActivities_activities_segment_efforts {
+  __typename: 'segment_efforts';
+  id: number;
+  elapsed_time: number;
+  moving_time: number;
+  name: string;
+}
+
 export interface getRecentActivities_activities {
   __typename: 'activities';
   distance: any;
@@ -25,6 +33,12 @@ export interface getRecentActivities_activities {
    */
   map: getRecentActivities_activities_map;
   pr_count: number | null;
+  external_id: any;
+  type: string;
+  /**
+   * An array relationship
+   */
+  segment_efforts: getRecentActivities_activities_segment_efforts[];
 }
 
 export interface getRecentActivities {

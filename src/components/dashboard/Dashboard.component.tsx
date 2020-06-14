@@ -1,5 +1,6 @@
-import { useQuery } from '@apollo/react-hooks';
-import { CircularProgress, Grid } from '@material-ui/core';
+import { useQuery } from '@apollo/client';
+import { CircularProgress, Grid, Typography } from '@material-ui/core';
+import { startOfWeek, startOfYear } from 'date-fns';
 import * as React from 'react';
 import { GET_RECENT_ACTIVITIES } from '../../queries/dashboard';
 import { GET_USER_DATA } from '../../queries/user';
@@ -10,7 +11,8 @@ import { RecentActivities } from './RecentActivities.component';
 import { GridDashboard } from './styles/Dashboard.styles';
 import { UserData, UserDataProps } from './UserData.component';
 
-interface UserDataPickProps extends UserDataProps {
+interface UserDataPickProps
+  extends Omit<UserDataProps, 'summary' | 'weekSummary' | 'yearSummary'> {
   [key: string]: string;
 }
 
@@ -20,7 +22,11 @@ export function Dashboard() {
     data: userData,
     error: errorUserData,
   } = useQuery<getUserData>(GET_USER_DATA, {
-    variables: { id: getUserInfo() },
+    variables: {
+      id: getUserInfo(),
+      weekStart: startOfWeek(new Date(), { weekStartsOn: 1 }),
+      yearStart: startOfYear(new Date()),
+    },
   });
   const {
     loading: loadingDashboardData,
@@ -34,6 +40,9 @@ export function Dashboard() {
       </Grid>
     );
   }
+  if (!userData || !userData) {
+    return <Typography>Error</Typography>;
+  }
   return (
     <GridDashboard container spacing={2}>
       <Grid item md={3}>
@@ -45,10 +54,13 @@ export function Dashboard() {
             },
             {} as UserDataPickProps
           )}
+          summary={userData.user_dashboard_summary[0]}
+          weekSummary={userData.activitiesWeek.aggregate!}
+          yearSummary={userData.activitiesYear.aggregate!}
         />
       </Grid>
       <Grid item md={9}>
-        <RecentActivities />
+        <RecentActivities activities={dashboardData!.activities} />
       </Grid>
     </GridDashboard>
   );

@@ -18,13 +18,80 @@ export interface getUserData_users_by_pk {
   username: string;
 }
 
+export interface getUserData_user_dashboard_summary {
+  __typename: 'user_summary';
+  activities: any | null;
+  distance: any | null;
+}
+
+export interface getUserData_activitiesWeek_aggregate_sum {
+  __typename: 'activities_sum_fields';
+  distance: any | null;
+  moving_time: number | null;
+  total_elevation_gain: any | null;
+}
+
+export interface getUserData_activitiesWeek_aggregate {
+  __typename: 'activities_aggregate_fields';
+  count: number | null;
+  sum: getUserData_activitiesWeek_aggregate_sum | null;
+}
+
+export interface getUserData_activitiesWeek {
+  __typename: 'activities_aggregate';
+  aggregate: getUserData_activitiesWeek_aggregate | null;
+}
+
+export interface getUserData_activitiesYear_aggregate_sum {
+  __typename: 'activities_sum_fields';
+  distance: any | null;
+  total_elevation_gain: any | null;
+  moving_time: number | null;
+}
+
+export interface getUserData_activitiesYear_aggregate {
+  __typename: 'activities_aggregate_fields';
+  count: number | null;
+  sum: getUserData_activitiesYear_aggregate_sum | null;
+}
+
+export interface getUserData_activitiesYear {
+  __typename: 'activities_aggregate';
+  aggregate: getUserData_activitiesYear_aggregate | null;
+}
+
+export interface getUserData_segment_efforts {
+  __typename: 'segment_efforts';
+  name: string;
+  start_date_local: any;
+  pr_rank: number | null;
+}
+
 export interface getUserData {
   /**
    * fetch data from the table: "users" using primary key columns
    */
   users_by_pk: getUserData_users_by_pk | null;
+  /**
+   * execute function "user_dashboard_summary" which returns "user_summary"
+   */
+  user_dashboard_summary: getUserData_user_dashboard_summary[];
+  /**
+   * fetch aggregated fields from the table: "activities"
+   */
+  activitiesWeek: getUserData_activitiesWeek;
+  /**
+   * fetch aggregated fields from the table: "activities"
+   */
+  activitiesYear: getUserData_activitiesYear;
+  /**
+   * fetch data from the table: "segment_efforts"
+   */
+  segment_efforts: getUserData_segment_efforts[];
 }
 
 export interface getUserDataVariables {
   id: number;
+  weekStart: any;
+  yearStart: any;
 }
