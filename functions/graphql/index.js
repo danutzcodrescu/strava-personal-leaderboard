@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function graphql(query, variables) {
-  return axios.post(`${process.env.HASURA_ENDPOINT}/v1/graphql`, {
+  return axios.post(process.env.REACT_APP_HASURA_ENDPOINT, {
     query,
     variables,
   });

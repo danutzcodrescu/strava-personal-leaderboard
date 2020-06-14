@@ -8,3 +8,7 @@ export function setUserInfo(resp: LoginTokens) {
   localStorage.setItem('user', resp.external_id.toString());
   localStorage.setItem('access_token', resp.access_token);
 }
+
+export function getUserInfo() {
+  return localStorage.getItem('user');
+}

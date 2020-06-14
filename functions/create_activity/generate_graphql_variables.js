@@ -47,8 +47,10 @@ function generateGraphqlVariables(stravaActivity, user_id) {
     city: effort.segment.city,
     state: effort.segment.state,
     type: effort.segment.activity_type,
+    name: effort.segment.name,
     segment_efforts: {
       data: {
+        name: effort.segment.name,
         activity_id: stravaActivity.id,
         average_heartrate: effort.average_heartrate,
         average_watts: effort.average_watts,
