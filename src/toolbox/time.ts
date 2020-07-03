@@ -40,6 +40,7 @@ export function convertDurationForActivityTitle(duration: number) {
   if ((time as Hours).hours) {
     return `${(time as Hours).hours}h ${time.minutes}m`;
   }
+  if (time.minutes === 0) return 0;
   return `${time.minutes}m ${(time as Minutes).seconds}`;
 }
 
