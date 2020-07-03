@@ -11,3 +11,7 @@ export function convertDistance(distance: number) {
     dist.unit
   }`;
 }
+
+export function distanceForSegment(distance: number) {
+  return `${convert(distance).from('m').to('km').toFixed(2)}km`;
+}

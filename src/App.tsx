@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ActivityComponent } from './components/activity/Activity.component';
 import { AuthGuard } from './components/authentication/AuthGuard.component';
 import { Login } from './components/authentication/Login.component';
 import { LoginCallback } from './components/authentication/LoginCallback.component';
@@ -22,7 +23,8 @@ function App() {
               <Login />
             </Route>
             <AuthGuard>
-              <Route path="/">
+              <Route exact path="/activity/:id" component={ActivityComponent} />
+              <Route exact path="/">
                 <Dashboard />
               </Route>
             </AuthGuard>
