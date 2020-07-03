@@ -16,5 +16,7 @@ export const useRecentActivities = makeStyles((theme: Theme) =>
 export const ValueTypography = withStyles(() => ({
   root: {
     fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
   },
 }))(Typography);

@@ -6,6 +6,7 @@ export function distanceElevation(elevation: number) {
 
 export function convertDistance(distance: number) {
   const dist = convert(distance).from('m').toBest();
+  if (dist.val === 0) return dist.val;
   return `${dist.unit === 'm' ? dist.val.toFixed(2) : dist.val.toFixed(1)} ${
     dist.unit
   }`;

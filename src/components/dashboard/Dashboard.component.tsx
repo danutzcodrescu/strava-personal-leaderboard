@@ -17,22 +17,19 @@ interface UserDataPickProps
 }
 
 export function Dashboard() {
-  const {
-    loading: loadingUserData,
-    data: userData,
-    error: errorUserData,
-  } = useQuery<getUserData>(GET_USER_DATA, {
-    variables: {
-      id: getUserInfo(),
-      weekStart: startOfWeek(new Date(), { weekStartsOn: 1 }),
-      yearStart: startOfYear(new Date()),
-    },
-  });
-  const {
-    loading: loadingDashboardData,
-    data: dashboardData,
-    error: errorDashboardData,
-  } = useQuery<getRecentActivities>(GET_RECENT_ACTIVITIES);
+  const { loading: loadingUserData, data: userData } = useQuery<getUserData>(
+    GET_USER_DATA,
+    {
+      variables: {
+        id: getUserInfo(),
+        weekStart: startOfWeek(new Date(), { weekStartsOn: 1 }),
+        yearStart: startOfYear(new Date()),
+      },
+    }
+  );
+  const { loading: loadingDashboardData, data: dashboardData } = useQuery<
+    getRecentActivities
+  >(GET_RECENT_ACTIVITIES);
   if (loadingDashboardData || loadingUserData) {
     return (
       <Grid container alignItems="center" justify="center">

@@ -3,7 +3,10 @@ import { QueryBuilder, ShowChart, Speed } from '@material-ui/icons';
 import * as React from 'react';
 import { convertDistance } from '../../toolbox/distance';
 import { convertDurationForActivityTitle } from '../../toolbox/time';
-import { SubtitleTypography } from '../../toolbox/typograpies';
+import {
+  PeriodTypography,
+  SubtitleTypography,
+} from '../../toolbox/typograpies';
 import {
   getUserData_activitiesWeek_aggregate,
   getUserData_activitiesYear_aggregate,
@@ -51,13 +54,10 @@ export function UserData({
             <Typography>{convertDistance(summary.distance)}</Typography>
           </Grid>
         </Grid>
-        <Typography color="secondary">
-          This week&nbsp;
-          {/* @ts-ignore */}
-          <SubtitleTypography component="span">
-            {weekSummary.count} activities
-          </SubtitleTypography>
-        </Typography>
+        <PeriodTypography>
+          <>This week&nbsp;</>
+          <>{weekSummary.count} activities</>
+        </PeriodTypography>
         <Grid container style={{ fontSize: '0.8rem' }} spacing={1}>
           <Grid item alignItems="center" container md={4}>
             <Speed className={classes.icon} />
@@ -72,13 +72,10 @@ export function UserData({
             {convertDistance(weekSummary.sum!.total_elevation_gain!)}
           </Grid>
         </Grid>
-        <Typography color="secondary">
-          This year&nbsp;
-          {/* @ts-ignore */}
-          <SubtitleTypography component="span">
-            {yearSummary.count} activities
-          </SubtitleTypography>
-        </Typography>
+        <PeriodTypography>
+          <>This year&nbsp;</>
+          <>{yearSummary.count} activities</>
+        </PeriodTypography>
         <Grid container style={{ fontSize: '0.8rem' }} spacing={1}>
           <Grid item alignItems="center" container md={4}>
             <Speed className={classes.icon} />
