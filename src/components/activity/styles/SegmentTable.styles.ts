@@ -1,8 +1,9 @@
-import { TableCell } from '@material-ui/core';
+import { Grid, Theme } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 
-export const StyledTableCell = withStyles(() => ({
-  head: {
-    fontWeight: 750,
+export const StyledGrid = withStyles((theme: Theme) => ({
+  container: {
+    padding: theme.spacing(2, 4),
+    borderBottom: `1px solid ${theme.palette.grey[300]}`,
   },
-}))(TableCell);
+}))(Grid);

@@ -5,14 +5,15 @@ import * as React from 'react';
 
 interface Props {
   line: Array<[number, number]>;
+  chartWidth: number;
+  chartHeight: number;
+  distance: number;
+  id: string;
 }
 
 const margin = { top: 10, right: 10, bottom: 50, left: 50 };
 const chartWidth = 860;
 const chartHeight = 300;
-const width = chartWidth - margin.right - margin.left;
-const height = chartHeight - margin.top - margin.bottom;
-const distance = 19655.1;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +27,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function drawChart(data: { x: number; y: number }[], chartFill: string) {
+function drawChart(
+  data: { x: number; y: number }[],
+  chartFill: string,
+  chartWidth: number,
+  chartHeight: number,
+  id: string
+) {
+  const width = chartWidth - margin.right - margin.left;
+  const height = chartHeight - margin.top - margin.bottom;
   const curve = d3.curveLinear;
   const x = d3
     .scaleLinear()
@@ -73,7 +82,7 @@ function drawChart(data: { x: number; y: number }[], chartFill: string) {
     // @ts-ignore
     .y1((d) => y(d.y));
   const svg = d3
-    .select('#elevationChart')
+    .select(`#${id}`)
     .append('svg')
     // @ts-ignore
     .attr('viewBox', [0, 0, width, height]);
@@ -85,7 +94,13 @@ function drawChart(data: { x: number; y: number }[], chartFill: string) {
   svg.append('g').call(yAxis);
 }
 
-export function ElevationChart({ line }: Props) {
+export function ElevationChart({
+  line,
+  chartHeight,
+  chartWidth,
+  distance,
+  id,
+}: Props) {
   const { palette } = useTheme<Theme>();
   useStyles();
   React.useLayoutEffect(() => {
@@ -100,9 +115,16 @@ export function ElevationChart({ line }: Props) {
           x: (distance / 100 / 1000) * index,
           y: data.elevation,
         }));
-        drawChart(parsed, palette.grey[300]);
+        drawChart(parsed, palette.grey[300], chartWidth, chartHeight, id);
       }
     );
-  }, [line, palette.grey]);
-  return <div id="elevationChart" style={{ margin: '20px' }} />;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return <div id={id} style={{ margin: '20px' }} />;
 }
+
+ElevationChart.defaultProps = {
+  chartWidth,
+  chartHeight,
+  id: 'elevationChart',
+};

@@ -51,8 +51,11 @@ export function ActivityComponent() {
             .reverse()}
         ></Marker>
       </Map>
-      <ElevationChart line={line} />
-      <SegmentsTable segments={data.activities_by_pk!.segment_efforts} />
+      <ElevationChart line={line} distance={data.activities_by_pk!.distance} />
+      <SegmentsTable
+        segments={data.activities_by_pk!.segment_efforts}
+        activityLine={line}
+      />
     </>
   );
 }
