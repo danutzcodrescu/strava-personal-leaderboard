@@ -118,6 +118,7 @@ export function ElevationChart({
         drawChart(parsed, palette.grey[300], chartWidth, chartHeight, id);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <div id={id} style={{ margin: '20px' }} />;
 }
