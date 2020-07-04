@@ -2,6 +2,7 @@ import { createStyles, Grid, Theme } from '@material-ui/core';
 import { EmojiEventsOutlined } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { convertDistance, distanceElevation } from '../../toolbox/distance';
 import {
   activityDate,
@@ -34,7 +35,9 @@ export function RecentActivityCard({ activity }: Props) {
   return (
     <>
       <TitleTypography gutterBottom>
-        <span>Title placeholder</span>
+        <Link to={`/activity/${activity.external_id}`}>
+          <span>Title placeholder</span>
+        </Link>
         {/* @ts-ignore */}
         <SubtitleTypography component="span">
           {activityDate(activity.start_date_local)}

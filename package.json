@@ -11,11 +11,14 @@
     "@testing-library/react": "^10.4.3",
     "@testing-library/user-event": "^12.0.11",
     "@turf/turf": "^5.1.6",
+    "@types/d3": "^5.7.2",
+    "@types/googlemaps": "^3.39.8",
     "@types/jest": "^26.0.3",
     "@types/node": "^14.0.14",
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.0",
     "convert-units": "^2.3.4",
+    "d3": "^5.16.0",
     "date-fns": "^2.14.0",
     "graphql": "^15.2.0",
     "leaflet": "^1.6.0",
@@ -34,7 +37,7 @@
     "build": "REACT_APP_URL=${URL} react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen-types": "npx apollo client:codegen --target typescript --outputFlat --includes=\"src/queries/*.ts\" --globalTypesFile=src/types/graphql-types.ts src/types/"
+    "gen-types": "npx apollo client:codegen --target typescript --outputFlat --includes=\"src/queries/*.ts\" --globalTypesFile=src/types/graphql-types.ts src/types/ && rm src/types/graphql-types.ts"
   },
   "eslintConfig": {
     "extends": "react-app"

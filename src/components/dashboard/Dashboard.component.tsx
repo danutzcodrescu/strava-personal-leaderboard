@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { CircularProgress, Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { startOfWeek, startOfYear } from 'date-fns';
 import * as React from 'react';
 import { GET_RECENT_ACTIVITIES } from '../../queries/dashboard';
@@ -7,6 +7,7 @@ import { GET_USER_DATA } from '../../queries/user';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { getRecentActivities } from '../../types/getRecentActivities';
 import { getUserData } from '../../types/getUserData';
+import { Loading } from '../utilities/Loading';
 import { RecentActivities } from './RecentActivities.component';
 import { GridDashboard } from './styles/Dashboard.styles';
 import { UserData, UserDataProps } from './UserData.component';
@@ -31,11 +32,7 @@ export function Dashboard() {
     getRecentActivities
   >(GET_RECENT_ACTIVITIES);
   if (loadingDashboardData || loadingUserData) {
-    return (
-      <Grid container alignItems="center" justify="center">
-        <CircularProgress />
-      </Grid>
-    );
+    return <Loading />;
   }
   if (!userData || !userData) {
     return <Typography>Error</Typography>;

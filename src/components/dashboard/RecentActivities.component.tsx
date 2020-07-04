@@ -1,11 +1,9 @@
-import { Box, Grid, useTheme } from '@material-ui/core';
+import { Box, Grid, Theme, useTheme } from '@material-ui/core';
 import { DirectionsBike, DirectionsRun } from '@material-ui/icons';
-import { bbox, lineString } from '@turf/turf';
-import { latLng, latLngBounds } from 'leaflet';
-// @ts-ignore
-import * as polylineUtils from 'polyline-encoded';
 import * as React from 'react';
 import { Map, Polyline, TileLayer } from 'react-leaflet';
+import { Link } from 'react-router-dom';
+import { getLineData } from '../../toolbox/map';
 import { getRecentActivities_activities } from '../../types/getRecentActivities';
 import { RecentActivityCard } from './RecentActivity.component';
 import { useRecentActivities } from './styles/RecentActivities.styles';
@@ -16,23 +14,12 @@ interface Props {
 
 export function RecentActivities({ activities }: Props) {
   const classes = useRecentActivities();
-  const { palette } = useTheme();
+  const { palette } = useTheme<Theme>();
   return (
     <>
       {activities.map((activity) => {
         // TODO move this into a serverless function and display it as image
-        const line = polylineUtils.decode(activity.map.map);
-        const box = bbox(
-          lineString(
-            JSON.parse(JSON.stringify(line)).map((coords: [number, number]) =>
-              coords.reverse()
-            )
-          )
-        );
-        const bounds = latLngBounds(
-          latLng(box.slice(0, 2).reverse() as [number, number]),
-          latLng(box.slice(2).reverse() as [number, number])
-        );
+        const { line, bounds } = getLineData(activity.map.map);
         return (
           <Box
             key={activity.external_id}
@@ -51,22 +38,23 @@ export function RecentActivities({ activities }: Props) {
                 <RecentActivityCard activity={activity} />
               </Grid>
             </Grid>
-
-            <Map
-              className={classes.map}
-              bounds={bounds}
-              zoomControl={false}
-              attributionControl={false}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-                maxZoom={18}
-                accessToken={process.env.REACT_APP_MAPBOX}
-                id="mapbox/light-v10"
-              />
-              <Polyline color={palette.primary.main} positions={line} />
-            </Map>
+            <Link to={`/activity/${activity.external_id}`}>
+              <Map
+                className={classes.map}
+                bounds={bounds}
+                zoomControl={false}
+                attributionControl={false}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
+                  maxZoom={18}
+                  accessToken={process.env.REACT_APP_MAPBOX}
+                  id="mapbox/light-v10"
+                />
+                <Polyline color={palette.primary.main} positions={line} />
+              </Map>
+            </Link>
           </Box>
         );
       })}
