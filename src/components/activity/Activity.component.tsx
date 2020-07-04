@@ -14,7 +14,7 @@ import { SegmentsTable } from './SegmentTable.component';
 
 export function ActivityComponent() {
   const { id } = useParams();
-  const { data, loading, error } = useQuery<getActivity>(GET_ACTIVITY, {
+  const { data, loading } = useQuery<getActivity>(GET_ACTIVITY, {
     variables: { id },
   });
   const { palette } = useTheme<Theme>();
