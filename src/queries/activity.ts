@@ -25,6 +25,9 @@ export const GET_ACTIVITY = gql`
           average_grade
           elevation_high
           elevation_low
+          map {
+            map
+          }
         }
         elapsed_time
         average_watts

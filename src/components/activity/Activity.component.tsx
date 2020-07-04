@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Typography, useTheme } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { Theme, useTheme } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Map, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { getLineData } from '../../toolbox/map';
 import { getActivity } from '../../types/getActivity';
 import { Loading } from '../utilities/Loading';
 import { ActivityDetails } from './ActivityDetails.component';
+import { ElevationChart } from './ElevationChart.component';
 import { SegmentsTable } from './SegmentTable.component';
 
 export function ActivityComponent() {
@@ -15,13 +17,12 @@ export function ActivityComponent() {
   const { data, loading, error } = useQuery<getActivity>(GET_ACTIVITY, {
     variables: { id },
   });
-  const { palette } = useTheme();
+  const { palette } = useTheme<Theme>();
   if (loading) return <Loading />;
   if (!data) {
     return <Typography>Error</Typography>;
   }
   const { line, bounds } = getLineData(data.activities_by_pk!.map.map);
-  console.log(line);
   return (
     <>
       <ActivityDetails activity={data.activities_by_pk!} />
@@ -50,6 +51,7 @@ export function ActivityComponent() {
             .reverse()}
         ></Marker>
       </Map>
+      <ElevationChart line={line} />
       <SegmentsTable segments={data.activities_by_pk!.segment_efforts} />
     </>
   );

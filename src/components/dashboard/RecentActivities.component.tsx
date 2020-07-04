@@ -1,4 +1,4 @@
-import { Box, Grid, useTheme } from '@material-ui/core';
+import { Box, Grid, Theme, useTheme } from '@material-ui/core';
 import { DirectionsBike, DirectionsRun } from '@material-ui/icons';
 import * as React from 'react';
 import { Map, Polyline, TileLayer } from 'react-leaflet';
@@ -14,7 +14,7 @@ interface Props {
 
 export function RecentActivities({ activities }: Props) {
   const classes = useRecentActivities();
-  const { palette } = useTheme();
+  const { palette } = useTheme<Theme>();
   return (
     <>
       {activities.map((activity) => {
