@@ -12,12 +12,21 @@ export interface getActivity_activities_by_pk_map {
   map: string;
 }
 
+export interface getActivity_activities_by_pk_segment_efforts_segment_map {
+  __typename: 'maps';
+  map: string;
+}
+
 export interface getActivity_activities_by_pk_segment_efforts_segment {
   __typename: 'segments';
   distance: any;
   average_grade: any;
   elevation_high: any;
   elevation_low: any;
+  /**
+   * An object relationship
+   */
+  map: getActivity_activities_by_pk_segment_efforts_segment_map | null;
 }
 
 export interface getActivity_activities_by_pk_segment_efforts {
@@ -30,7 +39,10 @@ export interface getActivity_activities_by_pk_segment_efforts {
    */
   segment: getActivity_activities_by_pk_segment_efforts_segment;
   elapsed_time: number;
+  moving_time: number;
   average_watts: any;
+  max_heartrate: any | null;
+  pr_rank: number | null;
 }
 
 export interface getActivity_activities_by_pk {

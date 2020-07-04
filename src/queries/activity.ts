@@ -30,7 +30,11 @@ export const GET_ACTIVITY = gql`
           }
         }
         elapsed_time
+        moving_time
         average_watts
+        average_heartrate
+        max_heartrate
+        pr_rank
       }
     }
   }

@@ -1,82 +1,200 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Grid,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Theme,
+  useTheme,
 } from '@material-ui/core';
+import { EmojiEventsOutlined } from '@material-ui/icons';
 import * as React from 'react';
+import { Map, Polyline, TileLayer } from 'react-leaflet';
 import { distanceForSegment } from '../../toolbox/distance';
+import { getLineData } from '../../toolbox/map';
 import { calculateSpeed } from '../../toolbox/speed';
 import { convertDurationForPR } from '../../toolbox/time';
 import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
 import { getActivity_activities_by_pk_segment_efforts } from '../../types/getActivity';
-import { StyledTableCell } from './styles/SegmentTable.styles';
+import { ElevationChart } from './ElevationChart.component';
+import { StyledGrid } from './styles/SegmentTable.styles';
 
 interface Props {
   segments: getActivity_activities_by_pk_segment_efforts[];
+  activityLine: any;
 }
 
-export function SegmentsTable({ segments }: Props) {
+interface ToggledSegment {
+  id: number;
+  map: string;
+}
+
+export function SegmentsTable({ segments, activityLine }: Props) {
+  const [expanded, setExpanded] = React.useState<ToggledSegment | null>(null);
+  const { palette } = useTheme<Theme>();
+
+  const handleChange = (data: ToggledSegment) => (
+    event: React.ChangeEvent<{}>,
+    isExpanded: boolean
+  ) => {
+    setExpanded(isExpanded ? data : null);
+  };
   return (
     <>
       <TitleTypography>Segments</TitleTypography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell>Time</StyledTableCell>
-              <StyledTableCell>Speed</StyledTableCell>
-              <StyledTableCell>Power</StyledTableCell>
-              <StyledTableCell>HR</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {segments.map((segment) => (
-              <TableRow key={segment.id}>
-                <TableCell component="th" scope="row">
-                  {segment.name}
-                  <SubtitleTypography>
-                    <span title="Distance">
-                      {distanceForSegment(segment.segment.distance)}
-                    </span>
-                    &nbsp;
-                    <span title="Elevation difference">
-                      {(
-                        segment.segment.elevation_high -
-                        segment.segment.elevation_low
-                      ).toFixed(0)}
-                      m
-                    </span>
-                    &nbsp;
-                    <span title="Average grade">
-                      {segment.segment.average_grade.toFixed(0)}%
-                    </span>
-                  </SubtitleTypography>
-                </TableCell>
-                <TableCell>
-                  {convertDurationForPR(segment.elapsed_time)}
-                </TableCell>
-                <TableCell>
-                  {calculateSpeed(
-                    segment.segment.distance,
-                    segment.elapsed_time
-                  )}
-                </TableCell>
-                <TableCell>{segment.average_watts}w</TableCell>
-                <TableCell>
-                  {segment.average_heartrate
-                    ? `${segment.average_heartrate}bpm`
-                    : '--'}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Paper>
+        <StyledGrid container>
+          <StyledGrid item md={1}></StyledGrid>
+          <StyledGrid item md={3}>
+            <strong>Name</strong>
+          </StyledGrid>
+          <StyledGrid item md={2}>
+            <strong>Timee</strong>
+          </StyledGrid>
+          <StyledGrid item md={2}>
+            <strong>Speed</strong>
+          </StyledGrid>
+          <StyledGrid item md={2}>
+            <strong>Power</strong>
+          </StyledGrid>
+          <StyledGrid item md={2}>
+            <strong>HR</strong>
+          </StyledGrid>
+        </StyledGrid>
+
+        {segments.map((segment) => {
+          const { line, bounds } = getLineData(segment.segment.map!.map);
+          return (
+            <Accordion
+              square
+              expanded={expanded?.id === segment.id}
+              onChange={handleChange({
+                id: segment.id,
+                map: segment.segment.map!.map,
+              })}
+              key={segment.id}
+              TransitionProps={{ unmountOnExit: true }}
+            >
+              <AccordionSummary
+                aria-controls={`${segment.name}-content`}
+                id={`${segment.name}-header`}
+              >
+                <StyledGrid container>
+                  <StyledGrid
+                    item
+                    md={1}
+                    style={{
+                      color:
+                        segment.pr_rank === 1
+                          ? 'gold'
+                          : segment.pr_rank === 2
+                          ? 'silver'
+                          : '#cd7f32',
+                    }}
+                  >
+                    {segment.pr_rank ? <EmojiEventsOutlined /> : null}
+                  </StyledGrid>
+                  <StyledGrid item md={3}>
+                    {segment.name}
+                    <SubtitleTypography>
+                      <span title="Distance">
+                        {distanceForSegment(segment.segment.distance)}
+                      </span>
+                      &nbsp;
+                      <span title="Elevation difference">
+                        {(
+                          segment.segment.elevation_high -
+                          segment.segment.elevation_low
+                        ).toFixed(0)}
+                        m
+                      </span>
+                      &nbsp;
+                      <span title="Average grade">
+                        {segment.segment.average_grade.toFixed(0)}%
+                      </span>
+                    </SubtitleTypography>
+                  </StyledGrid>
+                  <StyledGrid item md={2}>
+                    {convertDurationForPR(segment.elapsed_time)}
+                  </StyledGrid>
+                  <StyledGrid item md={2}>
+                    {calculateSpeed(
+                      segment.segment.distance,
+                      segment.elapsed_time
+                    )}
+                  </StyledGrid>
+                  <StyledGrid item md={2}>
+                    {segment.average_watts}w
+                  </StyledGrid>
+                  <StyledGrid item md={2}>
+                    {segment.average_heartrate
+                      ? `${segment.average_heartrate}bpm`
+                      : '--'}
+                  </StyledGrid>
+                </StyledGrid>
+              </AccordionSummary>
+              <AccordionDetails>
+                <StyledGrid container>
+                  <Grid item container md={6}>
+                    <Grid item md={3}>
+                      <TitleTypography>
+                        {convertDurationForPR(segment.elapsed_time)}
+                      </TitleTypography>
+                      <SubtitleTypography>This effort</SubtitleTypography>
+                    </Grid>
+                    <Grid item md={3}>
+                      <SubtitleTypography>
+                        {convertDurationForPR(segment.moving_time)}
+                      </SubtitleTypography>
+                      <SubtitleTypography>Moving effort</SubtitleTypography>
+                    </Grid>
+                    <Grid item md={3}>
+                      <SubtitleTypography>
+                        {segment.average_heartrate}bpm avg heartrate
+                      </SubtitleTypography>
+                    </Grid>
+                    <Grid item md={3}>
+                      <SubtitleTypography>
+                        {segment.max_heartrate}bpm max heartrate
+                      </SubtitleTypography>
+                    </Grid>
+                    <Grid item md={12}>
+                      <Map
+                        style={{ height: '170px' }}
+                        bounds={bounds}
+                        attributionControl={false}
+                        zoomControl={false}
+                        scrollWheelZoom={false}
+                      >
+                        <TileLayer
+                          url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
+                          maxZoom={18}
+                          accessToken={process.env.REACT_APP_MAPBOX}
+                          id="mapbox/light-v10"
+                        />
+                        <Polyline
+                          color={palette.primary.main}
+                          positions={activityLine}
+                        />
+                        <Polyline color="blue" positions={line} />
+                      </Map>
+                    </Grid>
+                  </Grid>
+                  <StyledGrid item md={6}>
+                    <ElevationChart
+                      distance={segment.segment.distance}
+                      line={line}
+                      chartHeight={220}
+                      chartWidth={400}
+                      id={`elevationChart-${segment.id}`}
+                    ></ElevationChart>
+                  </StyledGrid>
+                </StyledGrid>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+      </Paper>
     </>
   );
 }
