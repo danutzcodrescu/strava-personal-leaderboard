@@ -13,7 +13,7 @@ export function activityDate(dateString: string) {
 
 interface Minutes {
   minutes: number;
-  seconds: number;
+  seconds: string;
 }
 
 interface Hours {
@@ -26,7 +26,10 @@ type Duration = Minutes | Hours;
 function calculateDuration(duration: number): Duration {
   if (duration < 3600) {
     const minutes = Math.floor(duration / 60);
-    return { minutes, seconds: duration - minutes * 60 };
+    return {
+      minutes,
+      seconds: (duration - minutes * 60).toString().padStart(2, '0'),
+    };
   }
   const hours = Math.floor(duration / 3600);
   return {
@@ -47,4 +50,9 @@ export function convertDurationForActivityTitle(duration: number) {
 export function convertDurationForPR(duration: number) {
   const time = calculateDuration(duration);
   return `${time.minutes}:${(time as Minutes).seconds}`;
+}
+
+export function activityDateForSegment(dateString: string) {
+  const zonedDate = new Date(dateString.substring(0, 19));
+  return format(zonedDate, 'dd-MM-yyyy');
 }
