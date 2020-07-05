@@ -42,6 +42,7 @@ export interface getActivity_activities_by_pk_segment_efforts {
 export interface getActivity_activities_by_pk {
   __typename: 'activities';
   external_id: any;
+  name: string;
   /**
    * An object relationship
    */

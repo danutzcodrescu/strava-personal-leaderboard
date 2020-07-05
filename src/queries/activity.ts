@@ -4,6 +4,7 @@ export const GET_ACTIVITY = gql`
   query getActivity($id: bigint!) {
     activities_by_pk(external_id: $id) {
       external_id
+      name
       map {
         map
       }

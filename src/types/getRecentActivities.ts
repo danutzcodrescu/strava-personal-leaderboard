@@ -28,6 +28,7 @@ export interface getRecentActivities_activities {
   moving_time: number;
   achievement_count: number | null;
   start_date_local: any;
+  name: string;
   /**
    * An object relationship
    */

@@ -26,6 +26,7 @@ function generateGraphqlVariables(stravaActivity, user_id) {
     total_elevation_gain: stravaActivity.total_elevation_gain,
     type: stravaActivity.type,
     user_id: stravaActivity.athlete.id,
+    name: stravaActivity.name,
     map: {
       data: {
         external_id: stravaActivity.map.id,
