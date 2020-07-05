@@ -15,7 +15,7 @@ export function ActivityDetails({ activity }: Props) {
   return (
     <Grid container spacing={2}>
       <Grid md={5} item>
-        <TitleTypography>Title placeholder</TitleTypography>
+        <TitleTypography>{activity.name}</TitleTypography>
         <SubtitleTypography>
           {activityDate(activity.start_date_local)}
         </SubtitleTypography>

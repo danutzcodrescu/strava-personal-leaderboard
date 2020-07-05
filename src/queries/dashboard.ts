@@ -9,6 +9,7 @@ export const GET_RECENT_ACTIVITIES = gql`
       moving_time
       achievement_count
       start_date_local
+      name
       map {
         map
       }

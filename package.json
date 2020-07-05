@@ -37,7 +37,7 @@
     "build": "REACT_APP_URL=${URL} react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen-types": "npx apollo client:codegen --target typescript --outputFlat --includes=\"src/queries/*.ts\" --globalTypesFile=src/types/graphql-types.ts src/types/ && rm src/types/graphql-types.ts"
+    "gen-types": "npx apollo client:codegen --target typescript --outputFlat --includes=\"src/queries/*.ts\" --globalTypesFile=src/types/graphql-types.ts src/types/ && rm src/types/graphql-types.ts && prettier src/types/*.ts --write"
   },
   "eslintConfig": {
     "extends": "react-app"

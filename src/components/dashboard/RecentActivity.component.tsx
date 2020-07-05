@@ -36,7 +36,7 @@ export function RecentActivityCard({ activity }: Props) {
     <>
       <TitleTypography gutterBottom>
         <Link to={`/activity/${activity.external_id}`}>
-          <span>Title placeholder</span>
+          <span>{activity.name}</span>
         </Link>
         {/* @ts-ignore */}
         <SubtitleTypography component="span">
