@@ -5,15 +5,11 @@ import {
   AccordionSummary,
   Grid,
   Paper,
-  Theme,
-  useTheme,
 } from '@material-ui/core';
 import { EmojiEventsOutlined } from '@material-ui/icons';
 import * as React from 'react';
-import { Map, Polyline, TileLayer } from 'react-leaflet';
 import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
 import { distanceForSegment } from '../../toolbox/distance';
-import { getLineData } from '../../toolbox/map';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import { convertDurationForPR } from '../../toolbox/time';
@@ -23,7 +19,7 @@ import {
   getSegmentLeaderboards,
   getSegmentLeaderboardsVariables,
 } from '../../types/getSegmentLeaderboards';
-import { ElevationChart } from './ElevationChart.component';
+import { SegmentDetails } from './SegmentDetails';
 import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
 import { StyledGrid } from './styles/SegmentTable.styles';
 
@@ -34,13 +30,12 @@ interface Props {
 
 interface ToggledSegment {
   id: number;
-  map: string;
   segmentId: string;
 }
 
 export function SegmentsTable({ segments, activityLine }: Props) {
   const [expanded, setExpanded] = React.useState<ToggledSegment | null>(null);
-  const { palette } = useTheme<Theme>();
+
   const [loadLeaderboards, { data }] = useLazyQuery<
     getSegmentLeaderboards,
     getSegmentLeaderboardsVariables
@@ -84,14 +79,12 @@ export function SegmentsTable({ segments, activityLine }: Props) {
         </StyledGrid>
 
         {segments.map((segment) => {
-          const { line, bounds } = getLineData(segment.segment.map!.map);
           return (
             <Accordion
               square
               expanded={expanded?.id === segment.id}
               onChange={handleChange({
                 id: segment.id,
-                map: segment.segment.map!.map,
                 segmentId: segment.segment.external_id,
               })}
               key={segment.id}
@@ -181,32 +174,15 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                       </SubtitleTypography>
                     </Grid>
                     <Grid item md={12}>
-                      <ElevationChart
-                        distance={segment.segment.distance}
-                        line={line}
-                        chartHeight={220}
-                        chartWidth={400}
-                        id={`elevationChart-${segment.id}`}
-                      ></ElevationChart>
-                      <Map
-                        style={{ height: '170px' }}
-                        bounds={bounds}
-                        attributionControl={false}
-                        zoomControl={false}
-                        scrollWheelZoom={false}
-                      >
-                        <TileLayer
-                          url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-                          maxZoom={18}
-                          accessToken={process.env.REACT_APP_MAPBOX}
-                          id="mapbox/light-v10"
+                      {expanded ? (
+                        <SegmentDetails
+                          startPoint={segment.segment.start_point}
+                          endPoint={segment.segment.end_point}
+                          activityLine={activityLine}
+                          segmentId={segment.id}
+                          distance={segment.segment!.distance}
                         />
-                        <Polyline
-                          color={palette.primary.main}
-                          positions={activityLine}
-                        />
-                        <Polyline color="blue" positions={line} />
-                      </Map>
+                      ) : null}
                     </Grid>
                   </Grid>
                   <StyledGrid item md={6}>
