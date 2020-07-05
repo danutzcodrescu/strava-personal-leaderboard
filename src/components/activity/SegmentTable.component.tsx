@@ -1,3 +1,4 @@
+import { useLazyQuery } from '@apollo/client';
 import {
   Accordion,
   AccordionDetails,
@@ -10,13 +11,20 @@ import {
 import { EmojiEventsOutlined } from '@material-ui/icons';
 import * as React from 'react';
 import { Map, Polyline, TileLayer } from 'react-leaflet';
+import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
 import { distanceForSegment } from '../../toolbox/distance';
 import { getLineData } from '../../toolbox/map';
+import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import { convertDurationForPR } from '../../toolbox/time';
 import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
 import { getActivity_activities_by_pk_segment_efforts } from '../../types/getActivity';
+import {
+  getSegmentLeaderboards,
+  getSegmentLeaderboardsVariables,
+} from '../../types/getSegmentLeaderboards';
 import { ElevationChart } from './ElevationChart.component';
+import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
 import { StyledGrid } from './styles/SegmentTable.styles';
 
 interface Props {
@@ -27,17 +35,30 @@ interface Props {
 interface ToggledSegment {
   id: number;
   map: string;
+  segmentId: string;
 }
 
 export function SegmentsTable({ segments, activityLine }: Props) {
   const [expanded, setExpanded] = React.useState<ToggledSegment | null>(null);
   const { palette } = useTheme<Theme>();
+  const [loadLeaderboards, { data }] = useLazyQuery<
+    getSegmentLeaderboards,
+    getSegmentLeaderboardsVariables
+  >(GET_SEGMENT_LEADERBOARDS);
 
   const handleChange = (data: ToggledSegment) => (
     event: React.ChangeEvent<{}>,
     isExpanded: boolean
   ) => {
     setExpanded(isExpanded ? data : null);
+    if (isExpanded) {
+      loadLeaderboards({
+        variables: {
+          segmentId: data.segmentId,
+          userId: parseInt(getUserInfo()!),
+        },
+      });
+    }
   };
   return (
     <>
@@ -71,6 +92,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
               onChange={handleChange({
                 id: segment.id,
                 map: segment.segment.map!.map,
+                segmentId: segment.segment.external_id,
               })}
               key={segment.id}
               TransitionProps={{ unmountOnExit: true }}
@@ -159,6 +181,13 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                       </SubtitleTypography>
                     </Grid>
                     <Grid item md={12}>
+                      <ElevationChart
+                        distance={segment.segment.distance}
+                        line={line}
+                        chartHeight={220}
+                        chartWidth={400}
+                        id={`elevationChart-${segment.id}`}
+                      ></ElevationChart>
                       <Map
                         style={{ height: '170px' }}
                         bounds={bounds}
@@ -181,13 +210,12 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                     </Grid>
                   </Grid>
                   <StyledGrid item md={6}>
-                    <ElevationChart
-                      distance={segment.segment.distance}
-                      line={line}
-                      chartHeight={220}
-                      chartWidth={400}
-                      id={`elevationChart-${segment.id}`}
-                    ></ElevationChart>
+                    {expanded?.id === segment.id && data ? (
+                      <SegmentPersonalLeaderboard
+                        segment_efforts={data.segment_efforts}
+                        distance={segment.segment.distance}
+                      />
+                    ) : null}
                   </StyledGrid>
                 </StyledGrid>
               </AccordionDetails>

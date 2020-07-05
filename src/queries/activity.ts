@@ -21,6 +21,7 @@ export const GET_ACTIVITY = gql`
         id
         average_heartrate
         segment {
+          external_id
           distance
           average_grade
           elevation_high
@@ -36,6 +37,25 @@ export const GET_ACTIVITY = gql`
         max_heartrate
         pr_rank
       }
+    }
+  }
+`;
+
+export const GET_SEGMENT_LEADERBOARDS = gql`
+  query getSegmentLeaderboards($segmentId: bigint!, $userId: Int!) {
+    segment_efforts(
+      where: {
+        _and: [
+          { segment_id: { _eq: $segmentId } }
+          { user_id: { _eq: $userId } }
+        ]
+      }
+      order_by: { moving_time: asc }
+    ) {
+      start_date_local
+      moving_time
+      elapsed_time
+      id
     }
   }
 `;

@@ -19,6 +19,7 @@ export interface getActivity_activities_by_pk_segment_efforts_segment_map {
 
 export interface getActivity_activities_by_pk_segment_efforts_segment {
   __typename: 'segments';
+  external_id: any;
   distance: any;
   average_grade: any;
   elevation_high: any;
