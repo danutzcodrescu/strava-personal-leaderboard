@@ -86,6 +86,7 @@ CREATE TABLE public.activities (
     end_point point NOT NULL,
     map_id text NOT NULL,
     external_id bigint NOT NULL,
+    name text NOT NULL,
     CONSTRAINT rides_columns CHECK (((type = 'Ride'::text) AND (kilojoules IS NOT NULL) AND (average_watts IS NOT NULL))),
     CONSTRAINT type CHECK (((type = 'Ride'::text) OR (type = 'Run'::text)))
 );
