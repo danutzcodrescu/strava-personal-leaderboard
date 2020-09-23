@@ -197,3 +197,15 @@ ALTER TABLE ONLY public.segment_efforts
     ADD CONSTRAINT segment_efforts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.segments
     ADD CONSTRAINT segments_map_id_fkey FOREIGN KEY (map_id) REFERENCES public.maps(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+CREATE FUNCTION user_dashboard_summary(id bigint)
+RETURNS SETOF user_summary AS $$
+   SELECT users.first_name,
+    users.last_name,
+    count(activities.external_id) AS activities,
+    sum(activities.distance) AS distance
+   FROM (users
+     JOIN activities ON ((users.external_id = activities.user_id)))
+  WHERE users.external_id = id     
+  GROUP BY users.external_id;
+$$ LANGUAGE sql STABLE;
