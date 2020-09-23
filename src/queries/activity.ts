@@ -59,3 +59,18 @@ export const GET_SEGMENT_LEADERBOARDS = gql`
     }
   }
 `;
+
+export const GET_TOP_RESULTS = gql`
+  query getTopResults($id: bigint) {
+    segment_efforts(
+      where: {
+        _and: [{ activity_id: { _eq: $id } }, { pr_rank: { _is_null: false } }]
+      }
+      order_by: { pr_rank: asc }
+    ) {
+      id
+      name
+      pr_rank
+    }
+  }
+`;

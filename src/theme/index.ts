@@ -13,4 +13,18 @@ export const theme = createMuiTheme({
       dark: '#46A58D',
     },
   },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        a: {
+          fontWeight: 'bold',
+          textDecoration: 'none',
+          color: 'black',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        },
+      },
+    },
+  },
 });

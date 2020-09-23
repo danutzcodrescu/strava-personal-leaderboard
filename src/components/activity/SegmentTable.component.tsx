@@ -13,6 +13,7 @@ import { distanceForSegment } from '../../toolbox/distance';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import { convertDurationForPR } from '../../toolbox/time';
+import { trophyColors } from '../../toolbox/trophyColors';
 import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
 import { getActivity_activities_by_pk_segment_efforts } from '../../types/getActivity';
 import {
@@ -99,12 +100,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                     item
                     md={1}
                     style={{
-                      color:
-                        segment.pr_rank === 1
-                          ? 'gold'
-                          : segment.pr_rank === 2
-                          ? 'silver'
-                          : '#cd7f32',
+                      color: trophyColors(segment.pr_rank),
                     }}
                   >
                     {segment.pr_rank ? <EmojiEventsOutlined /> : null}

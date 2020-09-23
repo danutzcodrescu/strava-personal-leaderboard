@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
-import { ThemeProvider } from '@material-ui/core';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ActivityComponent } from './components/activity/Activity.component';
@@ -15,6 +15,7 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Switch>
             <Route path="/callback">
               <LoginCallback />
