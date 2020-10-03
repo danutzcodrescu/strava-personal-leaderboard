@@ -73,11 +73,13 @@ function drawChart(
     .domain([0, d3.max(data, (d) => d.y + 120)])
     .nice()
     .range([height - margin.bottom, margin.top]);
+  // @ts-ignore
   const area = d3
     .area()
     .curve(curve)
     // @ts-ignore
     .x((d) => x(d.x))
+    // @ts-ignore
     .y0(y(0))
     // @ts-ignore
     .y1((d) => y(d.y));

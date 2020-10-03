@@ -9,11 +9,13 @@ import { SegmentLeaderBoardGrid } from './styles/SegmentTable.styles';
 
 interface Props extends getSegmentLeaderboards {
   distance: number;
+  selectedId: number;
 }
 
 export function SegmentPersonalLeaderboard({
   segment_efforts,
   distance,
+  selectedId,
 }: Props) {
   return (
     <>
@@ -41,6 +43,7 @@ export function SegmentPersonalLeaderboard({
           container
           key={segment.id}
           justify="space-between"
+          className={selectedId === segment.id ? 'segmentHeader' : ''}
         >
           <SegmentLeaderBoardGrid item md={1}>
             {index + 1}
