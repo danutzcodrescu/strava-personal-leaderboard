@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
   try {
     console.log(request);
     const user = await graphql(userQuery, { pk: request.user });
-    console.log(user);
+    console.log(user.data.errors);
     if (user.data.data.users_by_pk.expired === 0) {
       return {
         statusCode: 200,
