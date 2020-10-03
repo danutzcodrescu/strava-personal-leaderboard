@@ -51,6 +51,7 @@ export const GET_SEGMENT_LEADERBOARDS = gql`
         ]
       }
       order_by: { moving_time: asc }
+      limit: 10
     ) {
       start_date_local
       moving_time
@@ -67,10 +68,12 @@ export const GET_TOP_RESULTS = gql`
         _and: [{ activity_id: { _eq: $id } }, { pr_rank: { _is_null: false } }]
       }
       order_by: { pr_rank: asc }
+      limit: 5
     ) {
       id
       name
       pr_rank
+      segment_id
     }
   }
 `;

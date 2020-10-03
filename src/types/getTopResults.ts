@@ -12,6 +12,7 @@ export interface getTopResults_segment_efforts {
   id: number;
   name: string;
   pr_rank: number | null;
+  segment_id: any;
 }
 
 export interface getTopResults {

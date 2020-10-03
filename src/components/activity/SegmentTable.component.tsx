@@ -20,6 +20,7 @@ import {
   getSegmentLeaderboards,
   getSegmentLeaderboardsVariables,
 } from '../../types/getSegmentLeaderboards';
+import { useSegmentData } from './contexts/selectedSegment.context';
 import { SegmentDetails } from './SegmentDetails';
 import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
 import { StyledGrid } from './styles/SegmentTable.styles';
@@ -36,26 +37,42 @@ interface ToggledSegment {
 
 export function SegmentsTable({ segments, activityLine }: Props) {
   const [expanded, setExpanded] = React.useState<ToggledSegment | null>(null);
+  const { state } = useSegmentData();
 
   const [loadLeaderboards, { data }] = useLazyQuery<
     getSegmentLeaderboards,
     getSegmentLeaderboardsVariables
   >(GET_SEGMENT_LEADERBOARDS);
 
-  const handleChange = (data: ToggledSegment) => (
-    event: React.ChangeEvent<{}>,
-    isExpanded: boolean
-  ) => {
-    setExpanded(isExpanded ? data : null);
-    if (isExpanded) {
-      loadLeaderboards({
-        variables: {
-          segmentId: data.segmentId,
-          userId: parseInt(getUserInfo()!),
-        },
-      });
+  const handleChange = React.useCallback(
+    (data: ToggledSegment) => (
+      event: React.ChangeEvent<{}>,
+      isExpanded: boolean
+    ) => {
+      setExpanded(isExpanded ? data : null);
+      if (isExpanded) {
+        loadLeaderboards({
+          variables: {
+            segmentId: data.segmentId,
+            userId: parseInt(getUserInfo()!),
+          },
+        });
+      }
+    },
+    [loadLeaderboards]
+  );
+
+  React.useLayoutEffect(() => {
+    if (state?.id !== expanded?.id) {
+      handleChange({
+        id: state.id!,
+        segmentId: state.segmentId!,
+      })(null as any, true);
+      document
+        .querySelector(`[data-id="${state.id}"]`)
+        ?.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, [state.id]);
   return (
     <>
       <TitleTypography>Segments</TitleTypography>
@@ -66,7 +83,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
             <strong>Name</strong>
           </StyledGrid>
           <StyledGrid item md={2}>
-            <strong>Timee</strong>
+            <strong>Time</strong>
           </StyledGrid>
           <StyledGrid item md={2}>
             <strong>Speed</strong>
@@ -90,6 +107,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
               })}
               key={segment.id}
               TransitionProps={{ unmountOnExit: true }}
+              data-id={segment.id}
             >
               <AccordionSummary
                 aria-controls={`${segment.name}-content`}
@@ -147,26 +165,26 @@ export function SegmentsTable({ segments, activityLine }: Props) {
               <AccordionDetails>
                 <StyledGrid container>
                   <Grid item container md={6}>
-                    <Grid item md={3}>
+                    <Grid item md={6}>
                       <TitleTypography>
                         {convertDurationForPR(segment.elapsed_time)}
                       </TitleTypography>
                       <SubtitleTypography>This effort</SubtitleTypography>
                     </Grid>
-                    <Grid item md={3}>
+                    <Grid item md={6}>
                       <SubtitleTypography>
                         {convertDurationForPR(segment.moving_time)}
                       </SubtitleTypography>
                       <SubtitleTypography>Moving effort</SubtitleTypography>
                     </Grid>
-                    <Grid item md={3}>
+                    <Grid item md={6}>
                       <SubtitleTypography>
-                        {segment.average_heartrate}bpm avg heartrate
+                        <b>AVG:</b> {segment.average_heartrate}bpm
                       </SubtitleTypography>
                     </Grid>
-                    <Grid item md={3}>
+                    <Grid item md={6}>
                       <SubtitleTypography>
-                        {segment.max_heartrate}bpm max heartrate
+                        <b>MAX</b> {segment.max_heartrate}bpm
                       </SubtitleTypography>
                     </Grid>
                     <Grid item md={12}>
@@ -186,6 +204,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                       <SegmentPersonalLeaderboard
                         segment_efforts={data.segment_efforts}
                         distance={segment.segment.distance}
+                        selectedId={expanded.id}
                       />
                     ) : null}
                   </StyledGrid>

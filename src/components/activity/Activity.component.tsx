@@ -10,6 +10,7 @@ import { getActivity } from '../../types/getActivity';
 import { getTopResults } from '../../types/getTopResults';
 import { Loading } from '../utilities/Loading';
 import { ActivityDetails } from './ActivityDetails.component';
+import { SelectedSegmentProvider } from './contexts/selectedSegment.context';
 import { ElevationChart } from './ElevationChart.component';
 import { SegmentsTable } from './SegmentTable.component';
 import { StyledPaper } from './styles/Activity.styles';
@@ -36,48 +37,51 @@ export function ActivityComponent() {
   }
   const { line, bounds } = getLineData(data.activities_by_pk!.map.map);
   return (
-    <Box display="flex" justifyContent="center" my={7}>
-      {/* @ts-ignore */}
-      <Box component={StyledPaper} variant="outlined" px={4.5} py={6.5}>
-        <ActivityDetails activity={data.activities_by_pk!} />
-        <Spacer />
-        <TopResults results={dataResults.segment_efforts} />
-        <Spacer />
-        <Map
-          style={{ height: '270px' }}
-          bounds={bounds}
-          attributionControl={false}
-        >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-            maxZoom={18}
-            accessToken={process.env.REACT_APP_MAPBOX}
-            id="mapbox/light-v10"
+    <SelectedSegmentProvider>
+      <Box display="flex" justifyContent="center" my={7}>
+        {/* @ts-ignore */}
+        <Box component={StyledPaper} variant="outlined" px={4.5} py={6.5}>
+          <ActivityDetails activity={data.activities_by_pk!} />
+          <Spacer />
+          <TopResults results={dataResults.segment_efforts} />
+          <Spacer />
+          <Map
+            style={{ height: '270px' }}
+            bounds={bounds}
+            attributionControl={false}
+            scrollWheelZoom={false}
+          >
+            <TileLayer
+              url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
+              maxZoom={18}
+              accessToken={process.env.REACT_APP_MAPBOX}
+              id="mapbox/light-v10"
+            />
+            <Polyline color={palette.primary.main} positions={line} />
+            <Marker
+              position={data
+                .activities_by_pk!.start_point.slice(1, -1)
+                .split(',')
+                .reverse()}
+            ></Marker>
+            <Marker
+              position={data
+                .activities_by_pk!.end_point.slice(1, -1)
+                .split(',')
+                .reverse()}
+            ></Marker>
+          </Map>
+          <ElevationChart
+            line={line}
+            distance={data.activities_by_pk!.distance}
           />
-          <Polyline color={palette.primary.main} positions={line} />
-          <Marker
-            position={data
-              .activities_by_pk!.start_point.slice(1, -1)
-              .split(',')
-              .reverse()}
-          ></Marker>
-          <Marker
-            position={data
-              .activities_by_pk!.end_point.slice(1, -1)
-              .split(',')
-              .reverse()}
-          ></Marker>
-        </Map>
-        <ElevationChart
-          line={line}
-          distance={data.activities_by_pk!.distance}
-        />
-        <Spacer />
-        <SegmentsTable
-          segments={data.activities_by_pk!.segment_efforts}
-          activityLine={line}
-        />
+          <Spacer />
+          <SegmentsTable
+            segments={data.activities_by_pk!.segment_efforts}
+            activityLine={line}
+          />
+        </Box>
       </Box>
-    </Box>
+    </SelectedSegmentProvider>
   );
 }

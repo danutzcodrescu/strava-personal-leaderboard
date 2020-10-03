@@ -1,15 +1,23 @@
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, Link } from '@material-ui/core';
 import { EmojiEventsOutlined } from '@material-ui/icons';
 import * as React from 'react';
 import { trophyColors } from '../../toolbox/trophyColors';
 import { getTopResults_segment_efforts } from '../../types/getTopResults';
-import { ValueTypography } from '../dashboard/styles/RecentActivities.styles';
+import { useSegmentData } from './contexts/selectedSegment.context';
+
+const selectResult = (id: number, segmentId: number) => (
+  fn: (id: number, segmentId: number) => void
+) => (e: any) => {
+  e.preventDefault();
+  fn(id, segmentId);
+};
 
 interface Props {
   results: getTopResults_segment_efforts[];
 }
 
 export function TopResults({ results }: Props) {
+  const { setValue } = useSegmentData();
   return (
     // @ts-expect-error
     <Box component={Grid} container spacing={4} py={4}>
@@ -23,7 +31,12 @@ export function TopResults({ results }: Props) {
               <EmojiEventsOutlined htmlColor={trophyColors(elem.pr_rank)} />
             </Grid>
             <Grid item>
-              <ValueTypography>{elem.name}</ValueTypography>
+              <Link
+                type="button"
+                onClick={selectResult(elem.id, elem.segment_id)(setValue)}
+              >
+                {elem.name}
+              </Link>
             </Grid>
           </Grid>
         ))}

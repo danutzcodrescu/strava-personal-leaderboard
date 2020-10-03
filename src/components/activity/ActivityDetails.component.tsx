@@ -2,7 +2,10 @@ import { Grid } from '@material-ui/core';
 import * as React from 'react';
 import { convertDistance } from '../../toolbox/distance';
 import { convertSpeed } from '../../toolbox/speed';
-import { activityDate, convertDurationForPR } from '../../toolbox/time';
+import {
+  activityDate,
+  convertDurationForActivityTitle,
+} from '../../toolbox/time';
 import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
 import { getActivity_activities_by_pk } from '../../types/getActivity';
 import { ValueTypography } from '../dashboard/styles/RecentActivities.styles';
@@ -28,13 +31,13 @@ export function ActivityDetails({ activity }: Props) {
         </Grid>
         <Grid item md={3}>
           <ValueTypography>
-            {convertDurationForPR(activity.elapsed_time)}
+            {convertDurationForActivityTitle(activity.elapsed_time)}
           </ValueTypography>
           <SubtitleTypography>elapsed time</SubtitleTypography>
         </Grid>
         <Grid item md={3}>
           <ValueTypography>
-            {convertDurationForPR(activity.moving_time)}
+            {convertDurationForActivityTitle(activity.moving_time)}
           </ValueTypography>
           <SubtitleTypography>moving time</SubtitleTypography>
         </Grid>
