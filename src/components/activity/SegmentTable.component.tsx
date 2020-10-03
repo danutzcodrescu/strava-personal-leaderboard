@@ -72,6 +72,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
         .querySelector(`[data-id="${state.id}"]`)
         ?.scrollIntoView({ behavior: 'smooth' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.id]);
   return (
     <>
