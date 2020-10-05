@@ -38,7 +38,7 @@ export function ActivityComponent() {
   });
   const { palette } = useTheme<Theme>();
   const {
-    state: { elevationPoint },
+    state: { elevationPoint, mainMap },
   } = useElevationData();
   if (loading || loadingResults) return <Loading />;
   if (!data || !dataResults) {
@@ -87,7 +87,7 @@ export function ActivityComponent() {
                 .reverse()}
               key="end"
             ></Marker>
-            {elevationPoint ? (
+            {mainMap && elevationPoint ? (
               <Marker position={elevationPoint} key="elevation-point" />
             ) : null}
           </Map>
@@ -95,6 +95,7 @@ export function ActivityComponent() {
             line={line}
             distance={data.activities_by_pk!.distance}
             key="elevation-chart"
+            mainMap
           />
           <Spacer />
           <SegmentsTable

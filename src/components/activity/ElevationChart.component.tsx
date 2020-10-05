@@ -1,6 +1,7 @@
 import { Theme } from '@material-ui/core';
 import { createStyles, makeStyles, useTheme } from '@material-ui/styles';
 import * as d3 from 'd3';
+import debounce from 'lodash/debounce';
 import * as React from 'react';
 import { useElevationData } from './contexts/elevationMap.context';
 
@@ -10,6 +11,7 @@ interface Props {
   chartHeight: number;
   distance: number;
   id: string;
+  mainMap: boolean;
 }
 
 const margin = { top: 10, right: 10, bottom: 50, left: 50 };
@@ -34,7 +36,8 @@ function drawChart(
   chartWidth: number,
   chartHeight: number,
   id: string,
-  onHover: (val: [number, number] | null) => void
+  onHover: (val: [number, number] | null, mainMap?: boolean) => void,
+  mainMap: boolean
 ) {
   const width = chartWidth - margin.right - margin.left;
   const height = chartHeight - margin.top - margin.bottom;
@@ -90,14 +93,23 @@ function drawChart(
     .append('svg')
     // @ts-ignore
     .attr('viewBox', [0, 0, width, height])
-    .on('mousemove', (e: any) => {
-      const bisectPoint = d3.bisector(
-        (point: { x: number; y: number }) => point.x
-      ).left;
-      // @ts-ignore
-      const dataIndex = bisectPoint(data, x.invert(d3.pointer(e)[0]), 0);
-      onHover(data[dataIndex].location);
-    })
+    .on(
+      'mousemove',
+      debounce(
+        (e: any) => {
+          const bisectPoint = d3.bisector(
+            (point: { x: number; y: number }) => point.x
+          ).left;
+          // @ts-ignore
+          const dataIndex = bisectPoint(data, x.invert(d3.pointer(e)[0]));
+          if (data[dataIndex]) {
+            onHover(data[dataIndex].location, mainMap);
+          }
+        },
+        25,
+        { leading: true, trailing: false }
+      )
+    )
     .on('mouseout', () => {
       onHover(null);
     });
@@ -115,6 +127,7 @@ export function ElevationChart({
   chartWidth,
   distance,
   id,
+  mainMap,
 }: Props) {
   const { palette } = useTheme<Theme>();
   useStyles();
@@ -141,7 +154,8 @@ export function ElevationChart({
           chartWidth,
           chartHeight,
           id,
-          setValue
+          setValue,
+          mainMap
         );
       }
     );
@@ -154,4 +168,5 @@ ElevationChart.defaultProps = {
   chartWidth,
   chartHeight,
   id: 'elevationChart',
+  mainMap: false,
 };

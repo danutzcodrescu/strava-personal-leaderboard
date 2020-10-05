@@ -7,23 +7,24 @@ const ElevationChartContext = React.createContext<any>(undefined);
 interface ElevationChartState {
   elevationPoint: [number, number] | null;
   data: Point[];
+  mainMap?: boolean;
 }
 
 interface Props {
   children: React.ReactNode;
 }
 
-type Action =
-  | { type: 'setData'; payload: Point[] }
-  | { type: 'setPoint'; payload: [number, number] | null };
+type Action = {
+  type: 'setPoint';
+  payload: { location: [number, number]; mainMap?: boolean } | null;
+};
 
 const reducer = produce((draft: ElevationChartState, action: Action) => {
   switch (action.type) {
     case 'setPoint':
-      draft.elevationPoint = action.payload;
+      draft.elevationPoint = action.payload?.location || null;
+      draft.mainMap = action.payload?.mainMap ?? undefined;
       break;
-    case 'setData':
-      draft.data = action.payload;
   }
   return undefined;
 });
@@ -47,8 +48,8 @@ export function useElevationData() {
     React.Dispatch<any>
   ] = React.useContext(ElevationChartContext);
   const setValue = React.useCallback(
-    (val: [number, number] | null) =>
-      dispatch({ type: 'setPoint', payload: val }),
+    (val: [number, number] | null, mainMap?: boolean) =>
+      dispatch({ type: 'setPoint', payload: { location: val, mainMap } }),
     [dispatch]
   );
   return {
