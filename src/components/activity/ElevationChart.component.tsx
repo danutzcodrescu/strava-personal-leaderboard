@@ -1,7 +1,9 @@
 import { Theme } from '@material-ui/core';
 import { createStyles, makeStyles, useTheme } from '@material-ui/styles';
 import * as d3 from 'd3';
+import debounce from 'lodash/debounce';
 import * as React from 'react';
+import { useElevationData } from './contexts/elevationMap.context';
 
 interface Props {
   line: Array<[number, number]>;
@@ -9,6 +11,7 @@ interface Props {
   chartHeight: number;
   distance: number;
   id: string;
+  mainMap: boolean;
 }
 
 const margin = { top: 10, right: 10, bottom: 50, left: 50 };
@@ -28,11 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function drawChart(
-  data: { x: number; y: number }[],
+  data: { x: number; y: number; location: [number, number] }[],
   chartFill: string,
   chartWidth: number,
   chartHeight: number,
-  id: string
+  id: string,
+  onHover: (val: [number, number] | null, mainMap?: boolean) => void,
+  mainMap: boolean
 ) {
   const width = chartWidth - margin.right - margin.left;
   const height = chartHeight - margin.top - margin.bottom;
@@ -87,7 +92,27 @@ function drawChart(
     .select(`#${id}`)
     .append('svg')
     // @ts-ignore
-    .attr('viewBox', [0, 0, width, height]);
+    .attr('viewBox', [0, 0, width, height])
+    .on(
+      'mousemove',
+      debounce(
+        (e: any) => {
+          const bisectPoint = d3.bisector(
+            (point: { x: number; y: number }) => point.x
+          ).left;
+          // @ts-ignore
+          const dataIndex = bisectPoint(data, x.invert(d3.pointer(e)[0]));
+          if (data[dataIndex]) {
+            onHover(data[dataIndex].location, mainMap);
+          }
+        },
+        25,
+        { leading: true, trailing: false }
+      )
+    )
+    .on('mouseout', () => {
+      onHover(null);
+    });
   // @ts-ignore
   svg.append('path').datum(data).attr('fill', chartFill).attr('d', area);
 
@@ -102,9 +127,11 @@ export function ElevationChart({
   chartWidth,
   distance,
   id,
+  mainMap,
 }: Props) {
   const { palette } = useTheme<Theme>();
   useStyles();
+  const { setValue } = useElevationData();
   React.useLayoutEffect(() => {
     const elevator = new google.maps.ElevationService();
     elevator.getElevationAlongPath(
@@ -116,8 +143,20 @@ export function ElevationChart({
         const parsed = results.map((data, index) => ({
           x: (distance / 100 / 1000) * index,
           y: data.elevation,
+          location: [data.location.lat(), data.location.lng()] as [
+            number,
+            number
+          ],
         }));
-        drawChart(parsed, palette.grey[300], chartWidth, chartHeight, id);
+        drawChart(
+          parsed,
+          palette.grey[300],
+          chartWidth,
+          chartHeight,
+          id,
+          setValue,
+          mainMap
+        );
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,4 +168,5 @@ ElevationChart.defaultProps = {
   chartWidth,
   chartHeight,
   id: 'elevationChart',
+  mainMap: false,
 };
