@@ -1,6 +1,6 @@
 import { Theme, useTheme } from '@material-ui/core';
 import * as React from 'react';
-import { Map, Marker, Polyline, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
 import { useElevationData } from './contexts/elevationMap.context';
 import { ElevationChart } from './ElevationChart.component';
@@ -39,7 +39,7 @@ export const SegmentDetails = React.memo(function ({
         chartWidth={400}
         id={`elevationChart-${segmentId}`}
       ></ElevationChart>
-      <Map
+      <MapContainer
         style={{ height: '170px' }}
         bounds={bounds}
         attributionControl={false}
@@ -57,7 +57,7 @@ export const SegmentDetails = React.memo(function ({
         {elevationPoint && mainMap === false ? (
           <Marker position={elevationPoint} />
         ) : null}
-      </Map>
+      </MapContainer>
     </>
   );
 });

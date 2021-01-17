@@ -1,7 +1,7 @@
 import { Box, Grid, Theme, useTheme } from '@material-ui/core';
 import { DirectionsBike, DirectionsRun } from '@material-ui/icons';
 import * as React from 'react';
-import { Map, Polyline, TileLayer } from 'react-leaflet';
+import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 import { getLineData } from '../../toolbox/map';
 import { getRecentActivities_activities } from '../../types/getRecentActivities';
@@ -39,7 +39,7 @@ export function RecentActivities({ activities }: Props) {
               </Grid>
             </Grid>
             <Link to={`/activity/${activity.external_id}`}>
-              <Map
+              <MapContainer
                 className={classes.map}
                 bounds={bounds}
                 zoomControl={false}
@@ -53,7 +53,7 @@ export function RecentActivities({ activities }: Props) {
                   id="mapbox/light-v10"
                 />
                 <Polyline color={palette.primary.main} positions={line} />
-              </Map>
+              </MapContainer>
             </Link>
           </Box>
         );
