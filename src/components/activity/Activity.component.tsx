@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Box, Divider, Typography } from '@material-ui/core';
 import { Theme, useTheme } from '@material-ui/core/styles';
 import * as React from 'react';
-import { Map, Marker, Polyline, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
 import { GET_ACTIVITY, GET_TOP_RESULTS } from '../../queries/activity';
 import { getLineData } from '../../toolbox/map';
@@ -31,9 +31,10 @@ export function ActivityComponent() {
   const { data, loading } = useQuery<getActivity>(GET_ACTIVITY, {
     variables: { id },
   });
-  const { data: dataResults, loading: loadingResults } = useQuery<
-    getTopResults
-  >(GET_TOP_RESULTS, {
+  const {
+    data: dataResults,
+    loading: loadingResults,
+  } = useQuery<getTopResults>(GET_TOP_RESULTS, {
     variables: { id },
   });
   const { palette } = useTheme<Theme>();
@@ -54,7 +55,7 @@ export function ActivityComponent() {
           <Spacer />
           <TopResults results={dataResults.segment_efforts} key="topResults" />
           <Spacer />
-          <Map
+          <MapContainer
             style={{ height: '270px' }}
             bounds={bounds}
             attributionControl={false}
@@ -90,7 +91,7 @@ export function ActivityComponent() {
             {mainMap && elevationPoint ? (
               <Marker position={elevationPoint} key="elevation-point" />
             ) : null}
-          </Map>
+          </MapContainer>
           <ElevationChart
             line={line}
             distance={data.activities_by_pk!.distance}
