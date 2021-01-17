@@ -36,8 +36,6 @@ export const SegmentDetails = React.memo(function ({
         distance={distance}
         line={segmentLine}
         chartHeight={220}
-        chartWidth={400}
-        id={`elevationChart-${segmentId}`}
       ></ElevationChart>
       <MapContainer
         style={{ height: '170px' }}
