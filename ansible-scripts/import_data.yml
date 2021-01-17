@@ -1,0 +1,6 @@
+- hosts: localhost
+  tasks:
+    - name: copy the file into docker
+      command: docker cp ../db.sql strava-personal-leaderboard_postgres_1:/db.sql
+    - name: import into StravaDB
+      command: docker exec strava-personal-leaderboard_postgres_1 sh -c "psql -U postgres postgres < db.sql"
