@@ -14,19 +14,6 @@ export const theme = createMuiTheme({
     },
   },
   overrides: {
-    MuiCssBaseline: {
-      '@global': {
-        a: {
-          fontWeight: 'bold',
-          textDecoration: 'none',
-          color: 'black',
-          '&:hover': {
-            textDecoration: 'underline',
-            color: '#007FB6',
-          },
-        },
-      },
-    },
     MuiLink: {
       root: {
         fontWeight: 'bold',
