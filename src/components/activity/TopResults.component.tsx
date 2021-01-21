@@ -3,13 +3,17 @@ import { EmojiEventsOutlined } from '@material-ui/icons';
 import * as React from 'react';
 import { trophyColors } from '../../toolbox/trophyColors';
 import { getTopResults_segment_efforts } from '../../types/getTopResults';
-import { useSegmentData } from './contexts/selectedSegment.context';
+import {
+  SetSegmentPayload,
+  useSegmentStore,
+  SetSegmentAction,
+} from './store/segment.store';
 
-const selectResult = (id: number, segmentId: number) => (
-  fn: (id: number, segmentId: number) => void
+const selectResult = (obj: SetSegmentPayload) => (
+  fn: (action: SetSegmentAction) => void
 ) => (e: any) => {
   e.preventDefault();
-  fn(id, segmentId);
+  fn({ type: 'setSegment', payload: obj });
 };
 
 interface Props {
@@ -17,7 +21,7 @@ interface Props {
 }
 
 export function TopResults({ results }: Props) {
-  const { setValue } = useSegmentData();
+  const dispatch = useSegmentStore((state) => state.dispatch);
   return (
     // @ts-expect-error
     <Box component={Grid} container spacing={4} py={4}>
@@ -33,7 +37,12 @@ export function TopResults({ results }: Props) {
             <Grid item>
               <Link
                 type="button"
-                onClick={selectResult(elem.id, elem.segment_id)(setValue)}
+                onClick={selectResult({
+                  id: elem.id,
+                  segmentId: elem.segment_id,
+                  startPoint: elem.segment.start_point,
+                  endPoint: elem.segment.end_point,
+                })(dispatch)}
               >
                 {elem.name}
               </Link>

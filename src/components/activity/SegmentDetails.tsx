@@ -2,8 +2,8 @@ import { Theme, useTheme } from '@material-ui/core';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
-import { useElevationData } from './contexts/elevationMap.context';
 import { ElevationChart } from './ElevationChart.component';
+import { HoverMarker } from './HoverMarker';
 
 interface Props {
   startPoint: string;
@@ -27,9 +27,6 @@ export const SegmentDetails = React.memo(function ({
     line: activityLine,
   });
   const bounds = getBounds(segmentLine);
-  const {
-    state: { elevationPoint, mainMap },
-  } = useElevationData();
   return (
     <>
       <ElevationChart
@@ -52,9 +49,7 @@ export const SegmentDetails = React.memo(function ({
         />
         <Polyline color={palette.primary.main} positions={activityLine} />
         <Polyline color="blue" positions={segmentLine} />
-        {elevationPoint && mainMap === false ? (
-          <Marker position={elevationPoint} />
-        ) : null}
+        <HoverMarker />
       </MapContainer>
     </>
   );

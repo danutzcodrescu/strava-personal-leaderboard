@@ -7,12 +7,22 @@
 // GraphQL query operation: getTopResults
 // ====================================================
 
+export interface getTopResults_segment_efforts_segment {
+  __typename: 'segments';
+  start_point: any;
+  end_point: any;
+}
+
 export interface getTopResults_segment_efforts {
   __typename: 'segment_efforts';
   id: number;
   name: string;
   pr_rank: number | null;
   segment_id: any;
+  /**
+   * An object relationship
+   */
+  segment: getTopResults_segment_efforts_segment;
 }
 
 export interface getTopResults {

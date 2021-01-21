@@ -1,7 +1,7 @@
 import { Theme, Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import * as React from 'react';
-import { useElevationData } from './contexts/elevationMap.context';
+import { useElevationStore } from './store/elevation.store';
 import { drawChart } from './utils';
 
 interface Props {
@@ -19,7 +19,7 @@ export function ElevationChart({
   mainMap,
 }: Props) {
   const { palette } = useTheme<Theme>();
-  const { setValue } = useElevationData();
+  const dispatch = useElevationStore((state) => state.dispatch);
   const chartRef = React.useRef<HTMLDivElement>();
   React.useLayoutEffect(() => {
     const elevator = new google.maps.ElevationService();
@@ -41,7 +41,15 @@ export function ElevationChart({
           ref: chartRef.current!,
           palette,
           mainMap,
-          onHover: setValue,
+          onHover: (
+            payload: {
+              location: [number, number];
+            } | null
+          ) =>
+            dispatch({
+              type: 'setPoint',
+              payload,
+            }),
           values: parsed,
         });
       }

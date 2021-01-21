@@ -1,5 +1,6 @@
 import { Palette } from '@material-ui/core/styles/createPalette';
 import * as eCharts from 'echarts';
+import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
 
 interface DrawChartArgs {
@@ -11,7 +12,7 @@ interface DrawChartArgs {
   }[];
   palette: Palette;
   mainMap: boolean;
-  onHover: (value: [number, number] | null, mainMap?: boolean) => void;
+  onHover: (obj: { location: [number, number] } | null) => void;
 }
 
 export function drawChart({
@@ -106,12 +107,28 @@ export function drawChart({
           pointInGrid[0]
         ];
         if (item) {
-          onHover(item.location, mainMap);
+          onHover({ location: item.location });
         }
       }
-    }, 35)
+    }, 20)
   );
   chart.getZr().on('mouseout', () => {
-    onHover(null, mainMap);
+    onHover(null);
   });
+}
+
+export function convertPostgresCoordsToLatLng(coords: string): LatLngTuple {
+  // @ts-ignore
+  return coords.slice(1, -1).split(',').reverse();
+}
+
+export function isAnyPartOfElementInViewport(el: Element) {
+  const rect = el.getBoundingClientRect();
+
+  const windowHeight =
+    window.innerHeight || document.documentElement.clientHeight;
+
+  const vertInView = rect.top <= windowHeight && rect.top + rect.height >= 0;
+
+  return vertInView;
 }
