@@ -1,7 +1,6 @@
 import { Theme, Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import { ECharts } from 'echarts';
-import { stat } from 'fs/promises';
 import * as React from 'react';
 import shallow from 'zustand/shallow';
 import { useElevationStore } from './store/elevation.store';
