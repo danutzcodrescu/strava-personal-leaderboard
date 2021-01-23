@@ -23,12 +23,12 @@ export function FitBounds({ bounds }: Props) {
         marker(convertPostgresCoordsToLatLng(start)),
         marker(convertPostgresCoordsToLatLng(end)),
       ]);
-      console.log(group.getBounds());
       map.fitBounds(group.getBounds());
     }
     if (!start && !end) {
       map.fitBounds(bounds);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start, end]);
   return null;
 }

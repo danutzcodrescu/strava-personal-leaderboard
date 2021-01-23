@@ -26,6 +26,7 @@ export function HoverMarker({ mainMap }: Props) {
       },
       (state) => state.elevationPoint
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null;
 }

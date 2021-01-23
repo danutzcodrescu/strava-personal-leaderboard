@@ -2,6 +2,7 @@ import { Palette } from '@material-ui/core/styles/createPalette';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
+import { lineString, point, nearestPointOnLine } from '@turf/turf';
 
 interface DrawChartArgs {
   ref: HTMLDivElement;
@@ -35,7 +36,7 @@ export function drawChart({
       type: 'category',
       boundaryGap: false,
       axisLabel: {
-        interval: 10,
+        interval: mainMap ? 10 : 25,
         formatter: (value: string) => {
           return `${
             parseFloat(value) >= 1
@@ -115,6 +116,7 @@ export function drawChart({
   chart.getZr().on('mouseout', () => {
     onHover(null);
   });
+  return chart;
 }
 
 export function convertPostgresCoordsToLatLng(coords: string): LatLngTuple {
@@ -131,4 +133,34 @@ export function isAnyPartOfElementInViewport(el: Element) {
   const vertInView = rect.top <= windowHeight && rect.top + rect.height >= 0;
 
   return vertInView;
+}
+
+interface HighlightedSector {
+  startPoint: string;
+  endPoint: string;
+  data: {
+    x: number;
+    y: number;
+    location: [number, number];
+  }[];
+}
+
+export function getHighlightedSector({
+  startPoint,
+  endPoint,
+  data,
+}: HighlightedSector) {
+  const line = lineString([...data.map((elem) => elem.location)]);
+  const closestStartPoint = nearestPointOnLine(
+    line,
+    point(convertPostgresCoordsToLatLng(startPoint))
+  );
+  const closestEndPoint = nearestPointOnLine(
+    line,
+    convertPostgresCoordsToLatLng(endPoint)
+  );
+  return {
+    start: closestStartPoint.properties.index,
+    end: closestEndPoint.properties.index,
+  };
 }

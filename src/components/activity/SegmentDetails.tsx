@@ -1,6 +1,6 @@
 import { Theme, useTheme } from '@material-ui/core';
 import * as React from 'react';
-import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
+import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
 import { ElevationChart } from './ElevationChart.component';
 import { HoverMarker } from './HoverMarker';
