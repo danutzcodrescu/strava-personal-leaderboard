@@ -20,10 +20,11 @@ import {
   getSegmentLeaderboards,
   getSegmentLeaderboardsVariables,
 } from '../../types/getSegmentLeaderboards';
-import { useSegmentData } from './contexts/selectedSegment.context';
 import { SegmentDetails } from './SegmentDetails';
 import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
+import { useSegmentStore } from './store/segment.store';
 import { StyledGrid } from './styles/SegmentTable.styles';
+import { isAnyPartOfElementInViewport } from './utils';
 
 interface Props {
   segments: getActivity_activities_by_pk_segment_efforts[];
@@ -33,12 +34,13 @@ interface Props {
 interface ToggledSegment {
   id: number;
   segmentId: string;
+  startPoint: string;
+  endPoint: string;
 }
 
 export function SegmentsTable({ segments, activityLine }: Props) {
-  const [expanded, setExpanded] = React.useState<ToggledSegment | null>(null);
-  const { state } = useSegmentData();
-
+  const dispatch = useSegmentStore((state) => state.dispatch);
+  const id = useSegmentStore((state) => state.id);
   const [loadLeaderboards, { data }] = useLazyQuery<
     getSegmentLeaderboards,
     getSegmentLeaderboardsVariables
@@ -49,7 +51,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
       event: React.ChangeEvent<{}>,
       isExpanded: boolean
     ) => {
-      setExpanded(isExpanded ? data : null);
+      dispatch({ type: 'setSegment', payload: isExpanded ? data : null });
       if (isExpanded) {
         loadLeaderboards({
           variables: {
@@ -59,21 +61,15 @@ export function SegmentsTable({ segments, activityLine }: Props) {
         });
       }
     },
-    [loadLeaderboards]
+    [dispatch, loadLeaderboards]
   );
 
   React.useLayoutEffect(() => {
-    if (state?.id !== expanded?.id) {
-      handleChange({
-        id: state.id!,
-        segmentId: state.segmentId!,
-      })(null as any, true);
-      document
-        .querySelector(`[data-id="${state.id}"]`)
-        ?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if (el && !isAnyPartOfElementInViewport(el)) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.id]);
+  }, [id]);
   return (
     <>
       <TitleTypography>Segments</TitleTypography>
@@ -101,10 +97,12 @@ export function SegmentsTable({ segments, activityLine }: Props) {
           return (
             <Accordion
               square
-              expanded={expanded?.id === segment.id}
+              expanded={id === segment.id}
               onChange={handleChange({
                 id: segment.id,
                 segmentId: segment.segment.external_id,
+                startPoint: segment.segment.start_point,
+                endPoint: segment.segment.end_point,
               })}
               key={segment.id}
               TransitionProps={{ unmountOnExit: true }}
@@ -189,7 +187,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                       </SubtitleTypography>
                     </Grid>
                     <Grid item md={12}>
-                      {expanded ? (
+                      {id ? (
                         <SegmentDetails
                           startPoint={segment.segment.start_point}
                           endPoint={segment.segment.end_point}
@@ -201,11 +199,11 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                     </Grid>
                   </Grid>
                   <StyledGrid item md={6}>
-                    {expanded?.id === segment.id && data ? (
+                    {id === segment.id && data ? (
                       <SegmentPersonalLeaderboard
                         segment_efforts={data.segment_efforts}
                         distance={segment.segment.distance}
-                        selectedId={expanded.id}
+                        selectedId={id!}
                       />
                     ) : null}
                   </StyledGrid>

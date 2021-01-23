@@ -74,6 +74,10 @@ export const GET_TOP_RESULTS = gql`
       name
       pr_rank
       segment_id
+      segment {
+        start_point
+        end_point
+      }
     }
   }
 `;
