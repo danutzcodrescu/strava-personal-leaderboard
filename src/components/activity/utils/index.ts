@@ -2,7 +2,7 @@ import { Palette } from '@material-ui/core/styles/createPalette';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
-import { lineString, point, lineOverlap } from '@turf/turf';
+import { lineString, lineOverlap } from '@turf/turf';
 
 interface DrawChartArgs {
   ref: HTMLDivElement;
