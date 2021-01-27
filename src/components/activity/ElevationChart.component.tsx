@@ -2,7 +2,6 @@ import { Theme, Box } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import { ECharts } from 'echarts';
 import * as React from 'react';
-import shallow from 'zustand/shallow';
 import { useElevationStore } from './store/elevation.store';
 import { useSegmentStore } from './store/segment.store';
 import { drawChart, getHighlightedSector } from './utils';
@@ -23,10 +22,7 @@ export function ElevationChart({
 }: Props) {
   const { palette } = useTheme<Theme>();
   const dispatch = useElevationStore((state) => state.dispatch);
-  const [startPoint, endPoint] = useSegmentStore(
-    (state) => [state.startPoint, state.endPoint],
-    shallow
-  );
+  const segmentLine = useSegmentStore((state) => state.segmentLine);
   const chartRef = React.useRef<HTMLDivElement>();
   const chartConfig = React.useRef<ECharts>();
   React.useLayoutEffect(() => {
@@ -67,12 +63,12 @@ export function ElevationChart({
 
   // highlight the selected segment in the area chart
   React.useEffect(() => {
-    if (mainMap && startPoint && endPoint && chartConfig.current) {
+    if (mainMap && segmentLine && chartConfig.current) {
       const { start, end } = getHighlightedSector({
-        startPoint,
-        endPoint,
+        segmentLine,
         data: (chartConfig.current!.getOption().dataset as any[])[0].source,
       });
+      console.log(start, end);
       chartConfig.current!.setOption({
         visualMap: [
           {
@@ -101,15 +97,14 @@ export function ElevationChart({
     }
     if (
       mainMap &&
-      !startPoint &&
-      !endPoint &&
+      !segmentLine &&
       chartConfig.current &&
       chartConfig.current!.getOption().visualMap
     ) {
       chartConfig.current!.setOption({}, { replaceMerge: 'visualMap' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startPoint, endPoint]);
+  }, [segmentLine]);
   // @ts-expect-error
   return <Box ref={chartRef as any} height={chartHeight} width="100%" />;
 }

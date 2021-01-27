@@ -5,21 +5,20 @@ import produce from 'immer';
 interface SelectedSegmentState {
   id: number | undefined;
   segmentId: string | undefined;
-  startPoint: string | undefined;
-  endPoint: string | undefined;
+  segmentLine: [number, number][] | undefined;
 }
 
 export interface SetSegmentPayload {
   id: number;
   segmentId: string;
-  startPoint: string;
-  endPoint: string;
 }
 
-export type SetSegmentAction = {
-  type: 'setSegment';
-  payload: SetSegmentPayload | null;
-};
+export type SetSegmentAction =
+  | {
+      type: 'setSegment';
+      payload: SetSegmentPayload | null;
+    }
+  | { type: 'setSegmentLine'; payload: [number, number][] };
 
 const reducer = produce(
   (draft: SelectedSegmentState, action: SetSegmentAction) => {
@@ -27,8 +26,12 @@ const reducer = produce(
       case 'setSegment':
         draft.id = action.payload?.id || undefined;
         draft.segmentId = action.payload?.segmentId || undefined;
-        draft.startPoint = action.payload?.startPoint || undefined;
-        draft.endPoint = action.payload?.endPoint || undefined;
+        if (!draft.id) {
+          draft.segmentLine = undefined;
+        }
+        break;
+      case 'setSegmentLine':
+        draft.segmentLine = action.payload;
         break;
     }
     return undefined;
@@ -40,13 +43,11 @@ export const useSegmentStore = create(
     {
       id: undefined,
       segmentId: undefined,
-      startPoint: undefined,
-      endPoint: undefined,
+      segmentLine: undefined,
     } as {
       id: number | undefined;
       segmentId: string | undefined;
-      startPoint: string | undefined;
-      endPoint: string | undefined;
+      segmentLine: [number, number][] | undefined;
     },
     (set) => ({
       dispatch: (action: SetSegmentAction) =>

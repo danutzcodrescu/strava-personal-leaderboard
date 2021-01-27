@@ -1,10 +1,7 @@
-import { LatLngBounds } from 'leaflet';
 import * as React from 'react';
 import { useLeafletContext } from '@react-leaflet/core';
-import { featureGroup, marker } from 'leaflet';
+import { LatLngBounds, Polyline, polyline } from 'leaflet';
 import { useSegmentStore } from './store/segment.store';
-import shallow from 'zustand/shallow';
-import { convertPostgresCoordsToLatLng } from './utils';
 
 interface Props {
   bounds: LatLngBounds;
@@ -12,23 +9,22 @@ interface Props {
 
 export function FitBounds({ bounds }: Props) {
   const { map } = useLeafletContext();
-  const [start, end] = useSegmentStore(
-    (state) => [state.startPoint, state.endPoint],
-    shallow
-  );
+  const segmentLine = useSegmentStore((state) => state.segmentLine);
+  const lineRef = React.useRef<Polyline<any> | undefined>(undefined);
 
   React.useEffect(() => {
-    if (start && end) {
-      const group = featureGroup([
-        marker(convertPostgresCoordsToLatLng(start)),
-        marker(convertPostgresCoordsToLatLng(end)),
-      ]);
-      map.fitBounds(group.getBounds());
+    if (segmentLine) {
+      lineRef.current = polyline(segmentLine, {
+        color: 'blue',
+      }).addTo(map);
+      map.fitBounds(lineRef.current.getBounds());
     }
-    if (!start && !end) {
+    if (!segmentLine && lineRef.current) {
+      map.removeLayer(lineRef.current!);
       map.fitBounds(bounds);
+      lineRef.current = undefined;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [start, end]);
+  }, [segmentLine]);
   return null;
 }

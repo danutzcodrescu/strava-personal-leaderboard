@@ -2,7 +2,7 @@ import { Palette } from '@material-ui/core/styles/createPalette';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
-import { lineString, point, nearestPointOnLine } from '@turf/turf';
+import { lineString, lineOverlap } from '@turf/turf';
 
 interface DrawChartArgs {
   ref: HTMLDivElement;
@@ -136,8 +136,7 @@ export function isAnyPartOfElementInViewport(el: Element) {
 }
 
 interface HighlightedSector {
-  startPoint: string;
-  endPoint: string;
+  segmentLine: [number, number][];
   data: {
     x: number;
     y: number;
@@ -145,22 +144,23 @@ interface HighlightedSector {
   }[];
 }
 
-export function getHighlightedSector({
-  startPoint,
-  endPoint,
-  data,
-}: HighlightedSector) {
+export function getHighlightedSector({ segmentLine, data }: HighlightedSector) {
+  const segment = lineString(segmentLine);
   const line = lineString([...data.map((elem) => elem.location)]);
-  const closestStartPoint = nearestPointOnLine(
-    line,
-    point(convertPostgresCoordsToLatLng(startPoint))
+  const overlap = lineOverlap(segment, line, { tolerance: 0.3 });
+  const first = data.findIndex(
+    (elem) =>
+      elem.location === overlap.features[0].geometry.coordinates[0].reverse()
   );
-  const closestEndPoint = nearestPointOnLine(
-    line,
-    convertPostgresCoordsToLatLng(endPoint)
+  const last = data.findIndex(
+    (elem) =>
+      elem.location ===
+      overlap.features[0].geometry.coordinates[
+        overlap.features[0].geometry.coordinates.length - 1
+      ].reverse()
   );
   return {
-    start: closestStartPoint.properties.index,
-    end: closestEndPoint.properties.index,
+    start: first < last ? first : last,
+    end: first < last ? last : first,
   };
 }
