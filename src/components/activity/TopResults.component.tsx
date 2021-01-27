@@ -40,8 +40,6 @@ export function TopResults({ results }: Props) {
                 onClick={selectResult({
                   id: elem.id,
                   segmentId: elem.segment_id,
-                  startPoint: elem.segment.start_point,
-                  endPoint: elem.segment.end_point,
                 })(dispatch)}
               >
                 {elem.name}

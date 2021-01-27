@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Theme, useTheme } from '@material-ui/core';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
 import { ElevationChart } from './ElevationChart.component';
 import { HoverMarker } from './HoverMarker';
+import { useSegmentStore } from './store/segment.store';
 
 interface Props {
   startPoint: string;
@@ -21,12 +23,19 @@ export const SegmentDetails = React.memo(function ({
   segmentId,
 }: Props) {
   const { palette } = useTheme<Theme>();
-  const segmentLine = getSegmentLine({
-    startPoint: startPoint,
-    endPoint: endPoint,
-    line: activityLine,
-  });
-  const bounds = getBounds(segmentLine);
+  const dispatch = useSegmentStore((state) => state.dispatch);
+  const { segmentLine, bounds } = React.useMemo(() => {
+    const segmentLine = getSegmentLine({
+      startPoint: startPoint,
+      endPoint: endPoint,
+      line: activityLine,
+    });
+    const bounds = getBounds(segmentLine);
+    return { segmentLine, bounds };
+  }, [segmentId]);
+  React.useEffect(() => {
+    dispatch({ type: 'setSegmentLine', payload: segmentLine });
+  }, [segmentId]);
   return (
     <>
       <ElevationChart
