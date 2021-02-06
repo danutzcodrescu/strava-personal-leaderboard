@@ -28,3 +28,4 @@ yarn-error.log*
 .netlify
 db.sql
 .eslintcache
+ansible-scripts/vars.yml

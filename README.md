@@ -1,44 +1,16 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Strava personal leaderboard
 
-## Available Scripts
+Strava hidden the personal leaderboards behind the paywall in July 2020. I was mainly interesting in comparing my segment performances, hence the idea to create my own Strava leaderboard by fetching the data using Strava API and dumping it in a Postgres DB. The project tries to recreate some of the Strava UI around activity details and segment leaderboards, but this _this also one of my personal playgrounds and some things might not be polished at all_.
 
-In the project directory, you can run:
+### Architecture
 
-### `yarn start`
+- serverless functions running on [Netlify](https://www.netlify.com/) to fetch data and authenticate the user against the [Strava API](https://developers.strava.com/)
+- data fetched from Strava is dumped into a [PostgreDB](https://www.postgresql.org/)
+- [Hasura Graphql](https://hasura.io/) to act as a backend-for-frontend
+- frontend written in React, Typescript, Apollo Client and Material-UI; maps are created using [Leaflet](https://leafletjs.com/) and [Mapbox tiles](https://www.mapbox.com/maps); the charts are created using [Echarts](https://echarts.apache.org/en/index.html).
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Local development
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Netlify Dev is used for local development of the frontend because it wraps create-react-app and spawns locally all the serverless functions required for the backend.
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Docker compose is used to spin up the backend, making it very easy to create both a postgres db and Hasura graphql server.
