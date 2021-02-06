@@ -1,15 +1,30 @@
 - hosts: localhost
+  vars_files:
+    - ./vars.yml
   tasks:
-    - name: PGDump from StravaDB everything
-      command: docker exec strava-personal-leaderboard_postgres_1 sh -c "pg_dump -U postgres postgres > db.sql"
-      tags:
-        - db
     - name: PGDump from StravaDB data only
-      command: docker exec strava-personal-leaderboard_postgres_1 sh -c "pg_dump -U postgres -d postgres --data-only --schema public > db.sql"
+      command: docker exec {{ docker_image_name }} sh -c "pg_dump -U postgres -d postgres --data-only --schema public > db.sql"
       tags:
-        - data
+        - sync
+        - db
 
     - name: copy the file from docker
-      command: docker cp strava-personal-leaderboard_postgres_1:/db.sql ../\$(date +"%Y-%m-%d")-db.sql
+      command: docker cp {{ docker_image_name }}:/db.sql ../db.sql
+      tags:
+        - always
+    - name: add schema to heroku
+      shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/init/up.sql
+      tags:
+        - db
+    - name: apply hasura metada to heroku
+      command: hasura metadata apply --endpoint {{ hasura_endpoint }}
+      tags:
+        - db
+    - name: reset heroku db
+      shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/reset/down.sql
+      tags:
+        - sync
+    - name: upload data to heroku
+      shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../db.sql
       tags:
         - always
