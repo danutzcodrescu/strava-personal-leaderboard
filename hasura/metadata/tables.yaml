@@ -1,0 +1,139 @@
+- table:
+    schema: public
+    name: activities
+  object_relationships:
+  - name: gear
+    using:
+      foreign_key_constraint_on: gear_id
+  - name: map
+    using:
+      foreign_key_constraint_on: map_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  array_relationships:
+  - name: segment_efforts
+    using:
+      foreign_key_constraint_on:
+        column: activity_id
+        table:
+          schema: public
+          name: segment_efforts
+- table:
+    schema: public
+    name: gears
+  object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  array_relationships:
+  - name: activities
+    using:
+      foreign_key_constraint_on:
+        column: gear_id
+        table:
+          schema: public
+          name: activities
+  event_triggers:
+  - name: enrich_gear
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: FETCH_GEAR_DATA
+- table:
+    schema: public
+    name: maps
+  array_relationships:
+  - name: activities
+    using:
+      foreign_key_constraint_on:
+        column: map_id
+        table:
+          schema: public
+          name: activities
+  - name: segments
+    using:
+      foreign_key_constraint_on:
+        column: map_id
+        table:
+          schema: public
+          name: segments
+- table:
+    schema: public
+    name: segment_efforts
+  object_relationships:
+  - name: activity
+    using:
+      foreign_key_constraint_on: activity_id
+  - name: segment
+    using:
+      foreign_key_constraint_on: segment_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+- table:
+    schema: public
+    name: segments
+  object_relationships:
+  - name: map
+    using:
+      foreign_key_constraint_on: map_id
+  array_relationships:
+  - name: segment_efforts
+    using:
+      foreign_key_constraint_on:
+        column: segment_id
+        table:
+          schema: public
+          name: segment_efforts
+  event_triggers:
+  - name: enrich_segment
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: FETCH_SEGMENT_DATA
+- table:
+    schema: public
+    name: user_summary
+- table:
+    schema: public
+    name: users
+  array_relationships:
+  - name: activities
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: activities
+  - name: gears
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: gears
+  - name: segment_efforts
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: segment_efforts
+  computed_fields:
+  - name: expired
+    definition:
+      function:
+        schema: public
+        name: users_expired_token
+    comment: ""
