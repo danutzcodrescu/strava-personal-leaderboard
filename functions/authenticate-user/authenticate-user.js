@@ -68,7 +68,7 @@ exports.handler = async (event, context) => {
       }),
     };
   } catch (err) {
-    console.log(err);
+    console.log(err?.data?.errors);
     return { statusCode: 500, body: err.toString() };
   }
 };
