@@ -21,7 +21,7 @@ import { SegmentTable } from './SegmentTable';
 export function SegmentComponent() {
   const { palette } = useTheme<Theme>();
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error } = useQuery<getDetailedSegmentLeaderboards>(
+  const { data } = useQuery<getDetailedSegmentLeaderboards>(
     GET_SEGMENT_LEADERBOARD,
     {
       variables: { segmentId: id, userId: getUserInfo() },

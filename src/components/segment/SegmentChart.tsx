@@ -116,6 +116,7 @@ export function SegmentLeaderboardsChart({ data }: Props) {
         },
       ],
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // @ts-expect-error
   return <Box ref={chartRef as any} height={chartHeight} width="100%" />;
