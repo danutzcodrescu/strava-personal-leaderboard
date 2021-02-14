@@ -13,6 +13,7 @@ export interface getSegmentLeaderboards_segment_efforts {
   moving_time: number;
   elapsed_time: number;
   id: number;
+  segment_id: any;
 }
 
 export interface getSegmentLeaderboards {

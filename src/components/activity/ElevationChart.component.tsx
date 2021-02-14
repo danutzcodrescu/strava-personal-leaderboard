@@ -13,7 +13,7 @@ interface Props {
   mainMap: boolean;
 }
 
-const chartHeight = 300;
+export const chartHeight = 300;
 export function ElevationChart({
   line,
   chartHeight,
@@ -68,7 +68,6 @@ export function ElevationChart({
         segmentLine,
         data: (chartConfig.current!.getOption().dataset as any[])[0].source,
       });
-      console.log(start, end);
       chartConfig.current!.setOption({
         visualMap: [
           {

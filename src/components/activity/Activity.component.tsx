@@ -12,18 +12,19 @@ import { Loading } from '../utilities/Loading';
 import { ActivityDetails } from './ActivityDetails.component';
 import { ElevationChart } from './ElevationChart.component';
 import { SegmentsTable } from './SegmentTable.component';
-import { StyledPaper } from './styles/Activity.styles';
+
 import { TopResults } from './TopResults.component';
 import { HoverMarker } from './HoverMarker';
 import { FitBounds } from './FitBounds';
 import { convertPostgresCoordsToLatLng } from './utils';
+import { ScreenWrapper } from '../../toolbox/ScreenWrapper';
 
 export interface Point {
   x: number;
   y: number;
 }
 
-function Spacer() {
+export function Spacer() {
   return <Box component={Divider} my={4}></Box>;
 }
 
@@ -45,56 +46,53 @@ export function ActivityComponent() {
   }
   const { line, bounds } = getLineData(data.activities_by_pk!.map.map);
   return (
-    <Box display="flex" justifyContent="center" my={7}>
-      {/* @ts-ignore */}
-      <Box component={StyledPaper} variant="outlined" px={4.5} py={6.5}>
-        <ActivityDetails activity={data.activities_by_pk!} key="details" />
-        <Spacer />
-        <TopResults results={dataResults.segment_efforts} key="topResults" />
-        <Spacer />
-        <MapContainer
-          style={{ height: '270px' }}
-          bounds={bounds}
-          attributionControl={false}
-          scrollWheelZoom={false}
-          key="map"
-        >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-            maxZoom={18}
-            accessToken={process.env.REACT_APP_MAPBOX}
-            id="mapbox/light-v10"
-            key="tiles"
-          />
-          <Polyline color={palette.primary.main} positions={line} key="line" />
-          <Marker
-            key="start"
-            position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk!.start_point
-            )}
-          ></Marker>
-          <Marker
-            position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk!.end_point
-            )}
-            key="end"
-          ></Marker>
-          <HoverMarker />
-          <FitBounds bounds={bounds} />
-        </MapContainer>
-        <ElevationChart
-          line={line}
-          distance={data.activities_by_pk!.distance}
-          key="elevation-chart"
-          mainMap
+    <ScreenWrapper>
+      <ActivityDetails activity={data.activities_by_pk!} key="details" />
+      <Spacer />
+      <TopResults results={dataResults.segment_efforts} key="topResults" />
+      <Spacer />
+      <MapContainer
+        style={{ height: '270px' }}
+        bounds={bounds}
+        attributionControl={false}
+        scrollWheelZoom={false}
+        key="map"
+      >
+        <TileLayer
+          url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
+          maxZoom={18}
+          accessToken={process.env.REACT_APP_MAPBOX}
+          id="mapbox/light-v10"
+          key="tiles"
         />
-        <Spacer />
-        <SegmentsTable
-          segments={data.activities_by_pk!.segment_efforts}
-          activityLine={line}
-          key="segments"
-        />
-      </Box>
-    </Box>
+        <Polyline color={palette.primary.main} positions={line} key="line" />
+        <Marker
+          key="start"
+          position={convertPostgresCoordsToLatLng(
+            data.activities_by_pk!.start_point
+          )}
+        ></Marker>
+        <Marker
+          position={convertPostgresCoordsToLatLng(
+            data.activities_by_pk!.end_point
+          )}
+          key="end"
+        ></Marker>
+        <HoverMarker />
+        <FitBounds bounds={bounds} />
+      </MapContainer>
+      <ElevationChart
+        line={line}
+        distance={data.activities_by_pk!.distance}
+        key="elevation-chart"
+        mainMap
+      />
+      <Spacer />
+      <SegmentsTable
+        segments={data.activities_by_pk!.segment_efforts}
+        activityLine={line}
+        key="segments"
+      />
+    </ScreenWrapper>
   );
 }

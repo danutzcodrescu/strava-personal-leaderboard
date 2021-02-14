@@ -1,4 +1,5 @@
 import convert from 'convert-units';
+
 export function convertSpeed(speed: number) {
   const converted = convert(speed).from('m/s').to('km/h');
 
@@ -6,6 +7,12 @@ export function convertSpeed(speed: number) {
 }
 
 export function calculateSpeed(distance: number, time: number) {
-  const speed = distance / time;
-  return `${convert(speed).from('m/s').to('km/h').toFixed(1)}km/h`;
+  return `${calculateSpeedValue(distance, time)}km/h`;
+}
+
+export function calculateSpeedValue(distance: number, time: number) {
+  return convert(distance / time)
+    .from('m/s')
+    .to('km/h')
+    .toFixed(1);
 }

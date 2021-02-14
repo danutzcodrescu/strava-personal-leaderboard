@@ -1,3 +1,5 @@
+import { Link } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 import * as React from 'react';
 import { calculateSpeed } from '../../toolbox/speed';
 import {
@@ -6,6 +8,7 @@ import {
 } from '../../toolbox/time';
 import { getSegmentLeaderboards } from '../../types/getSegmentLeaderboards';
 import { SegmentLeaderBoardGrid } from './styles/SegmentTable.styles';
+import { useLinkLeaderboardStyles } from './styles/SegmentLeaderboard.styles';
 
 interface Props extends getSegmentLeaderboards {
   distance: number;
@@ -17,6 +20,7 @@ export function SegmentPersonalLeaderboard({
   distance,
   selectedId,
 }: Props) {
+  const classes = useLinkLeaderboardStyles();
   return (
     <>
       <SegmentLeaderBoardGrid
@@ -62,6 +66,13 @@ export function SegmentPersonalLeaderboard({
           </SegmentLeaderBoardGrid>
         </SegmentLeaderBoardGrid>
       ))}
+      <Link
+        component={RouterLink}
+        to={`/segment/${segment_efforts[0].segment_id}`}
+        classes={{ root: classes.root }}
+      >
+        View full leaderboard
+      </Link>
     </>
   );
 }
