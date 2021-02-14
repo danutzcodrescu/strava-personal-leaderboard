@@ -7,6 +7,7 @@ import { AuthGuard } from './components/authentication/AuthGuard.component';
 import { Login } from './components/authentication/Login.component';
 import { LoginCallback } from './components/authentication/LoginCallback.component';
 import { Dashboard } from './components/dashboard/Dashboard.component';
+import { SegmentComponent } from './components/segment/SegmentComponent';
 import { client } from './graphql';
 import { theme } from './theme';
 
@@ -28,6 +29,7 @@ function App() {
               <Route exact path="/">
                 <Dashboard />
               </Route>
+              <Route exact path="/segment/:id" component={SegmentComponent} />
             </AuthGuard>
           </Switch>
         </ThemeProvider>

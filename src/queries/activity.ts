@@ -57,6 +57,7 @@ export const GET_SEGMENT_LEADERBOARDS = gql`
       moving_time
       elapsed_time
       id
+      segment_id
     }
   }
 `;
