@@ -2,6 +2,7 @@ import { Palette } from '@material-ui/core/styles/createPalette';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
+import cloneDeep from 'lodash/cloneDeep';
 import { lineString, lineOverlap } from '@turf/turf';
 
 interface DrawChartArgs {
@@ -148,16 +149,20 @@ export function getHighlightedSector({ segmentLine, data }: HighlightedSector) {
   const segment = lineString(segmentLine);
   const line = lineString([...data.map((elem) => elem.location)]);
   const overlap = lineOverlap(segment, line, { tolerance: 0.3 });
+  console.log(overlap);
   const first = data.findIndex(
     (elem) =>
-      elem.location === overlap.features[0].geometry.coordinates[0].reverse()
+      elem.location ===
+      cloneDeep(overlap.features[0].geometry.coordinates[0]).reverse()
   );
   const last = data.findIndex(
     (elem) =>
       elem.location ===
-      overlap.features[0].geometry.coordinates[
-        overlap.features[0].geometry.coordinates.length - 1
-      ].reverse()
+      cloneDeep(
+        overlap.features[0].geometry.coordinates[
+          overlap.features[0].geometry.coordinates.length - 1
+        ]
+      ).reverse()
   );
   return {
     start: first < last ? first : last,
