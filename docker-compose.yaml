@@ -20,7 +20,9 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-      FETCH_GEAR_DATA: 'http://172.17.0.1:8888/.netlify/functions/fetch-gear-data'
-      FETCH_SEGMENT_DATA: 'http://172.17.0.1:8888/.netlify/functions/fetch-segment-data'
+      FETCH_GEAR_DATA: '${DOCKER_HOST_IP}:8888/.netlify/functions/fetch-gear-data'
+      FETCH_SEGMENT_DATA: '${DOCKER_HOST_IP}:8888/.netlify/functions/fetch-segment-data'
+      FETCH_WEATHER_DATA_ACTIVITY: '${DOCKER_HOST_IP}:8888/.netlify/functions/fetch-weather-data-activity'
+      FETCH_WEATHER_DATA_SEGMENT: '${DOCKER_HOST_IP}:8888/.netlify/functions/fetch-weather-data-segment'
 volumes:
   db_data:

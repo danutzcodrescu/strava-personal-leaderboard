@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
     return { statusCode: 400, body: 'cannot parse function body' };
   }
   try {
-    const user = await graphql(userQuery, { pk: request.user });
+    const user = await graphql(userQuery, { pk: parseInt(request.user) });
     if (user.data.data.users_by_pk.expired === 0) {
       return {
         statusCode: 200,
@@ -49,7 +49,7 @@ exports.handler = async (event, context) => {
       }),
     };
   } catch (err) {
-    console.log(err.data);
+    console.log(err);
     return { statusCode: 500, body: err.toString() };
   }
 };

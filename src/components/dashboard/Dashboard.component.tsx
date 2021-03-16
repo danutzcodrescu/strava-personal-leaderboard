@@ -22,15 +22,16 @@ export function Dashboard() {
     GET_USER_DATA,
     {
       variables: {
-        id: getUserInfo(),
+        id: parseInt(getUserInfo()!),
         weekStart: startOfWeek(new Date(), { weekStartsOn: 1 }),
         yearStart: startOfYear(new Date()),
       },
     }
   );
-  const { loading: loadingDashboardData, data: dashboardData } = useQuery<
-    getRecentActivities
-  >(GET_RECENT_ACTIVITIES);
+  const {
+    loading: loadingDashboardData,
+    data: dashboardData,
+  } = useQuery<getRecentActivities>(GET_RECENT_ACTIVITIES);
   if (loadingDashboardData || loadingUserData) {
     return <Loading />;
   }

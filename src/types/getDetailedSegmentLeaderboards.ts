@@ -24,7 +24,7 @@ export interface getDetailedSegmentLeaderboards_segment_efforts_segment {
   /**
    * An object relationship
    */
-  map: getDetailedSegmentLeaderboards_segment_efforts_segment_map | null;
+  map: getDetailedSegmentLeaderboards_segment_efforts_segment_map;
   distance: any;
   maximum_grade: any;
 }
