@@ -41,7 +41,7 @@ exports.handler = async (event, context) => {
     );
     const { object, segments } = generateVars(
       activityFromStrava,
-      request.user_id
+      parseInt(request.user_id)
     );
     const newActivity = await graphql(insertActivityMutation, {
       obj: object,

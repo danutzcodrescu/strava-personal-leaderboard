@@ -33,7 +33,7 @@ export interface getUserData_activitiesWeek_aggregate_sum {
 
 export interface getUserData_activitiesWeek_aggregate {
   __typename: 'activities_aggregate_fields';
-  count: number | null;
+  count: number;
   sum: getUserData_activitiesWeek_aggregate_sum | null;
 }
 
@@ -51,7 +51,7 @@ export interface getUserData_activitiesYear_aggregate_sum {
 
 export interface getUserData_activitiesYear_aggregate {
   __typename: 'activities_aggregate_fields';
-  count: number | null;
+  count: number;
   sum: getUserData_activitiesYear_aggregate_sum | null;
 }
 
