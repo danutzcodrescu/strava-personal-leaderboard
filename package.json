@@ -51,7 +51,9 @@
     "eject": "react-scripts eject",
     "gen-types": "npx apollo client:codegen --target typescript --outputFlat --includes=\"src/queries/*.ts\" --globalTypesFile=src/types/graphql-types.ts src/types/ && rm src/types/graphql-types.ts && prettier src/types/*.ts --write",
     "sync-data": "ansible-playbook ./ansible-scripts/export_data.yml --tags \"sync\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev-wsl": "python ./utils/replace-host-wsl.py && docker-compose down &&  docker-compose up -d && netlify dev",
+    "check-compose": "python ./utils/put-back-docker-host.py"
   },
   "eslintConfig": {
     "extends": "react-app"
