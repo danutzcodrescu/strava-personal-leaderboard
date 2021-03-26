@@ -16,10 +16,10 @@
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/init/up.sql
       tags:
         - db
-    - name: apply hasura metada to heroku
-      command: hasura metadata apply --endpoint {{ hasura_endpoint }}
+    - name: export metadata
+      shell: hasura metadata export --project ../hasura
       tags:
-        - db
+        - always
     - name: reset heroku db
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/reset/down.sql
       tags:
@@ -28,3 +28,7 @@
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../db.sql
       tags:
         - always
+    - name: apply hasura metada to remote hasura
+      command: hasura metadata apply --endpoint {{ hasura_endpoint }} --project ../hasura
+      tags:
+        - db

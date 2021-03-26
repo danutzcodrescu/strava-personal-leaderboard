@@ -5,4 +5,5 @@ DELETE FROM public.user_summary CASCADE;
 DELETE FROM public.maps CASCADE;
 DELETE FROM public.segment_efforts CASCADE;
 DELETE FROM public.segments CASCADE;
+DELETE FROM public.weather CASCADE;
 
