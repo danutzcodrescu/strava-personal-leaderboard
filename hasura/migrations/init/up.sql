@@ -76,6 +76,7 @@ CREATE TABLE public.activities (
     map_id text NOT NULL,
     external_id bigint NOT NULL,
     name text NOT NULL,
+    weather_id uuid,
     CONSTRAINT rides_columns CHECK (((type = 'Ride'::text) AND (kilojoules IS NOT NULL) AND (average_watts IS NOT NULL))),
     CONSTRAINT type CHECK (((type = 'Ride'::text) OR (type = 'Run'::text)))
 );
@@ -107,7 +108,8 @@ CREATE TABLE public.segment_efforts (
     average_cadence numeric,
     id integer NOT NULL,
     activity_id bigint NOT NULL,
-    name text NOT NULL
+    name text NOT NULL,
+    weather_id uuid
 );
 CREATE SEQUENCE public.segment_efforts_id_seq
     AS integer
@@ -144,6 +146,15 @@ CREATE SEQUENCE public.users_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.external_id;
+CREATE TABLE public.weather (
+    wind_dir real,
+    temperature real,
+    wind_speed real,
+    wind_gust real,
+    wind_chill real,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    conditions text NOT NULL
+);
 ALTER TABLE ONLY public.segment_efforts ALTER COLUMN id SET DEFAULT nextval('public.segment_efforts_id_seq'::regclass);
 ALTER TABLE ONLY public.users ALTER COLUMN external_id SET DEFAULT nextval('public.users_id_seq'::regclass);
 ALTER TABLE ONLY public.activities
@@ -168,6 +179,8 @@ ALTER TABLE ONLY public.segments
     ADD CONSTRAINT segments_pkey PRIMARY KEY (external_id);
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (external_id);
+ALTER TABLE ONLY public.weather
+    ADD CONSTRAINT weather_pkey PRIMARY KEY (id);
 CREATE TRIGGER set_public_users_updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_users_updated_at ON public.users IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 ALTER TABLE ONLY public.activities
@@ -176,6 +189,8 @@ ALTER TABLE ONLY public.activities
     ADD CONSTRAINT activities_map_id_fkey FOREIGN KEY (map_id) REFERENCES public.maps(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.activities
     ADD CONSTRAINT activities_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.activities
+    ADD CONSTRAINT activities_weather_id_fkey FOREIGN KEY (weather_id) REFERENCES public.weather(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.gears
     ADD CONSTRAINT gears_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.segment_efforts
@@ -184,9 +199,10 @@ ALTER TABLE ONLY public.segment_efforts
     ADD CONSTRAINT segment_efforts_segment_id_fkey FOREIGN KEY (segment_id) REFERENCES public.segments(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.segment_efforts
     ADD CONSTRAINT segment_efforts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.segment_efforts
+    ADD CONSTRAINT segment_efforts_weather_id_fkey FOREIGN KEY (weather_id) REFERENCES public.weather(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.segments
     ADD CONSTRAINT segments_map_id_fkey FOREIGN KEY (map_id) REFERENCES public.maps(external_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
 CREATE FUNCTION public.user_dashboard_summary(id integer) RETURNS SETOF public.user_summary
     LANGUAGE sql STABLE
     AS $$
@@ -198,4 +214,4 @@ CREATE FUNCTION public.user_dashboard_summary(id integer) RETURNS SETOF public.u
      JOIN activities ON ((users.external_id = activities.user_id)))
   WHERE users.external_id = id     
   GROUP BY users.external_id;
-$$;    
+$$;

@@ -11,6 +11,9 @@
   - name: user
     using:
       foreign_key_constraint_on: user_id
+  - name: weather
+    using:
+      foreign_key_constraint_on: weather_id
   array_relationships:
   - name: segment_efforts
     using:
@@ -19,6 +22,17 @@
         table:
           schema: public
           name: segment_efforts
+  event_triggers:
+  - name: get_weather_for_activity
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: FETCH_WEATHER_DATA_ACTIVITY
 - table:
     schema: public
     name: gears
@@ -76,6 +90,20 @@
   - name: user
     using:
       foreign_key_constraint_on: user_id
+  - name: weather
+    using:
+      foreign_key_constraint_on: weather_id
+  event_triggers:
+  - name: get_weather_for_segments
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: FETCH_WEATHER_DATA_SEGMENT
 - table:
     schema: public
     name: segments
@@ -137,3 +165,21 @@
         schema: public
         name: users_expired_token
     comment: ""
+- table:
+    schema: public
+    name: weather
+  array_relationships:
+  - name: activities
+    using:
+      foreign_key_constraint_on:
+        column: weather_id
+        table:
+          schema: public
+          name: activities
+  - name: segment_efforts
+    using:
+      foreign_key_constraint_on:
+        column: weather_id
+        table:
+          schema: public
+          name: segment_efforts
