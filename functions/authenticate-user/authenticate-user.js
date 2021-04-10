@@ -21,7 +21,6 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    console.log('test');
     const {
       athlete,
       refresh_token,
