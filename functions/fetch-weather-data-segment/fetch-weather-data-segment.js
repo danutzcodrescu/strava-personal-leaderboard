@@ -47,7 +47,6 @@ const handler = async (event) => {
     const end = point(
       segmentData.data.data.segments_by_pk.end_point.slice(1, -1).split(',')
     );
-    console.log(midpoint);
     const center = midpoint(start, end);
     const weatherData = await getWeatherData({
       point: center.geometry.coordinates.reverse().join(','),

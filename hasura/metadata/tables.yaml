@@ -22,6 +22,44 @@
         table:
           schema: public
           name: segment_efforts
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - distance
+      - moving_time
+      - elapsed_time
+      - total_elevation_gain
+      - start_date_local
+      - location_city
+      - location_state
+      - location_country
+      - achievement_count
+      - average_speed
+      - max_speed
+      - average_watts
+      - has_heartrate
+      - average_heartrate
+      - max_heartrate
+      - elev_high
+      - elev_low
+      - pr_count
+      - user_id
+      - device_watts
+      - kilojoules
+      - type
+      - gear_id
+      - start_point
+      - end_point
+      - map_id
+      - external_id
+      - name
+      - weather_id
+      filter:
+        user:
+          external_id:
+            _eq: X-Hasura-User-Id
+      allow_aggregations: true
   event_triggers:
   - name: get_weather_for_activity
     definition:
@@ -48,6 +86,21 @@
         table:
           schema: public
           name: activities
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - distance
+      - brand_name
+      - model_name
+      - frame_type
+      - description
+      - user_id
+      - external_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: true
   event_triggers:
   - name: enrich_gear
     definition:
@@ -77,6 +130,23 @@
         table:
           schema: public
           name: segments
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - summary
+      - map
+      - external_id
+      filter:
+        _or:
+        - activities:
+            user:
+              external_id:
+                _eq: X-Hasura-User-Id
+        - segments:
+            segment_efforts:
+              user_id:
+                _eq: X-Hasura-User-Id
 - table:
     schema: public
     name: segment_efforts
@@ -93,6 +163,29 @@
   - name: weather
     using:
       foreign_key_constraint_on: weather_id
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - user_id
+      - segment_id
+      - elapsed_time
+      - moving_time
+      - start_date_local
+      - device_watts
+      - average_watts
+      - average_heartrate
+      - max_heartrate
+      - pr_rank
+      - average_cadence
+      - id
+      - activity_id
+      - name
+      - weather_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: true
   event_triggers:
   - name: get_weather_for_segments
     definition:
@@ -119,6 +212,30 @@
         table:
           schema: public
           name: segment_efforts
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - external_id
+      - distance
+      - type
+      - average_grade
+      - maximum_grade
+      - elevation_high
+      - elevation_low
+      - start_point
+      - end_point
+      - climb_category
+      - total_elevation_gain
+      - city
+      - country
+      - state
+      - map_id
+      - name
+      filter:
+        segment_efforts:
+          user_id:
+            _eq: X-Hasura-User-Id
   event_triggers:
   - name: enrich_segment
     definition:
@@ -133,6 +250,15 @@
 - table:
     schema: public
     name: user_summary
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - first_name
+      - last_name
+      - activities
+      - distance
+      filter: {}
 - table:
     schema: public
     name: users
@@ -165,6 +291,46 @@
         schema: public
         name: users_expired_token
     comment: ""
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - external_id
+      - access_token
+      - refresh_token
+      - scope
+      - username
+      - first_name
+      - last_name
+      - profile_medium
+      - profile
+      - state
+      - country
+      - city
+      - sex
+      - created_at
+      - updated_at
+      - measurement_preference
+      - ftp
+      - date_preference
+      - expires_at
+      computed_fields:
+      - expired
+      filter:
+        external_id:
+          _eq: X-Hasura-User-Id
+  update_permissions:
+  - role: user
+    permission:
+      columns:
+      - access_token
+      - expires_at
+      - refresh_token
+      - updated_at
+      filter:
+        external_id:
+          _eq: X-Hasura-User-Id
+      check: null
 - table:
     schema: public
     name: weather
@@ -183,3 +349,23 @@
         table:
           schema: public
           name: segment_efforts
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - wind_dir
+      - temperature
+      - wind_speed
+      - wind_gust
+      - wind_chill
+      - id
+      - conditions
+      filter:
+        _or:
+        - activities:
+            user:
+              external_id:
+                _eq: X-Hasura-User-Id
+        - segment_efforts:
+            user_id:
+              _eq: X-Hasura-User-Id
