@@ -1,6 +1,6 @@
-const graphql = require('../graphql');
-const checkForExistingUser = require('./check-for-existing-user');
-const { authenticateOnStrava, getAthleteProfile } = require('../strava');
+// const graphql = require('../graphql');
+// const checkForExistingUser = require('./check-for-existing-user');
+// const { authenticateOnStrava, getAthleteProfile } = require('../strava');
 
 const insertUserMutation = `
 mutation insertUser($object:  users_insert_input!) {
