@@ -1,28 +1,29 @@
-version: '3.6'
 services:
+  graphql-engine:
+    depends_on:
+    - postgres
+    environment:
+      FETCH_GEAR_DATA: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-gear-data
+      FETCH_SEGMENT_DATA: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-segment-data
+      FETCH_WEATHER_DATA_ACTIVITY: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-activity
+      FETCH_WEATHER_DATA_SEGMENT: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-segment
+      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log,
+        query-log
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: user
+    image: hasura/graphql-engine:v1.3.4-beta.2
+    ports:
+    - 8080:8080
+    restart: always
   postgres:
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
     image: postgres:12
     restart: always
     volumes:
-      - db_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgrespassword
-  graphql-engine:
-    image: hasura/graphql-engine:v1.3.4-beta.2
-    ports:
-      - '8080:8080'
-    depends_on:
-      - 'postgres'
-    restart: always
-    environment:
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
-      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true' # set to "false" to disable console
-      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
-      FETCH_GEAR_DATA: '${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-gear-data'
-      FETCH_SEGMENT_DATA: '${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-segment-data'
-      FETCH_WEATHER_DATA_ACTIVITY: '${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-activity'
-      FETCH_WEATHER_DATA_SEGMENT: '${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-segment'
+    - db_data:/var/lib/postgresql/data
+version: '3.6'
 volumes:
-  db_data:
+  db_data: null

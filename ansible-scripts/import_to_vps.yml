@@ -1,0 +1,28 @@
+- hosts: localhost
+  vars_files:
+    - ./vars.yml
+  tasks:
+    - name: PGDump from StravaDB data only
+      command: docker exec {{ docker_image_name }} sh -c "pg_dump -U postgres -d postgres --data-only --schema public > db.sql"
+
+    - name: copy the file from docker
+      command: docker cp {{ docker_image_name }}:/db.sql ../db.sql
+      tags:
+        - always
+    - name: add schema to vps
+      shell: psql -h {{vps_address}} -p {{port}} -d {{db_name}} -U {{db_user}} < ../hasura/migrations/init/up.sql
+      environment:
+        PGPASSWORD: '{{ db_password }}'
+
+    - name: clean db if there is data
+      shell: psql -h {{vps_address}} -p {{port}} -d {{db_name}} -U {{db_user}} < ../hasura/migrations/reset/down.sql
+      environment:
+        PGPASSWORD: '{{ db_password }}'
+
+    - name: upload data to vps
+      shell: psql -h {{vps_address}} -p {{port}} -d {{db_name}} -U {{db_user}} < ../db.sql
+      environment:
+        PGPASSWORD: '{{ db_password }}'
+
+    - name: apply hasura metada to remote hasura
+      command: hasura metadata apply --endpoint {{ hasura_endpoint }} --project ../hasura --admin-secret {{hasura_admin_secret}}
