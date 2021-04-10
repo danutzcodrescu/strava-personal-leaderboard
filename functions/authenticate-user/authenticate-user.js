@@ -29,48 +29,43 @@ exports.handler = async (event, context) => {
       access_token,
     } = await authenticateOnStrava(request.code);
     console.log(JSON.stringify(athlete));
-    // const existingUser = await checkForExistingUser(
-    //   athlete.id,
-    //   access_token,
-    //   refresh_token,
-    //   expires_at
-    // );
-    // if (existingUser) {
-    //   return {
-    //     statusCode: 200,
-    //     body: JSON.stringify({
-    //       external_id: athlete.id,
-    //       access_token,
-    //     }),
-    //   };
-    // }
+    const existingUser = await checkForExistingUser(
+      athlete.id,
+      access_token,
+      refresh_token,
+      expires_at
+    );
+    if (existingUser) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          external_id: athlete.id,
+          access_token,
+        }),
+      };
+    }
+    const athleteProfile = await getAthleteProfile(token_type, access_token);
+    const variables = {
+      external_id: athlete.id,
+      access_token,
+      refresh_token,
+      scope: request.scope,
+      ...athleteProfile,
+    };
+    const user = await graphql(insertUserMutation, {
+      object: variables,
+    });
+    const {
+      data: { insert_users_one },
+    } = user.data;
     return {
       statusCode: 200,
-      body: 'test',
+      body: JSON.stringify({
+        access_token: insert_users_one.access_token,
+        external_id: insert_users_one.external_id,
+        expires_at,
+      }),
     };
-
-    // const athleteProfile = await getAthleteProfile(token_type, access_token);
-    // const variables = {
-    //   external_id: athlete.id,
-    //   access_token,
-    //   refresh_token,
-    //   scope: request.scope,
-    //   ...athleteProfile,
-    // };
-    // const user = await graphql(insertUserMutation, {
-    //   object: variables,
-    // });
-    // const {
-    //   data: { insert_users_one },
-    // } = user.data;
-    // return {
-    //   statusCode: 200,
-    //   body: JSON.stringify({
-    //     access_token: insert_users_one.access_token,
-    //     external_id: insert_users_one.external_id,
-    //     expires_at,
-    //   }),
-    // };
   } catch (err) {
     console.log(JSON.stringify(err));
     return { statusCode: 500, body: err.toString() };

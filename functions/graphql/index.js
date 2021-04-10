@@ -9,7 +9,7 @@ async function graphql(query, variables) {
     },
     {
       headers: {
-        'X-Hasura-Admin-Secret': '1234334',
+        'X-Hasura-Admin-Secret': process.env.HASURA_ADMIN_SECRET,
         'Content-Type': 'application/json',
       },
     }
