@@ -10,4 +10,5 @@
     - name: Get file from VPS
       ansible.builtin.fetch:
         src: /{{ansible_ssh_user}}/backups/db.sql
-        dest: /home/danut/strava-personal-leaderboard/sasa.sql
+        dest: ./
+        flat: yes
