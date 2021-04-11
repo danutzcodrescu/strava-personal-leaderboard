@@ -5,8 +5,7 @@
     - name: PGDump from StravaDB data only
       command: docker exec {{ docker_image_name }} sh -c "pg_dump -U postgres -d postgres --data-only --schema public > db.sql"
       tags:
-        - sync
-        - db
+        - always
 
     - name: copy the file from docker
       command: docker cp {{ docker_image_name }}:/db.sql ../db.sql
@@ -15,11 +14,11 @@
     - name: add schema to heroku
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/init/up.sql
       tags:
-        - db
+        - sync
     - name: export metadata
       shell: hasura metadata export --project ../hasura
       tags:
-        - always
+        - sync
     - name: reset heroku db
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../hasura/migrations/reset/down.sql
       tags:
@@ -27,8 +26,8 @@
     - name: upload data to heroku
       shell: heroku pg:psql DATABASE_URL --app {{ app_name }} < ../db.sql
       tags:
-        - always
+        - sync
     - name: apply hasura metada to remote hasura
       command: hasura metadata apply --endpoint {{ hasura_endpoint }} --project ../hasura
       tags:
-        - db
+        - sync

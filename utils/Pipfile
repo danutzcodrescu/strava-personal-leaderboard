@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 pyyaml = "*"
+requests = "*"
+aiohttp = "*"
+asyncio = "*"
+aiodns = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

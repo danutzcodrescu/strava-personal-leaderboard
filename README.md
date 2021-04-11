@@ -8,6 +8,7 @@ Strava hidden the personal leaderboards behind the paywall in July 2020. I was m
 - data fetched from Strava is dumped into a [PostgreDB](https://www.postgresql.org/)
 - [Hasura Graphql](https://hasura.io/) to act as a backend-for-frontend
 - frontend written in React, Typescript, Apollo Client and Material-UI; maps are created using [Leaflet](https://leafletjs.com/) and [Mapbox tiles](https://www.mapbox.com/maps); the charts are created using [Echarts](https://echarts.apache.org/en/index.html).
+- weather data is collected using [Visual crossing API](https://www.visualcrossing.com/)
 
 ### Local development
 
@@ -22,10 +23,16 @@ Netlify functions that are passed as ENV variable having the url as docker host 
 
 ### Ansible scripts
 
-There are some ansible scripts in order to backup the data or to import it into new postgres db. Also the scripts provide a way to upload the data to a Heroku postgress DB linked to a Hasura cloud instance.
+There are some ansible scripts in order to backup the data from Docker, copy data from VPS Postgres DB, or to import it into a new Postgres database running remotely. Due to the volume of records that would be created by the weather data, Heroku DB quickly runs out of records (there is a hard limit of 10k rows for free version). I would personally advice getting a managed DB or a small server and install Postgres there. Also the scripts provide a way to upload the data to a Heroku Postgres DB linked to a Hasura cloud instance. `Psql` is required in most cases, but the scripts could be easily modified to be run from within docker if `psql` is not available locally.
 
 The ansible scripts require some variables defined in the `ansible-scripts/vars.yml`. The file should contain:
 
 - app_name -> Heroku application name
 - hasura_endpoint -> Hasura cloud instance url
 - docker_image_name -> name of the postgress docker container
+- db_user - if running on in a vps get the role
+- db_password - if running in a vps/managed db
+- db_name - if running in a vps/managed db
+- vps_address - ip of the vps or managed db
+- port - if running in a vps/managed db
+- hasura_admin_secret - if security is set in hasura

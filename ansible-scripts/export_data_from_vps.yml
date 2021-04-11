@@ -1,0 +1,14 @@
+- hosts: strava
+  vars_files:
+    - ./vars.yml
+  tasks:
+    - name: PGDump from StravaDB data only
+      shell: pg_dump -U {{db_user}} -d {{db_name}} -n public -a > /{{ansible_ssh_user}}/backups/db.sql
+      environment:
+        PGPASSWORD: '{{ db_password }}'
+
+    - name: Get file from VPS
+      ansible.builtin.fetch:
+        src: /{{ansible_ssh_user}}/backups/db.sql
+        dest: ./
+        flat: yes
