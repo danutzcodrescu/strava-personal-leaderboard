@@ -7,8 +7,10 @@
 
     - name: copy the file from docker
       command: docker cp {{ docker_image_name }}:/db.sql ../db.sql
-      tags:
-        - always
+
+    - name: clear hasura metadata
+      command: hasura metadata clear --endpoint {{ hasura_endpoint }} --project ../hasura --admin-secret {{hasura_admin_secret}}
+
     - name: add schema to vps
       shell: psql -h {{vps_address}} -p {{port}} -d {{db_name}} -U {{db_user}} < ../hasura/migrations/init/up.sql
       environment:

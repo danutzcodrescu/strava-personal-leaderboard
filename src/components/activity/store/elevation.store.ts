@@ -27,6 +27,7 @@ export const useElevationStore = create(
       data: [],
     },
     (set) => ({
+      // @ts-ignore
       dispatch: (action: Action) => set((state) => reducer(state, action)),
     })
   )
