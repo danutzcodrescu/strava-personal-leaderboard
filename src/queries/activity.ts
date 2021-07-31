@@ -37,6 +37,12 @@ export const GET_ACTIVITY = gql`
         max_heartrate
         pr_rank
       }
+      weather {
+        wind_speed
+        wind_dir
+        conditions
+        temperature
+      }
     }
   }
 `;
