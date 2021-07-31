@@ -23,7 +23,7 @@ export function ActivityDetails({ activity }: Props) {
           {activityDate(activity.start_date_local)}
         </SubtitleTypography>
       </Grid>
-      <Grid md={7} item container justify="space-between">
+      <Grid md={7} item container justifyContent="space-between">
         <Grid item md={3}>
           <ValueTypography>
             {convertDistance(activity.distance)}

@@ -9,12 +9,13 @@ import {
   SetSegmentAction,
 } from './store/segment.store';
 
-const selectResult = (obj: SetSegmentPayload) => (
-  fn: (action: SetSegmentAction) => void
-) => (e: any) => {
-  e.preventDefault();
-  fn({ type: 'setSegment', payload: obj });
-};
+const selectResult =
+  (obj: SetSegmentPayload) =>
+  (fn: (action: SetSegmentAction) => void) =>
+  (e: any) => {
+    e.preventDefault();
+    fn({ type: 'setSegment', payload: obj });
+  };
 
 interface Props {
   results: getTopResults_segment_efforts[];
@@ -23,7 +24,6 @@ interface Props {
 export function TopResults({ results }: Props) {
   const dispatch = useSegmentStore((state) => state.dispatch);
   return (
-    // @ts-expect-error
     <Box component={Grid} container spacing={4} py={4}>
       <Grid sm={2} item>
         TOP RESULTS

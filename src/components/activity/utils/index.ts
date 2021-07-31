@@ -1,4 +1,4 @@
-import { Palette } from '@material-ui/core/styles/createPalette';
+import { Palette } from '@material-ui/core/styles';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';

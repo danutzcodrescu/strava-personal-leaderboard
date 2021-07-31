@@ -1,4 +1,5 @@
-import { createStyles, Grid, Theme } from '@material-ui/core';
+import { Grid, Theme } from '@material-ui/core';
+import createStyles from '@material-ui/styles/createStyles';
 import { EmojiEventsOutlined } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
 import * as React from 'react';

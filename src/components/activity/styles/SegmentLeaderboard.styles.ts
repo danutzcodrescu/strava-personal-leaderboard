@@ -1,4 +1,5 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import createStyles from '@material-ui/styles/createStyles';
 import { makeStyles } from '@material-ui/styles';
 
 export const useLinkLeaderboardStyles = makeStyles((theme: Theme) =>
