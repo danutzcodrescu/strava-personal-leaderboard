@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       width: '70px',
       height: '70px',
-      marginBlockEnd: theme.spacing(1.5) + 'px',
+      marginBlockEnd: theme.spacing(1.5),
     },
     username: {
       fontSize: '1.3rem',
