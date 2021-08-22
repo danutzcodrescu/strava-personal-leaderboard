@@ -15,9 +15,11 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.4.1",
-    "@craco/craco": "^6.2.0",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^5.0.0-beta.2",
     "@material-ui/icons": "^5.0.0-beta.1",
     "@material-ui/lab": "^5.0.0-alpha.41",
@@ -38,9 +40,7 @@
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
     "react-table": "^7.7.0",
-    "typescript": "^4.3.5",
     "url": "^0.11.0",
     "zustand": "^3.5.7"
   },
@@ -76,6 +76,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.5",
+    "@craco/craco": "^6.2.0",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@types/convert-units": "^2.3.4",
     "@types/googlemaps": "^3.43.3",
@@ -89,7 +90,9 @@
     "@types/react-table": "^7.7.2",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.1",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.3.5"
   },
   "husky": {
     "hooks": {

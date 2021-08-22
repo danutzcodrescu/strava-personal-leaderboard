@@ -39,6 +39,14 @@ export interface getActivity_activities_by_pk_segment_efforts {
   pr_rank: number | null;
 }
 
+export interface getActivity_activities_by_pk_weather {
+  __typename: 'weather';
+  wind_speed: number | null;
+  wind_dir: number | null;
+  conditions: string;
+  temperature: number | null;
+}
+
 export interface getActivity_activities_by_pk {
   __typename: 'activities';
   external_id: any;
@@ -60,6 +68,10 @@ export interface getActivity_activities_by_pk {
    * An array relationship
    */
   segment_efforts: getActivity_activities_by_pk_segment_efforts[];
+  /**
+   * An object relationship
+   */
+  weather: getActivity_activities_by_pk_weather;
 }
 
 export interface getActivity {

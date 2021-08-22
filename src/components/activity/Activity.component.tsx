@@ -18,6 +18,7 @@ import { HoverMarker } from './HoverMarker';
 import { FitBounds } from './FitBounds';
 import { convertPostgresCoordsToLatLng } from './utils';
 import { ScreenWrapper } from '../../toolbox/ScreenWrapper';
+import { WeatherData } from '../weather/WeatherData';
 
 export interface Point {
   x: number;
@@ -51,36 +52,45 @@ export function ActivityComponent() {
       <Spacer />
       <TopResults results={dataResults.segment_efforts} key="topResults" />
       <Spacer />
-      <MapContainer
-        style={{ height: '270px' }}
-        bounds={bounds}
-        attributionControl={false}
-        scrollWheelZoom={false}
-        key="map"
-      >
-        <TileLayer
-          url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-          maxZoom={18}
-          accessToken={process.env.REACT_APP_MAPBOX}
-          id="mapbox/light-v10"
-          key="tiles"
+      <Box position="relative">
+        <WeatherData
+          windDir={data.activities_by_pk!.weather.wind_dir}
+          windSpeed={data.activities_by_pk!.weather.wind_speed}
+          temperature={data.activities_by_pk!.weather.temperature}
+          conditions={data.activities_by_pk!.weather.conditions}
         />
-        <Polyline color={palette.primary.main} positions={line} key="line" />
-        <Marker
-          key="start"
-          position={convertPostgresCoordsToLatLng(
-            data.activities_by_pk!.start_point
-          )}
-        ></Marker>
-        <Marker
-          position={convertPostgresCoordsToLatLng(
-            data.activities_by_pk!.end_point
-          )}
-          key="end"
-        ></Marker>
-        <HoverMarker />
-        <FitBounds bounds={bounds} />
-      </MapContainer>
+        <MapContainer
+          style={{ height: '270px' }}
+          bounds={bounds}
+          attributionControl={false}
+          scrollWheelZoom={false}
+          key="map"
+        >
+          <TileLayer
+            url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
+            maxZoom={18}
+            accessToken={process.env.REACT_APP_MAPBOX}
+            id="mapbox/light-v10"
+            key="tiles"
+          />
+          <Polyline color={palette.primary.main} positions={line} key="line" />
+          <Marker
+            key="start"
+            position={convertPostgresCoordsToLatLng(
+              data.activities_by_pk!.start_point
+            )}
+          ></Marker>
+          <Marker
+            position={convertPostgresCoordsToLatLng(
+              data.activities_by_pk!.end_point
+            )}
+            key="end"
+          ></Marker>
+          <HoverMarker />
+          <FitBounds bounds={bounds} />
+        </MapContainer>
+      </Box>
+
       <ElevationChart
         line={line}
         distance={data.activities_by_pk!.distance}
