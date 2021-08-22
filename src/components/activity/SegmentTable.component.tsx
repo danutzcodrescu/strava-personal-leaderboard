@@ -73,6 +73,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
     return () => {
       dispatch({ type: 'setSegment', payload: null });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
