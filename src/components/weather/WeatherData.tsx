@@ -25,10 +25,10 @@ const useWeatherStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  windSpeed: number | null;
-  windDir: number | null;
-  temperature: number | null;
-  conditions: string | null;
+  windSpeed?: number | null;
+  windDir?: number | null;
+  temperature?: number | null;
+  conditions?: string | null;
 }
 
 export function WeatherData(props: Props) {
@@ -44,7 +44,7 @@ export function WeatherData(props: Props) {
       {props.conditions ? <WeatherIcon conditions={props.conditions} /> : null}
 
       {props.windSpeed || props.windDir ? (
-        <WindData windDirection={props.windDir!} windSpeed={props.windSpeed} />
+        <WindData windDirection={props.windDir!} windSpeed={props.windSpeed!} />
       ) : null}
     </div>
   );

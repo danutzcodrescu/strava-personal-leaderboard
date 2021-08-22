@@ -37,6 +37,7 @@ export interface getActivity_activities_by_pk_segment_efforts {
   average_watts: any;
   max_heartrate: any | null;
   pr_rank: number | null;
+  weather_id: any | null;
 }
 
 export interface getActivity_activities_by_pk_weather {
