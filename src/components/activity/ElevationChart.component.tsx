@@ -104,7 +104,7 @@ export function ElevationChart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentLine]);
-  return <Box ref={chartRef as any} height={chartHeight} width="100%" />;
+  return <Box ref={chartRef} height={chartHeight} width="100%" />;
 }
 
 ElevationChart.defaultProps = {

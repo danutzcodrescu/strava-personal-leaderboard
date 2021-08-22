@@ -36,6 +36,7 @@ export const GET_ACTIVITY = gql`
         average_heartrate
         max_heartrate
         pr_rank
+        weather_id
       }
       weather {
         wind_speed
