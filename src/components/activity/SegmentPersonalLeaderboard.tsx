@@ -26,7 +26,7 @@ export function SegmentPersonalLeaderboard({
       <SegmentLeaderBoardGrid
         container
         className="segmentHeader"
-        justify="space-around"
+        justifyContent="space-around"
       >
         <SegmentLeaderBoardGrid item md={1}></SegmentLeaderBoardGrid>
         <SegmentLeaderBoardGrid item md={3}>
@@ -46,7 +46,7 @@ export function SegmentPersonalLeaderboard({
         <SegmentLeaderBoardGrid
           container
           key={segment.id}
-          justify="space-between"
+          justifyContent="space-between"
           className={selectedId === segment.id ? 'segmentHeader' : ''}
         >
           <SegmentLeaderBoardGrid item md={1}>

@@ -23,7 +23,6 @@ interface Props {
 export function TopResults({ results }: Props) {
   const dispatch = useSegmentStore((state) => state.dispatch);
   return (
-    // @ts-expect-error
     <Box component={Grid} container spacing={4} py={4}>
       <Grid sm={2} item>
         TOP RESULTS

@@ -146,8 +146,8 @@ export function SegmentTable({ segments }: Props) {
             count={rows.length}
             rowsPerPage={pageSize}
             page={pageIndex}
-            onChangePage={(_, page) => gotoPage(page)}
-            ActionsComponent={TablePaginationActions}
+            onPageChange={(_, page) => gotoPage(page)}
+            ActionsComponent={TablePaginationActions as any}
           />
         </TableRow>
       </TableFooter>

@@ -36,7 +36,7 @@ export function UserData({
   const classes = useStyles();
   return (
     <Card variant="outlined" classes={{ root: classes.cardRoot }}>
-      <Grid container alignItems="center" justify="center">
+      <Grid container alignItems="center" justifyContent="center">
         <Avatar className={classes.avatar} alt={username} src={profile} />
       </Grid>
 
@@ -44,7 +44,7 @@ export function UserData({
         {first_name} {last_name}
       </Typography>
       <CardContent>
-        <Grid container spacing={2} justify="center">
+        <Grid container spacing={2} justifyContent="center">
           <Grid item sm={5}>
             <SubtitleTypography align="center">Activities</SubtitleTypography>
             <Typography align="center">{summary.activities}</Typography>
