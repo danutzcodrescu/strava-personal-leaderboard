@@ -38,12 +38,12 @@ export function WeatherData(props: Props) {
       {props.temperature ? (
         <Box fontSize="1rem">
           {props.temperature.toFixed(0)}
-          <sup>&deg;</sup>
+          &deg;
         </Box>
       ) : null}
       {props.conditions ? <WeatherIcon conditions={props.conditions} /> : null}
 
-      {props.windSpeed ? (
+      {props.windSpeed || props.windDir ? (
         <WindData windDirection={props.windDir!} windSpeed={props.windSpeed} />
       ) : null}
     </div>

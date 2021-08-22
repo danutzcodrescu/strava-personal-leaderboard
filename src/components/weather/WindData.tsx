@@ -4,43 +4,38 @@ import * as React from 'react';
 
 const useWindStyles = makeStyles((theme: Theme) => ({
   wind: {
-    borderRadius: '100%',
-    border: `2px solid ${theme.palette.background.default}`,
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '27px',
+    height: '27px',
+    lineHeight: '25px',
+    textAlign: 'center',
+    fontSize: '0.7rem',
+    fontWeight: 'bold',
+    border: `3px solid ${theme.palette.background.default}`,
+    borderRadius: '50%',
     position: 'relative',
-  },
-  direction: {
-    position: 'absolute',
-    zIndex: theme.zIndex.modal,
-    width: '10px',
-    height: '10px',
-    borderRadius: '100%',
-    backgroundColor: theme.palette.error.main,
+    marginRight: '0',
+    '&:before': {
+      content: '""',
+      display: 'block',
+      width: '0',
+      height: '18px',
+      borderWidth: '9px 5px',
+      borderStyle: 'solid',
+      borderColor: `${theme.palette.background.default} transparent transparent transparent`,
+      position: 'absolute',
+      top: '-4px',
+      left: '8px',
+      transform: (props: Props) => `rotate(${props.windDirection}deg)`,
+    },
   },
 }));
 
 interface Props {
-  windSpeed: number;
+  windSpeed: number | null;
   windDirection: number;
 }
 
 export function WindData(props: Props) {
-  const classes = useWindStyles();
-  console.log(props.windDirection);
-  return (
-    <div className={classes.wind}>
-      {props.windSpeed}
-      <span
-        className={classes.direction}
-        // style={{
-        //   left: `${19 + 19 * Math.sin(props.windDirection)}px`,
-        //   top: `${19 + 19 * Math.cos(props.windDirection)}px`,
-        // }}
-      ></span>
-    </div>
-  );
+  const classes = useWindStyles(props);
+  return <div className={classes.wind}>{props.windSpeed?.toFixed(0)}</div>;
 }
