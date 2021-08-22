@@ -10,6 +10,7 @@ aiohttp = "*"
 asyncio = "*"
 aiodns = "*"
 python-dotenv = "*"
+netifaces = "*"
 
 [dev-packages]
 

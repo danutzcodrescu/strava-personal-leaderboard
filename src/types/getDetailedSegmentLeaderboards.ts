@@ -24,9 +24,19 @@ export interface getDetailedSegmentLeaderboards_segment_efforts_segment {
   /**
    * An object relationship
    */
-  map: getDetailedSegmentLeaderboards_segment_efforts_segment_map;
+  map: getDetailedSegmentLeaderboards_segment_efforts_segment_map | null;
   distance: any;
   maximum_grade: any;
+}
+
+export interface getDetailedSegmentLeaderboards_segment_efforts_weather {
+  __typename: 'weather';
+  temperature: number | null;
+  conditions: string;
+  wind_dir: number | null;
+  wind_gust: number | null;
+  wind_chill: number | null;
+  wind_speed: number | null;
 }
 
 export interface getDetailedSegmentLeaderboards_segment_efforts {
@@ -43,11 +53,15 @@ export interface getDetailedSegmentLeaderboards_segment_efforts {
   segment: getDetailedSegmentLeaderboards_segment_efforts_segment;
   name: string;
   id: number;
+  /**
+   * An object relationship
+   */
+  weather: getDetailedSegmentLeaderboards_segment_efforts_weather | null;
 }
 
 export interface getDetailedSegmentLeaderboards {
   /**
-   * fetch data from the table: "segment_efforts"
+   * An array relationship
    */
   segment_efforts: getDetailedSegmentLeaderboards_segment_efforts[];
 }

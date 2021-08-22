@@ -37,7 +37,7 @@ export function WeatherData(props: Props) {
     <div className={classes.container}>
       {props.temperature ? (
         <Box fontSize="1rem">
-          {props.temperature.toFixed(0)}
+          {Math.round(props.temperature)}
           &deg;
         </Box>
       ) : null}

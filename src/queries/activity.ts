@@ -57,7 +57,7 @@ export const GET_SEGMENT_LEADERBOARDS = gql`
           { user_id: { _eq: $userId } }
         ]
       }
-      order_by: { moving_time: asc }
+      order_by: { elapsed_time: asc }
       limit: 10
     ) {
       start_date_local

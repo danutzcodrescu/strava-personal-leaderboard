@@ -13,7 +13,7 @@ services:
         query-log
       HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: user
-    image: hasura/graphql-engine:v1.3.4-beta.2
+    image: hasura/graphql-engine:v2.0.0-beta.2
     ports:
     - 8080:8080
     restart: always
@@ -22,6 +22,8 @@ services:
       POSTGRES_PASSWORD: postgrespassword
     image: postgres:12
     restart: always
+    ports: 
+    - 5432:5432
     volumes:
     - db_data:/var/lib/postgresql/data
 version: '3.6'

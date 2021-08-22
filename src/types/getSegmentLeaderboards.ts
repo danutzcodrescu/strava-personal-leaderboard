@@ -18,7 +18,7 @@ export interface getSegmentLeaderboards_segment_efforts {
 
 export interface getSegmentLeaderboards {
   /**
-   * fetch data from the table: "segment_efforts"
+   * An array relationship
    */
   segment_efforts: getSegmentLeaderboards_segment_efforts[];
 }

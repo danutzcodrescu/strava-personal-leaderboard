@@ -16,6 +16,14 @@ Netlify Dev is used for local development of the frontend because it wraps creat
 
 Docker compose is used to spin up the backend, making it very easy to create both a postgres db and Hasura graphql server.
 
+In order to have the schema structure created make sure you first run the `init` migration and then apply the hasura metadata
+
+```
+psql -h localhost -p 5432 -d postgres -U postgres < ./hasura/migrations/init/up.sql
+
+hasura metadata apply --admin-secret myadminsecretkey
+```
+
 #### WSL development
 
 **Requires Python**

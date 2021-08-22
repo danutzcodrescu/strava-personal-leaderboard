@@ -37,5 +37,5 @@ interface Props {
 
 export function WindData(props: Props) {
   const classes = useWindStyles(props);
-  return <div className={classes.wind}>{props.windSpeed?.toFixed(0)}</div>;
+  return <div className={classes.wind}>{Math.round(props.windSpeed || 0)}</div>;
 }

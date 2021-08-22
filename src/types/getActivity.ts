@@ -72,7 +72,7 @@ export interface getActivity_activities_by_pk {
   /**
    * An object relationship
    */
-  weather: getActivity_activities_by_pk_weather;
+  weather: getActivity_activities_by_pk_weather | null;
 }
 
 export interface getActivity {

@@ -44,7 +44,7 @@ export interface getRecentActivities_activities {
 
 export interface getRecentActivities {
   /**
-   * fetch data from the table: "activities"
+   * An array relationship
    */
   activities: getRecentActivities_activities[];
 }

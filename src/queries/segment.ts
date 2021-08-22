@@ -33,6 +33,14 @@ export const GET_SEGMENT_LEADERBOARD = gql`
       }
       name
       id
+      weather {
+        temperature
+        conditions
+        wind_dir
+        wind_gust
+        wind_chill
+        wind_speed
+      }
     }
   }
 `;
