@@ -4,7 +4,11 @@ const refreshToken = require('../refresh_user_token/refreshToken');
 
 const createMap = `
 mutation createMap($obj: maps_insert_input!) {
-  insert_maps_one(object: $obj) {
+  insert_maps_one(object: $obj, 
+    on_conflict: {
+      constraint: maps_id_key,
+      update_columns: []
+    }) {
     external_id
   }
 }
@@ -52,11 +56,12 @@ exports.handler = async (event, context) => {
       id: request.event.data.new.external_id,
       obj: {
         total_elevation_gain: segment.total_elevation_gain,
-        map_id: map.data.data.insert_maps_one.external_id,
+        map_id: map.data.data?.insert_maps_one?.external_id || segment.map.id,
       },
     });
     return { statusCode: 200, body: 'success' };
   } catch (err) {
+    console.log(err);
     return { statusCode: 500, body: err.toString() };
   }
 };
