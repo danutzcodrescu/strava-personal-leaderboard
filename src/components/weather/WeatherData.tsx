@@ -1,27 +1,25 @@
-import { Box, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Box } from '@mui/material';
+import { styled } from '@mui/system';
 import * as React from 'react';
 import { WeatherIcon } from './WeatherIcon';
 import { WindData } from './WindData';
 
-const useWeatherStyles = makeStyles((theme: Theme) => ({
-  container: {
-    position: 'absolute',
-    left: '15px',
-    bottom: '15px',
-    backgroundColor: theme.palette.text.primary,
-    borderRadius: '25px',
-    height: '45px',
-    zIndex: theme.zIndex.modal,
-    color: theme.palette.background.default,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    padding: theme.spacing(0, 1.5),
-    fontSize: '0.7rem',
-    fontWeight: 'bold',
-  },
+const Root = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  left: '15px',
+  bottom: '15px',
+  backgroundColor: theme.palette.text.primary,
+  borderRadius: '25px',
+  height: '45px',
+  zIndex: (theme.zIndex as any).modal,
+  color: theme.palette.background.default,
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  padding: theme.spacing(0, 1.5),
+  fontSize: '0.7rem',
+  fontWeight: 'bold',
 }));
 
 interface Props {
@@ -32,9 +30,8 @@ interface Props {
 }
 
 export function WeatherData(props: Props) {
-  const classes = useWeatherStyles();
   return (
-    <div className={classes.container}>
+    <Root>
       {props.temperature ? (
         <Box fontSize="1rem">
           {props.temperature.toFixed(0)}
@@ -46,6 +43,6 @@ export function WeatherData(props: Props) {
       {props.windSpeed || props.windDir ? (
         <WindData windDirection={props.windDir!} windSpeed={props.windSpeed} />
       ) : null}
-    </div>
+    </Root>
   );
 }

@@ -1,5 +1,5 @@
-import { Box, Grid, Link } from '@material-ui/core';
-import { EmojiEventsOutlined } from '@material-ui/icons';
+import { Box, Grid, Link } from '@mui/material';
+import { EmojiEventsOutlined } from '@mui/icons-material';
 import * as React from 'react';
 import { trophyColors } from '../../toolbox/trophyColors';
 import { getTopResults_segment_efforts } from '../../types/getTopResults';
@@ -9,12 +9,13 @@ import {
   SetSegmentAction,
 } from './store/segment.store';
 
-const selectResult = (obj: SetSegmentPayload) => (
-  fn: (action: SetSegmentAction) => void
-) => (e: any) => {
-  e.preventDefault();
-  fn({ type: 'setSegment', payload: obj });
-};
+const selectResult =
+  (obj: SetSegmentPayload) =>
+  (fn: (action: SetSegmentAction) => void) =>
+  (e: any) => {
+    e.preventDefault();
+    fn({ type: 'setSegment', payload: obj });
+  };
 
 interface Props {
   results: getTopResults_segment_efforts[];

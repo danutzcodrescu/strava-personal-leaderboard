@@ -5,8 +5,8 @@ import {
   AccordionSummary,
   Grid,
   Paper,
-} from '@material-ui/core';
-import { EmojiEventsOutlined } from '@material-ui/icons';
+} from '@mui/material';
+import { EmojiEventsOutlined } from '@mui/icons-material';
 import * as React from 'react';
 import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
 import { distanceForSegment } from '../../toolbox/distance';
@@ -47,20 +47,18 @@ export function SegmentsTable({ segments, activityLine }: Props) {
   >(GET_SEGMENT_LEADERBOARDS);
 
   const handleChange = React.useCallback(
-    (data: ToggledSegment) => (
-      event: React.ChangeEvent<{}>,
-      isExpanded: boolean
-    ) => {
-      dispatch({ type: 'setSegment', payload: isExpanded ? data : null });
-      if (isExpanded) {
-        loadLeaderboards({
-          variables: {
-            segmentId: data.segmentId,
-            userId: parseInt(getUserInfo()!),
-          },
-        });
-      }
-    },
+    (data: ToggledSegment) =>
+      (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+        dispatch({ type: 'setSegment', payload: isExpanded ? data : null });
+        if (isExpanded) {
+          loadLeaderboards({
+            variables: {
+              segmentId: data.segmentId,
+              userId: parseInt(getUserInfo()!),
+            },
+          });
+        }
+      },
     [dispatch, loadLeaderboards]
   );
 

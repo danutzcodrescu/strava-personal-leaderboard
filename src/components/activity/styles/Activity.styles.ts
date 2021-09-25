@@ -1,9 +1,9 @@
-import { Paper } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Paper } from '@mui/material';
+import { styled } from '@mui/system';
 
-export const StyledPaper = withStyles(() => ({
+export const StyledPaper = styled(Paper)(() => ({
   root: {
     width: '80%',
     maxWidth: '1000px',
   },
-}))(Paper);
+}));

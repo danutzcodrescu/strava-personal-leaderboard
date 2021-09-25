@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Box, Divider, Typography } from '@material-ui/core';
-import { Theme, useTheme } from '@material-ui/core/styles';
+import { Box, Divider, Typography } from '@mui/material';
+import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
@@ -34,12 +34,10 @@ export function ActivityComponent() {
   const { data, loading } = useQuery<getActivity>(GET_ACTIVITY, {
     variables: { id },
   });
-  const {
-    data: dataResults,
-    loading: loadingResults,
-  } = useQuery<getTopResults>(GET_TOP_RESULTS, {
-    variables: { id },
-  });
+  const { data: dataResults, loading: loadingResults } =
+    useQuery<getTopResults>(GET_TOP_RESULTS, {
+      variables: { id },
+    });
   const { palette } = useTheme<Theme>();
   if (loading || loadingResults) return <Loading />;
   if (!data || !dataResults) {

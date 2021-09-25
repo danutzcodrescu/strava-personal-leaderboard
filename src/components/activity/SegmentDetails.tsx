@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Theme, useTheme } from '@material-ui/core';
+import { Theme, useTheme } from '@mui/material';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';

@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Theme } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
@@ -19,7 +18,7 @@ import { SegmentInfo } from './SegmentInfo';
 import { SegmentTable } from './SegmentTable';
 
 export function SegmentComponent() {
-  const { palette } = useTheme<Theme>();
+  const { palette } = useTheme();
   const { id } = useParams<{ id: string }>();
   const { data } = useQuery<getDetailedSegmentLeaderboards>(
     GET_SEGMENT_LEADERBOARD,

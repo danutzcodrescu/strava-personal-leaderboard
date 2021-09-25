@@ -10,13 +10,12 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   activityDateForSegment,
   convertDurationForPR,
 } from '../../toolbox/time';
 import { calculateSpeedValue } from '../../toolbox/speed';
-import { useTableStyles } from './SegmentTable.styles';
 import { TablePaginationActions } from './TablePagination';
 
 const columns: Column[] = [
@@ -91,21 +90,24 @@ export function SegmentTable({ segments }: Props) {
     useSortBy,
     usePagination
   );
-
-  const classes = useTableStyles();
   return (
     <Table {...getTableProps()}>
       <TableHead>
         {headerGroups.map((headerGroup) => (
           <TableRow
             {...headerGroup.getHeaderGroupProps()}
-            classes={{ root: classes.tableRow }}
+            sx={{
+              backgroundColor: 'grey.300',
+            }}
           >
             {headerGroup.headers.map((column) => (
               <TableCell
                 // @ts-expect-error
                 {...column.getHeaderProps(column.getSortByToggleProps())}
-                classes={{ root: classes.headerCell }}
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                }}
               >
                 {column.render('Header')}
 

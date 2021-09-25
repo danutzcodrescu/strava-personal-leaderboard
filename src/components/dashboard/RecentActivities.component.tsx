@@ -1,19 +1,18 @@
-import { Box, Grid, Theme, useTheme } from '@material-ui/core';
-import { DirectionsBike, DirectionsRun } from '@material-ui/icons';
+import { Box, Grid, Theme, useTheme } from '@mui/material';
+import { DirectionsBike, DirectionsRun } from '@mui/icons-material';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 import { getLineData } from '../../toolbox/map';
 import { getRecentActivities_activities } from '../../types/getRecentActivities';
 import { RecentActivityCard } from './RecentActivity.component';
-import { useRecentActivities } from './styles/RecentActivities.styles';
+import { css } from '@mui/styled-engine';
 
 interface Props {
   activities: getRecentActivities_activities[];
 }
 
 export function RecentActivities({ activities }: Props) {
-  const classes = useRecentActivities();
   const { palette } = useTheme<Theme>();
   return (
     <>
@@ -24,7 +23,11 @@ export function RecentActivities({ activities }: Props) {
           <Box
             key={activity.external_id}
             boxShadow={3}
-            className={classes.card}
+            sx={{
+              marginBottom: 2,
+              paddingBlock: 4,
+              paddingInline: 3,
+            }}
           >
             <Grid container spacing={2}>
               <Grid item sm={2}>
@@ -40,7 +43,10 @@ export function RecentActivities({ activities }: Props) {
             </Grid>
             <Link to={`/activity/${activity.external_id}`}>
               <MapContainer
-                className={classes.map}
+                // @ts-ignore
+                className={css`
+                  height: 270px;
+                `}
                 bounds={bounds}
                 zoomControl={false}
                 attributionControl={false}

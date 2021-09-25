@@ -1,8 +1,8 @@
-import { Grid, Theme } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Grid } from '@mui/material';
+import { styled } from '@mui/system';
 
-export const GridDashboard = withStyles((theme: Theme) => ({
+export const GridDashboard = styled(Grid)(({ theme }) => ({
   container: {
     marginTop: theme.spacing(3),
   },
-}))(Grid);
+}));

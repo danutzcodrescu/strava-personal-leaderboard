@@ -1,7 +1,5 @@
-import { Grid, Theme } from '@material-ui/core';
-import createStyles from '@material-ui/styles/createStyles';
-import { EmojiEventsOutlined } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/styles';
+import { EmojiEventsOutlined } from '@mui/icons-material';
+import { Grid } from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { convertDistance, distanceElevation } from '../../toolbox/distance';
@@ -18,21 +16,7 @@ interface Props {
   activity: getRecentActivities_activities;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    dataInfo: {
-      margin: theme.spacing(2, 0),
-    },
-    PR: {
-      fontSize: '0.65rem',
-    },
-    icon: {
-      marginRight: theme.spacing(1),
-    },
-  })
-);
 export function RecentActivityCard({ activity }: Props) {
-  const classes = useStyles();
   return (
     <>
       <TitleTypography gutterBottom>
@@ -44,7 +28,7 @@ export function RecentActivityCard({ activity }: Props) {
           {activityDate(activity.start_date_local)}
         </SubtitleTypography>
       </TitleTypography>
-      <Grid container className={classes.dataInfo}>
+      <Grid container sx={{ marginBlock: 2, marginInline: 0 }}>
         <Grid item sm={3}>
           <SubtitleTypography>Distance</SubtitleTypography>
           <ValueTypography>
@@ -72,7 +56,7 @@ export function RecentActivityCard({ activity }: Props) {
                 Achievements
               </SubtitleTypography>
               <ValueTypography align="right">
-                <EmojiEventsOutlined className={classes.icon} />
+                <EmojiEventsOutlined sx={{ marginBlock: 2, marginInline: 0 }} />
                 {activity.achievement_count}
               </ValueTypography>
             </>
@@ -83,7 +67,7 @@ export function RecentActivityCard({ activity }: Props) {
         const movingTime = convertDurationForPR(effort.moving_time);
         const totalTime = convertDurationForPR(effort.elapsed_time);
         return (
-          <SubtitleTypography key={effort.id} className={classes.PR}>
+          <SubtitleTypography key={effort.id} sx={{ fontSize: '0.65rem' }}>
             {effort.name} <strong>PR</strong> (
             {movingTime === totalTime
               ? movingTime

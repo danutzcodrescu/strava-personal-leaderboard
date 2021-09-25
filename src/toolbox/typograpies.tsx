@@ -1,24 +1,26 @@
-import { Theme, Typography, TypographyProps } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { Typography, TypographyProps } from '@mui/material';
 import * as React from 'react';
 
 interface Props extends TypographyProps {}
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    title: {
-      fontWeight: 'bold',
-      fontSize: '1.4rem',
+const StyledTypography = (props: TypographyProps) => (
+  <Typography
+    color="secondary"
+    sx={{
       display: 'flex',
       justifyContent: 'space-between',
-    },
-  })
+      marginTop: 2,
+    }}
+  >
+    {props.children}
+  </Typography>
 );
 
-export function TitleTypography(props: Props) {
-  const classes = useStyles();
+export function TitleTypography({ children, ...props }: Props) {
   return (
-    <Typography {...props} variant="h3" className={classes.title}></Typography>
+    <StyledTypography {...props} variant="h3">
+      {children}
+    </StyledTypography>
   );
 }
 
@@ -30,20 +32,16 @@ interface PeriodProps {
   children: React.ReactElement[];
 }
 
-const usePeriodStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    title: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(2),
-    },
-  })
-);
-
 export function PeriodTypography({ children }: PeriodProps) {
-  const classes = usePeriodStyles();
   return (
-    <Typography color="secondary" className={classes.title}>
+    <Typography
+      color="secondary"
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginTop: 2,
+      }}
+    >
       {children[0]}
       {/* @ts-ignore */}
       <SubtitleTypography component="span">{children[1]}</SubtitleTypography>
