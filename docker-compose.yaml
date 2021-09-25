@@ -21,9 +21,9 @@ services:
     environment:
       POSTGRES_PASSWORD: postgrespassword
     image: postgres:12
-    restart: always
-    ports: 
+    ports:
     - 5432:5432
+    restart: always
     volumes:
     - db_data:/var/lib/postgresql/data
 version: '3.6'

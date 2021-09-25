@@ -1,14 +1,15 @@
-import { Grid, Theme } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { Grid } from '@mui/material';
+import { styled } from '@mui/system';
 
-export const StyledGrid = withStyles((theme: Theme) => ({
+export const StyledGrid = styled(Grid)(({ theme }) => ({
   container: {
     padding: theme.spacing(2, 4),
     borderBottom: `1px solid ${theme.palette.grey[300]}`,
   },
-}))(Grid);
+}));
 
-export const SegmentLeaderBoardGrid = withStyles((theme: Theme) => ({
+export const SegmentLeaderBoardGrid = styled(Grid)(({ theme }) => ({
+  // TODO check this class
   '@global': {
     '.segmentHeader': {
       backgroundColor: theme.palette.grey[300],
@@ -18,4 +19,4 @@ export const SegmentLeaderBoardGrid = withStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(1, 0.5),
   },
-}))(Grid);
+}));

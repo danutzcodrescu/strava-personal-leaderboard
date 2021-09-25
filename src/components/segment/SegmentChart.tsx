@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@material-ui/core';
+import { Box, useTheme } from '@mui/material';
 import * as React from 'react';
 import { chartHeight } from '../activity/ElevationChart.component';
 import * as eCharts from 'echarts';

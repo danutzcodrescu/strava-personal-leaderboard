@@ -1,22 +1,10 @@
-import { Theme, Typography } from '@material-ui/core';
-import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
+import { Typography } from '@mui/material';
+import { styled } from '@mui/system';
 
-export const useRecentActivities = makeStyles((theme: Theme) =>
-  createStyles({
-    card: {
-      padding: theme.spacing(4, 3),
-      marginBottom: theme.spacing(2),
-    },
-    map: {
-      height: '270px',
-    },
-  })
-);
-
-export const ValueTypography = withStyles(() => ({
+export const ValueTypography = styled(Typography)(() => ({
   root: {
     fontWeight: 'bold',
     display: 'flex',
     alignItems: 'center',
   },
-}))(Typography);
+}));

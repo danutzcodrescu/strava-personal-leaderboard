@@ -1,5 +1,4 @@
-import { Theme, Box } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+import { Theme, Box, useTheme } from '@mui/material';
 import { ECharts } from 'echarts';
 import * as React from 'react';
 import { useElevationStore } from './store/elevation.store';

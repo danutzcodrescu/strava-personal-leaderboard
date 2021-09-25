@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useLazyQuery } from '@apollo/client';
-import { Box, Theme, useTheme } from '@material-ui/core';
+import { Theme, useTheme, Box } from '@mui/material';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { GET_WEATHER_FOR_SEGMENT } from '../../queries/segment';

@@ -1,4 +1,4 @@
-import { Palette } from '@material-ui/core/styles';
+import { Palette } from '@mui/material/styles';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
 import debounce from 'lodash/debounce';
@@ -52,6 +52,9 @@ export function drawChart({
       type: 'value',
       splitLine: false,
       triggerEvent: true,
+      axisLabel: {
+        formatter: '{value} m',
+      },
     },
     tooltip: {
       trigger: 'axis',

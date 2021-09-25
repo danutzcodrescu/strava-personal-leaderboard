@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { startOfWeek, startOfYear } from 'date-fns';
 import * as React from 'react';
 import { GET_RECENT_ACTIVITIES } from '../../queries/dashboard';
@@ -28,10 +28,8 @@ export function Dashboard() {
       },
     }
   );
-  const {
-    loading: loadingDashboardData,
-    data: dashboardData,
-  } = useQuery<getRecentActivities>(GET_RECENT_ACTIVITIES);
+  const { loading: loadingDashboardData, data: dashboardData } =
+    useQuery<getRecentActivities>(GET_RECENT_ACTIVITIES);
   if (loadingDashboardData || loadingUserData) {
     return <Loading />;
   }

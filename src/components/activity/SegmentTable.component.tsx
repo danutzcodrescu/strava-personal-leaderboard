@@ -5,8 +5,8 @@ import {
   AccordionSummary,
   Grid,
   Paper,
-} from '@material-ui/core';
-import { EmojiEventsOutlined } from '@material-ui/icons';
+} from '@mui/material';
+import { EmojiEventsOutlined } from '@mui/icons-material';
 import * as React from 'react';
 import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
 import { distanceForSegment } from '../../toolbox/distance';

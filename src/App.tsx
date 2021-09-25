@@ -1,10 +1,9 @@
 import { ApolloProvider } from '@apollo/client';
 import {
   CssBaseline,
-  ThemeProvider,
-  Theme,
   StyledEngineProvider,
-} from '@material-ui/core';
+  ThemeProvider,
+} from '@mui/material';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ActivityComponent } from './components/activity/Activity.component';
@@ -15,11 +14,6 @@ import { Dashboard } from './components/dashboard/Dashboard.component';
 import { SegmentComponent } from './components/segment/SegmentComponent';
 import { client } from './graphql';
 import { theme } from './theme';
-
-declare module '@material-ui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 function App() {
   return (

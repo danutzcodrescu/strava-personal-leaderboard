@@ -9,7 +9,7 @@ import {
   faCloudSunRain,
   faSun,
 } from '@fortawesome/free-solid-svg-icons';
-import { Theme, useTheme } from '@material-ui/core';
+import { Theme, useTheme } from '@mui/material';
 
 function Icon(conditions: string, theme: Theme) {
   switch (conditions) {

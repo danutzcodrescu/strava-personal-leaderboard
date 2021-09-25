@@ -1,17 +1,15 @@
-import { makeStyles } from '@material-ui/styles';
 import {
   FirstPage,
   KeyboardArrowLeft,
   KeyboardArrowRight,
   LastPage,
-} from '@material-ui/icons';
-import { Theme, useTheme, IconButton } from '@material-ui/core';
+} from '@mui/icons-material';
+import { IconButton, useTheme } from '@mui/material';
+import { styled } from '@mui/system';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
+const Root = styled('div')(({ theme }) => ({
+  flexShrink: 0,
+  marginLeft: theme.spacing(2.5),
 }));
 
 interface TablePaginationActionsProps {
@@ -25,7 +23,6 @@ interface TablePaginationActionsProps {
 }
 
 export function TablePaginationActions(props: TablePaginationActionsProps) {
-  const classes = useStyles();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
@@ -54,7 +51,7 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
   };
 
   return (
-    <div className={classes.root}>
+    <Root>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
@@ -95,6 +92,6 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
       >
         {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
       </IconButton>
-    </div>
+    </Root>
   );
 }

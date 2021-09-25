@@ -1,5 +1,5 @@
-import { Avatar, Card, CardContent, Grid, Typography } from '@material-ui/core';
-import { QueryBuilder, ShowChart, Speed } from '@material-ui/icons';
+import { QueryBuilder, ShowChart, Speed } from '@mui/icons-material';
+import { Avatar, Card, CardContent, Grid, Typography } from '@mui/material';
 import * as React from 'react';
 import { convertDistance } from '../../toolbox/distance';
 import { convertDurationForActivityTitle } from '../../toolbox/time';
@@ -12,7 +12,6 @@ import {
   getUserData_activitiesYear_aggregate,
   getUserData_user_dashboard_summary,
 } from '../../types/getUserData';
-import { useStyles } from './styles/UserData.styles';
 
 export interface UserDataProps {
   profile: string;
@@ -33,14 +32,25 @@ export function UserData({
   weekSummary,
   yearSummary,
 }: UserDataProps) {
-  const classes = useStyles();
   return (
-    <Card variant="outlined" classes={{ root: classes.cardRoot }}>
+    <Card variant="outlined" sx={{ padding: 1.5 }}>
       <Grid container alignItems="center" justifyContent="center">
-        <Avatar className={classes.avatar} alt={username} src={profile} />
+        <Avatar
+          sx={{
+            width: '70px',
+            height: '70px',
+            marginBlockEnd: 1.5,
+          }}
+          alt={username}
+          src={profile}
+        />
       </Grid>
 
-      <Typography variant="h2" className={classes.username} align="center">
+      <Typography
+        variant="h2"
+        sx={{ fontSize: '1.3rem', fontWeight: 'bold' }}
+        align="center"
+      >
         {first_name} {last_name}
       </Typography>
       <CardContent>
@@ -60,15 +70,15 @@ export function UserData({
         </PeriodTypography>
         <Grid container style={{ fontSize: '0.8rem' }} spacing={1}>
           <Grid item alignItems="center" container md={4}>
-            <Speed className={classes.icon} />
+            <Speed sx={{ marginRight: 1 }} />
             {convertDistance(weekSummary.sum!.distance)}
           </Grid>
           <Grid item alignItems="center" container md={4}>
-            <QueryBuilder className={classes.icon} />
+            <QueryBuilder sx={{ marginRight: 1 }} />
             {convertDurationForActivityTitle(weekSummary.sum!.moving_time!)}
           </Grid>
           <Grid item alignItems="center" container md={4}>
-            <ShowChart className={classes.icon} />
+            <ShowChart sx={{ marginRight: 1 }} />
             {convertDistance(weekSummary.sum!.total_elevation_gain!)}
           </Grid>
         </Grid>
@@ -78,15 +88,15 @@ export function UserData({
         </PeriodTypography>
         <Grid container style={{ fontSize: '0.8rem' }} spacing={1}>
           <Grid item alignItems="center" container md={4}>
-            <Speed className={classes.icon} />
+            <Speed sx={{ marginRight: 1 }} />
             {convertDistance(yearSummary.sum!.distance)}
           </Grid>
           <Grid item alignItems="center" container md={4}>
-            <QueryBuilder className={classes.icon} />
+            <QueryBuilder sx={{ marginRight: 1 }} />
             {convertDurationForActivityTitle(yearSummary.sum!.moving_time!)}
           </Grid>
           <Grid item alignItems="center" container md={4}>
-            <ShowChart className={classes.icon} />
+            <ShowChart sx={{ marginRight: 1 }} />
             {convertDistance(yearSummary.sum!.total_elevation_gain!)}
           </Grid>
         </Grid>

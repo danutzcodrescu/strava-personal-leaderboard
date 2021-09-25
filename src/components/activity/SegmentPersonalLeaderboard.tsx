@@ -1,4 +1,4 @@
-import { Link } from '@material-ui/core';
+import { Link, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import * as React from 'react';
 import { calculateSpeed } from '../../toolbox/speed';
@@ -8,7 +8,6 @@ import {
 } from '../../toolbox/time';
 import { getSegmentLeaderboards } from '../../types/getSegmentLeaderboards';
 import { SegmentLeaderBoardGrid } from './styles/SegmentTable.styles';
-import { useLinkLeaderboardStyles } from './styles/SegmentLeaderboard.styles';
 
 interface Props extends getSegmentLeaderboards {
   distance: number;
@@ -20,7 +19,7 @@ export function SegmentPersonalLeaderboard({
   distance,
   selectedId,
 }: Props) {
-  const classes = useLinkLeaderboardStyles();
+  const theme = useTheme();
   return (
     <>
       <SegmentLeaderBoardGrid
@@ -69,7 +68,21 @@ export function SegmentPersonalLeaderboard({
       <Link
         component={RouterLink}
         to={`/segment/${segment_efforts[0].segment_id}`}
-        classes={{ root: classes.root }}
+        sx={{
+          textAlign: 'center',
+          width: '100%',
+          border: `1px solid ${theme.palette.grey[300]}`,
+          display: 'block',
+          padding: theme.spacing(1, 2),
+          marginTop: 1,
+          borderRadius: '5px',
+          '&:hover': {
+            textDecoration: 'underline',
+            // TODO add this color to theme
+            color: '#007FB6',
+            backgroundColor: 'grey.100',
+          },
+        }}
       >
         View full leaderboard
       </Link>
