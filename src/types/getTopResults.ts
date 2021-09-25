@@ -27,7 +27,7 @@ export interface getTopResults_segment_efforts {
 
 export interface getTopResults {
   /**
-   * fetch data from the table: "segment_efforts"
+   * An array relationship
    */
   segment_efforts: getTopResults_segment_efforts[];
 }

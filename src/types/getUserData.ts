@@ -77,15 +77,15 @@ export interface getUserData {
    */
   user_dashboard_summary: getUserData_user_dashboard_summary[];
   /**
-   * fetch aggregated fields from the table: "activities"
+   * An aggregate relationship
    */
   activitiesWeek: getUserData_activitiesWeek;
   /**
-   * fetch aggregated fields from the table: "activities"
+   * An aggregate relationship
    */
   activitiesYear: getUserData_activitiesYear;
   /**
-   * fetch data from the table: "segment_efforts"
+   * An array relationship
    */
   segment_efforts: getUserData_segment_efforts[];
 }

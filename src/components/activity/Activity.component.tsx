@@ -51,12 +51,15 @@ export function ActivityComponent() {
       <TopResults results={dataResults.segment_efforts} key="topResults" />
       <Spacer />
       <Box position="relative">
-        <WeatherData
-          windDir={data.activities_by_pk!.weather.wind_dir}
-          windSpeed={data.activities_by_pk!.weather.wind_speed}
-          temperature={data.activities_by_pk!.weather.temperature}
-          conditions={data.activities_by_pk!.weather.conditions}
-        />
+        {data.activities_by_pk?.weather ? (
+          <WeatherData
+            windDir={data.activities_by_pk!.weather.wind_dir}
+            windSpeed={data.activities_by_pk!.weather.wind_speed}
+            temperature={data.activities_by_pk!.weather.temperature}
+            conditions={data.activities_by_pk!.weather.conditions}
+          />
+        ) : null}
+
         <MapContainer
           style={{ height: '270px' }}
           bounds={bounds}

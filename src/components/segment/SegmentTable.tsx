@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { getDetailedSegmentLeaderboards_segment_efforts } from '../../types/getDetailedSegmentLeaderboards';
-import { useTable, Column, usePagination, Row, useSortBy } from 'react-table';
 import {
+  useTable,
+  Column,
+  usePagination,
+  Row,
+  useSortBy,
+  CellProps,
+} from 'react-table';
+import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -17,10 +25,12 @@ import {
 } from '../../toolbox/time';
 import { calculateSpeedValue } from '../../toolbox/speed';
 import { TablePaginationActions } from './TablePagination';
+import { getDirection } from './utils';
+import { WeatherIcon } from '../weather/WeatherIcon';
 
 const columns: Column[] = [
   {
-    Header: 'Rank',
+    Header: '#',
     id: 'rank',
     Cell: (param) => param.row.index + 1,
   },
@@ -40,7 +50,7 @@ const columns: Column[] = [
     Cell: (param) => `${param.value} km/h`,
   },
   {
-    Header: 'Moving speed',
+    Header: 'Moving',
     // @ts-ignore
     accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
       calculateSpeedValue(row.segment.distance, row.moving_time),
@@ -51,6 +61,45 @@ const columns: Column[] = [
     Header: 'Time',
     accessor: 'elapsed_time',
     Cell: (param) => convertDurationForPR(param.value),
+  },
+  {
+    Header: 'Wind',
+    // @ts-ignore
+    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) => ({
+      windSpeed: row.weather?.wind_speed,
+      windDir: row.weather?.wind_dir,
+    }),
+    id: 'wind',
+    Cell: (param) =>
+      `${getDirection(param.value.windDir)} ${param.value.windSpeed} km/h`,
+  },
+  {
+    Header: 'Gusts',
+    // @ts-ignore
+    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
+      row.weather?.wind_gust,
+    id: 'wind-gusts',
+    Cell: (param) => `${param.value} km/h`,
+  },
+  {
+    Header: 'Temp',
+    // @ts-ignore
+    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
+      row.weather?.temperature,
+    id: 'temperature',
+    Cell: ({
+      value,
+      row,
+    }: CellProps<getDetailedSegmentLeaderboards_segment_efforts>) => {
+      return (
+        <Box display="flex" alignItems="center" component="span" gap="10px">
+          {Math.round(value)}&deg;{' '}
+          {row.original.weather?.conditions ? (
+            <WeatherIcon conditions={row.original.weather.conditions} />
+          ) : null}
+        </Box>
+      );
+    },
   },
   {
     Header: 'HR',

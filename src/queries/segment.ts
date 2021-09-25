@@ -33,6 +33,25 @@ export const GET_SEGMENT_LEADERBOARD = gql`
       }
       name
       id
+      weather {
+        temperature
+        conditions
+        wind_dir
+        wind_gust
+        wind_chill
+        wind_speed
+      }
+    }
+  }
+`;
+
+export const GET_WEATHER_FOR_SEGMENT = gql`
+  query getWeatherForSegment($weatherId: uuid!) {
+    weather_by_pk(id: $weatherId) {
+      temperature
+      wind_dir
+      wind_speed
+      conditions
     }
   }
 `;

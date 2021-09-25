@@ -1,5 +1,4 @@
-import { Theme, Box } from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+import { Theme, Box, useTheme } from '@mui/material';
 import { ECharts } from 'echarts';
 import * as React from 'react';
 import { useElevationStore } from './store/elevation.store';
@@ -104,7 +103,7 @@ export function ElevationChart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentLine]);
-  return <Box ref={chartRef as any} height={chartHeight} width="100%" />;
+  return <Box ref={chartRef} height={chartHeight} width="100%" />;
 }
 
 ElevationChart.defaultProps = {

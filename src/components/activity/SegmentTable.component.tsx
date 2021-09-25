@@ -68,6 +68,14 @@ export function SegmentsTable({ segments, activityLine }: Props) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   }, [id]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch({ type: 'setSegment', payload: null });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <TitleTypography>Segments</TitleTypography>
@@ -192,6 +200,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                           activityLine={activityLine}
                           segmentId={segment.id}
                           distance={segment.segment!.distance}
+                          weatherId={segment.weather_id}
                         />
                       ) : null}
                     </Grid>

@@ -23,10 +23,10 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 interface Props {
-  windSpeed: number | null;
-  windDir: number | null;
-  temperature: number | null;
-  conditions: string | null;
+  windSpeed?: number | null;
+  windDir?: number | null;
+  temperature?: number | null;
+  conditions?: string | null;
 }
 
 export function WeatherData(props: Props) {
@@ -34,14 +34,14 @@ export function WeatherData(props: Props) {
     <Root>
       {props.temperature ? (
         <Box fontSize="1rem">
-          {props.temperature.toFixed(0)}
+          {Math.round(props.temperature)}
           &deg;
         </Box>
       ) : null}
       {props.conditions ? <WeatherIcon conditions={props.conditions} /> : null}
 
       {props.windSpeed || props.windDir ? (
-        <WindData windDirection={props.windDir!} windSpeed={props.windSpeed} />
+        <WindData windDirection={props.windDir!} windSpeed={props.windSpeed!} />
       ) : null}
     </Root>
   );
