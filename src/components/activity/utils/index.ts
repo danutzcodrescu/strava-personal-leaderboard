@@ -1,9 +1,8 @@
 import { Palette } from '@mui/material/styles';
+import { distance, lineOverlap, lineString, point, simplify } from '@turf/turf';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
-import debounce from 'lodash/debounce';
-import cloneDeep from 'lodash/cloneDeep';
-import { lineString, lineOverlap } from '@turf/turf';
+import { cloneDeep, debounce, isEqualWith } from 'lodash';
 
 interface DrawChartArgs {
   ref: HTMLDivElement;
@@ -32,10 +31,16 @@ export function drawChart({
     dataset: {
       source: values,
     },
-    color: [palette.grey[300]],
+    color: [palette.grey[400]],
     xAxis: {
       type: 'category',
       boundaryGap: false,
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: palette.grey[300],
+        },
+      },
       axisLabel: {
         interval: mainMap ? 10 : 25,
         formatter: (value: string) => {
@@ -50,10 +55,19 @@ export function drawChart({
     },
     yAxis: {
       type: 'value',
-      splitLine: false,
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: palette.grey[300],
+        },
+      },
       triggerEvent: true,
       axisLabel: {
         formatter: '{value} m',
+        showMinLabel: false,
+      },
+      axisLine: {
+        show: true,
       },
     },
     tooltip: {
@@ -148,27 +162,45 @@ interface HighlightedSector {
   }[];
 }
 
+// check distance between points in order to create elevation chart highlight of the sector
+// the segment line and data points could be slightly different because of the simplification algorithm
+function comparePoints(coord1: [number, number], coord2: [number, number]) {
+  const dist = distance(point(coord1), point(coord2), { units: 'kilometers' });
+  if (dist < 0.4) return true;
+  return false;
+}
+
 export function getHighlightedSector({ segmentLine, data }: HighlightedSector) {
   const segment = lineString(segmentLine);
   const line = lineString([...data.map((elem) => elem.location)]);
   const overlap = lineOverlap(segment, line, { tolerance: 0.3 });
-  console.log(overlap);
-  const first = data.findIndex(
-    (elem) =>
-      elem.location ===
-      cloneDeep(overlap.features[0].geometry.coordinates[0]).reverse()
+  const first = data.findIndex((elem) =>
+    isEqualWith(
+      elem.location.reverse(),
+      cloneDeep(overlap.features[0].geometry.coordinates[0]).reverse(),
+      comparePoints
+    )
   );
-  const last = data.findIndex(
-    (elem) =>
-      elem.location ===
+
+  const last = data.findIndex((elem) =>
+    isEqualWith(
+      elem.location.reverse(),
       cloneDeep(
         overlap.features[0].geometry.coordinates[
           overlap.features[0].geometry.coordinates.length - 1
         ]
-      ).reverse()
+      ).reverse(),
+      comparePoints
+    )
   );
   return {
-    start: first < last ? first : last,
-    end: first < last ? last : first,
+    start: first <= last ? first : last,
+    end: first <= last ? last : first,
   };
 }
+
+export const getLine = (line: [number, number][]) =>
+  simplify(lineString(line), {
+    highQuality: true,
+    tolerance: 0.0009,
+  });

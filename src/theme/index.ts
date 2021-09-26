@@ -1,21 +1,21 @@
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-export const theme = createTheme(
-  adaptV4Theme({
-    palette: {
-      primary: {
-        main: '#FC5200',
-        light: '#FF853C',
-        dark: '#C11300',
-      },
-      secondary: {
-        main: '#79D7BD',
-        light: '#ACFFEF',
-        dark: '#46A58D',
-      },
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#FC5200',
+      light: '#FF853C',
+      dark: '#C11300',
     },
-    overrides: {
-      MuiLink: {
+    secondary: {
+      main: '#79D7BD',
+      light: '#ACFFEF',
+      dark: '#46A58D',
+    },
+  },
+  components: {
+    MuiLink: {
+      styleOverrides: {
         root: {
           fontWeight: 'bold',
           textDecoration: 'none',
@@ -27,7 +27,9 @@ export const theme = createTheme(
           },
         },
       },
-      MuiAccordion: {
+    },
+    MuiAccordion: {
+      styleOverrides: {
         root: {
           '&::after': {
             position: 'absolute',
@@ -46,5 +48,5 @@ export const theme = createTheme(
         },
       },
     },
-  })
-);
+  },
+});

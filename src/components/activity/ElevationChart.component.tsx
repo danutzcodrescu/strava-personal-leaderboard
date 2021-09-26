@@ -1,9 +1,9 @@
-import { Theme, Box, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { ECharts } from 'echarts';
 import * as React from 'react';
 import { useElevationStore } from './store/elevation.store';
 import { useSegmentStore } from './store/segment.store';
-import { drawChart, getHighlightedSector } from './utils';
+import { drawChart, getHighlightedSector, getLine } from './utils';
 
 interface Props {
   line: Array<[number, number]>;
@@ -19,7 +19,7 @@ export function ElevationChart({
   distance,
   mainMap,
 }: Props) {
-  const { palette } = useTheme<Theme>();
+  const { palette } = useTheme();
   const dispatch = useElevationStore((state) => state.dispatch);
   const segmentLine = useSegmentStore((state) => state.segmentLine);
   const chartRef = React.useRef<HTMLDivElement>();
@@ -28,7 +28,10 @@ export function ElevationChart({
     const elevator = new google.maps.ElevationService();
     elevator.getElevationAlongPath(
       {
-        path: line.map((val) => ({ lat: val[0], lng: val[1] })) as any,
+        path: getLine(line).geometry.coordinates.map((val) => ({
+          lat: val[0],
+          lng: val[1],
+        })) as any,
         samples: 100,
       } as any,
       (results) => {
