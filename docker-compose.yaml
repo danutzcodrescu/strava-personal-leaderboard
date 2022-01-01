@@ -1,5 +1,16 @@
+version: '3.6'
 services:
+  postgres:
+      environment:
+        POSTGRES_PASSWORD: postgrespassword
+      image: postgres:12
+      ports:
+      - 5432:5432
+      restart: always
+      volumes:
+      - db_data:/var/lib/postgresql/data
   graphql-engine:
+    image: hasura/graphql-engine:v2.1.1.cli-migrations-v2
     depends_on:
     - postgres
     environment:
@@ -13,19 +24,11 @@ services:
         query-log
       HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: user
-    image: hasura/graphql-engine:v2.0.0-beta.2
     ports:
     - 8080:8080
-    restart: always
-  postgres:
-    environment:
-      POSTGRES_PASSWORD: postgrespassword
-    image: postgres:12
-    ports:
-    - 5432:5432
-    restart: always
     volumes:
-    - db_data:/var/lib/postgresql/data
-version: '3.6'
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    restart: always
 volumes:
   db_data: null
