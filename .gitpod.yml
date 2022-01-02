@@ -14,9 +14,12 @@ tasks:
       docker-compose down -v
       docker-compose up
 
-  - name: strava-app
+  - name: functions
     before: echo $LOCAL_ENV_STRAVA | base64 -d >> .env
-    init: yarn install && cd functions && yarn install && cd ..
+    init: cd functions && yarn install
+  
+  - name: strava
+    init: yarn install
     command: netlify dev
 
   - name: data
@@ -28,7 +31,7 @@ tasks:
       rclone copy $BB_PROJECT:$BB_BUCKET/bi-weekly/$FILE ./hasura/seeds
       mv ./hasura/seeds/$FILE ./hasura/seeds/db.sql
       sed -i "s/'search_path', '', false/'search_path', 'public', false/" ./hasura/seeds/db.sql 
-      sleep 90
+      gp await-port 8888
       cat ./hasura/seeds/db.sql | docker exec -i strava-personal-leaderboard_postgres_1 psql -U postgres postgres  
   
 github:
