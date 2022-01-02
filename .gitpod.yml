@@ -23,10 +23,10 @@ tasks:
     command: netlify dev
 
   - name: data
-    before: |
+    init: |
       mkdir ~/.config/rclone
       echo $RCLONE_CONFIG_FILE | base64 -d >> ~/.config/rclone/rclone.conf 
-    init: |
+    command: |
       FILE=$( rclone lsf --format "tp" $BB_PROJECT:$BB_BUCKET/bi-weekly | awk -F ";" '{print $2}' | tail -1 )  
       rclone copy $BB_PROJECT:$BB_BUCKET/bi-weekly/$FILE ./hasura/seeds
       mv ./hasura/seeds/$FILE ./hasura/seeds/db.sql
