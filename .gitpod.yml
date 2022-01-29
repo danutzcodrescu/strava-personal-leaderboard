@@ -6,7 +6,7 @@ ports:
     onOpen: open-browser
   - port: 8080
   - port: 9695
-    onOpen: open-browser  
+    onOpen: open-browser
 
 tasks:
   - name: hasura
@@ -19,38 +19,38 @@ tasks:
       echo $LOCAL_ENV_STRAVA | base64 -d >> .env
       printf "\n[settings]\napi_key = $WAKATIME\n" > ~/.wakatime.cfg
     init: cd functions && yarn install
-  
+
   - name: strava
     init: yarn install
     command: netlify dev
 
   - name: data
-    init: |
+    before: |
       mkdir ~/.config/rclone
-      echo $RCLONE_CONFIG_FILE | base64 -d >> ~/.config/rclone/rclone.conf 
+      echo $RCLONE_CONFIG_FILE | base64 -d >> ~/.config/rclone/rclone.conf
     command: |
       FILE=$( rclone lsf --format "tp" $BB_PROJECT:$BB_BUCKET/bi-weekly | awk -F ";" '{print $2}' | tail -1 )  
       rclone copy $BB_PROJECT:$BB_BUCKET/bi-weekly/$FILE ./hasura/seeds
       mv ./hasura/seeds/$FILE ./hasura/seeds/db.sql
       sed -i "s/'search_path', '', false/'search_path', 'public', false/" ./hasura/seeds/db.sql 
       gp await-port 8888
-      cat ./hasura/seeds/db.sql | docker exec -i strava-personal-leaderboard_postgres_1 psql -U postgres postgres  
+      cat ./hasura/seeds/db.sql | docker exec -i strava-personal-leaderboard_postgres_1 psql -U postgres postgres
 
 vscode:
   extensions:
-    - "streetsidesoftware.code-spell-checker" 
-    - "naumovs.color-highlight"  
-    - "dbaeumer.vscode-eslint"
-    - "eamodio.gitlens"
-    - "GraphQL.vscode-graphql"
-    - "oderwat.indent-rainbow"   
-    - "christian-kohler.npm-intellisense"
-    - "christian-kohler.path-intellisense"
-    - "esbenp.prettier-vscode"
-    - "meganrogge.template-string-converter"
-    - "WakaTime.vscode-wakatime"
-  
+    - 'streetsidesoftware.code-spell-checker'
+    - 'naumovs.color-highlight'
+    - 'dbaeumer.vscode-eslint'
+    - 'eamodio.gitlens'
+    - 'GraphQL.vscode-graphql'
+    - 'oderwat.indent-rainbow'
+    - 'christian-kohler.npm-intellisense'
+    - 'christian-kohler.path-intellisense'
+    - 'esbenp.prettier-vscode'
+    - 'meganrogge.template-string-converter'
+    - 'WakaTime.vscode-wakatime'
+
 github:
   prebuilds:
     pullRequests: false
-    addCheck: false    
+    addCheck: false
