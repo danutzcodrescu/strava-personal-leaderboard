@@ -35,14 +35,16 @@ export function ElevationChart({
         samples: 100,
       } as any,
       (results) => {
-        const parsed = results.map((data, index) => ({
-          x: (distance / 100 / 1000) * index,
-          y: data.elevation,
-          location: [data.location.lat(), data.location.lng()] as [
-            number,
-            number
-          ],
-        }));
+        const parsed = results
+          ? results.map((data, index) => ({
+              x: (distance / 100 / 1000) * index,
+              y: data.elevation,
+              location: [
+                data.location?.lat() || 0,
+                data.location?.lng() || 0,
+              ] as [number, number],
+            }))
+          : [];
         chartConfig.current = drawChart({
           ref: chartRef.current!,
           palette,
