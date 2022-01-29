@@ -71,10 +71,11 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.7",
+    "@babel/runtime": "^7.16.7",
     "@craco/craco": "^6.4.3",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@types/convert-units": "^2.3.5",
-    "@types/googlemaps": "^3.43.3",
+    "@types/google.maps": "^3.47.3",
     "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.178",
     "@types/node": "^16.0.0",
@@ -105,5 +106,8 @@
       "eslint",
       "prettier --write"
     ]
+  },
+  "resolutions": {
+    "@babel/runtime": "^7.16"
   }
 }
