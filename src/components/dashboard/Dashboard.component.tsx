@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Grid, Typography } from '@mui/material';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { startOfWeek, startOfYear } from 'date-fns';
 import * as React from 'react';
 import { GET_RECENT_ACTIVITIES } from '../../queries/dashboard';
@@ -7,9 +7,9 @@ import { GET_USER_DATA } from '../../queries/user';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { getRecentActivities } from '../../types/getRecentActivities';
 import { getUserData } from '../../types/getUserData';
+import { ScreenWrapper } from '../shared/ScreenWrapper';
 import { Loading } from '../utilities/Loading';
 import { RecentActivities } from './RecentActivities.component';
-import { GridDashboard } from './styles/Dashboard.styles';
 import { UserData, UserDataProps } from './UserData.component';
 
 interface UserDataPickProps
@@ -34,11 +34,11 @@ export function Dashboard() {
     return <Loading />;
   }
   if (!userData || !userData) {
-    return <Typography>Error</Typography>;
+    return <Text>Error</Text>;
   }
   return (
-    <GridDashboard container spacing={2}>
-      <Grid item md={3}>
+    <ScreenWrapper as={Flex}>
+      <Box mr={3}>
         <UserData
           {...['profile', 'first_name', 'last_name', 'username'].reduce(
             (acc, val) => {
@@ -51,10 +51,10 @@ export function Dashboard() {
           weekSummary={userData.activitiesWeek.aggregate!}
           yearSummary={userData.activitiesYear.aggregate!}
         />
-      </Grid>
-      <Grid item md={9}>
+      </Box>
+      <Box flex={1}>
         <RecentActivities activities={dashboardData!.activities} />
-      </Grid>
-    </GridDashboard>
+      </Box>
+    </ScreenWrapper>
   );
 }

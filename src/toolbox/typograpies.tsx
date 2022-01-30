@@ -1,31 +1,34 @@
-import { Typography, TypographyProps } from '@mui/material';
+import { Heading, HeadingProps, Text, TextProps } from '@chakra-ui/react';
 import * as React from 'react';
 
-interface Props extends TypographyProps {}
-
-const StyledTypography = (props: TypographyProps) => (
-  <Typography
-    color="secondary"
-    sx={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: 2,
-    }}
-  >
-    {props.children}
-  </Typography>
-);
-
-export function TitleTypography({ children, ...props }: Props) {
+export function TitleTypography({ children, ...props }: HeadingProps) {
   return (
-    <StyledTypography {...props} variant="h3">
+    <Heading
+      as="h3"
+      mt={4}
+      display="flex"
+      justifyContent="space-between"
+      fontSize="1.3rem"
+      alignContent="center"
+      {...props}
+    >
       {children}
-    </StyledTypography>
+    </Heading>
   );
 }
 
-export function SubtitleTypography(props: Props) {
-  return <Typography {...props} color="textSecondary"></Typography>;
+export function SubtitleTypography(props: TextProps) {
+  return (
+    <Text
+      fontWeight="350"
+      fontSize="0.8em"
+      color="gray.500"
+      display="block"
+      {...props}
+    >
+      {props.children}
+    </Text>
+  );
 }
 
 interface PeriodProps {
@@ -34,17 +37,25 @@ interface PeriodProps {
 
 export function PeriodTypography({ children }: PeriodProps) {
   return (
-    <Typography
-      color="secondary"
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: 2,
-      }}
-    >
+    <Text mt={4}>
       {children[0]}
-      {/* @ts-ignore */}
-      <SubtitleTypography component="span">{children[1]}</SubtitleTypography>
-    </Typography>
+      <SubtitleTypography
+        as="span"
+        display="inline"
+        fontSize="1rem"
+        fontWeight="bold"
+        color="primary.main"
+      >
+        {children[1]}
+      </SubtitleTypography>
+    </Text>
+  );
+}
+
+export function ValueTypography({ children, ...rest }: TextProps) {
+  return (
+    <Text fontSize="1.2em" fontWeight="350" {...rest}>
+      {children}
+    </Text>
   );
 }

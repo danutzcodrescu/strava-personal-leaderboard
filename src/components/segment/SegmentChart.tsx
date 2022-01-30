@@ -1,4 +1,3 @@
-import { Box, useTheme } from '@mui/material';
 import * as React from 'react';
 import { chartHeight } from '../activity/ElevationChart.component';
 import * as eCharts from 'echarts';
@@ -9,14 +8,15 @@ import {
 } from '../../toolbox/time';
 import { sortByDate } from './utils';
 import { calculateSpeed } from '../../toolbox/speed';
+import { Box, useToken } from '@chakra-ui/react';
 
 interface Props {
   data: getDetailedSegmentLeaderboards_segment_efforts[];
 }
 
 export function SegmentLeaderboardsChart({ data }: Props) {
+  const [main, gray] = useToken('colors', ['primary.main', 'gray.700']);
   const chartRef = React.useRef<HTMLDivElement>();
-  const { palette } = useTheme();
   React.useLayoutEffect(() => {
     const chart = eCharts.init(chartRef.current!);
     const chartData = data
@@ -80,7 +80,7 @@ export function SegmentLeaderboardsChart({ data }: Props) {
           type: 'line',
           symbolSize: 6,
           itemStyle: {
-            color: palette.grey[700],
+            color: gray,
           },
           lineStyle: {
             width: 0,
@@ -93,7 +93,7 @@ export function SegmentLeaderboardsChart({ data }: Props) {
               {
                 type: 'max',
                 itemStyle: {
-                  color: palette.primary.main,
+                  color: main,
                 },
                 label: {
                   formatter: () => '',
@@ -104,7 +104,7 @@ export function SegmentLeaderboardsChart({ data }: Props) {
           markLine: {
             symbol: 'none',
             lineStyle: {
-              color: palette.primary.main,
+              color: main,
               width: 1.5,
             },
             label: {

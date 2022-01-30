@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button } from '@chakra-ui/react';
 import * as React from 'react';
 
 function getAuthorization() {
@@ -7,7 +7,12 @@ function getAuthorization() {
 
 export function Login() {
   return (
-    <Button variant="contained" color="primary" onClick={getAuthorization}>
+    <Button
+      variant="contained"
+      bgColor="primary.main"
+      color="white"
+      onClick={getAuthorization}
+    >
       Login
     </Button>
   );

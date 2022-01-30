@@ -1,16 +1,4 @@
-import {
-  FirstPage,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-  LastPage,
-} from '@mui/icons-material';
-import { IconButton, useTheme } from '@mui/material';
-import { styled } from '@mui/system';
-
-const Root = styled('div')(({ theme }) => ({
-  flexShrink: 0,
-  marginLeft: theme.spacing(2.5),
-}));
+import { Box, IconButton } from '@chakra-ui/react';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -23,7 +11,6 @@ interface TablePaginationActionsProps {
 }
 
 export function TablePaginationActions(props: TablePaginationActionsProps) {
-  const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
   const handleFirstPageButtonClick = (
@@ -51,26 +38,24 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
   };
 
   return (
-    <Root>
+    <Box ml={5}>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
         size="large"
-      >
-        {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
-      </IconButton>
+      ></IconButton>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
         size="large"
       >
-        {theme.direction === 'rtl' ? (
+        {/* {theme.direction === 'rtl' ? (
           <KeyboardArrowRight />
         ) : (
           <KeyboardArrowLeft />
-        )}
+        )} */}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
@@ -78,11 +63,11 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
         aria-label="next page"
         size="large"
       >
-        {theme.direction === 'rtl' ? (
+        {/* {theme.direction === 'rtl' ? (
           <KeyboardArrowLeft />
         ) : (
           <KeyboardArrowRight />
-        )}
+        )} */}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
@@ -90,8 +75,8 @@ export function TablePaginationActions(props: TablePaginationActionsProps) {
         aria-label="last page"
         size="large"
       >
-        {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
+        {/* {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />} */}
       </IconButton>
-    </Root>
+    </Box>
   );
 }

@@ -1,13 +1,20 @@
-import { Box, Grid, Link } from '@mui/material';
-import { EmojiEventsOutlined } from '@mui/icons-material';
-import * as React from 'react';
-import { trophyColors } from '../../toolbox/trophyColors';
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Link,
+  useToken,
+  Text,
+} from '@chakra-ui/react';
 import { getTopResults_segment_efforts } from '../../types/getTopResults';
 import {
   SetSegmentPayload,
   useSegmentStore,
   SetSegmentAction,
 } from './store/segment.store';
+import { TrophyIcon } from '../shared/Icons';
+import { trophyColors } from '../../toolbox/trophyColors';
 
 const selectResult =
   (obj: SetSegmentPayload) =>
@@ -22,32 +29,53 @@ interface Props {
 }
 
 export function TopResults({ results }: Props) {
+  const [gold, silver, bronze] = useToken('colors', [
+    'trophy.gold',
+    'trophy.silver',
+    'trophy.bronze',
+  ]);
   const dispatch = useSegmentStore((state) => state.dispatch);
   return (
-    <Box component={Grid} container spacing={4} py={4}>
-      <Grid sm={2} item>
+    <Grid gridGap={1.5} py={4} gridTemplateColumns="repeat(12, 1fr)">
+      <GridItem colSpan={2} textTransform="uppercase">
         TOP RESULTS
-      </Grid>
-      <Grid sm={10} item>
+      </GridItem>
+      <GridItem colSpan={10}>
         {results.map((elem) => (
-          <Grid key={elem.id} container spacing={2} alignItems="center">
-            <Grid item>
-              <EmojiEventsOutlined htmlColor={trophyColors(elem.pr_rank)} />
-            </Grid>
-            <Grid item>
-              <Link
-                type="button"
-                onClick={selectResult({
-                  id: elem.id,
-                  segmentId: elem.segment_id,
-                })(dispatch)}
-              >
-                {elem.name}
-              </Link>
-            </Grid>
-          </Grid>
+          <Flex key={elem.id} gap={2} alignItems="center" as={Text}>
+            <Box
+              color={trophyColors({
+                prRank: elem.pr_rank,
+                goldColor: gold,
+                silverColor: silver,
+                bronzeColor: bronze,
+              })}
+              as="span"
+            >
+              <TrophyIcon role="img" />
+            </Box>
+            <Box as="span" fontWeight="bold">
+              {elem.pr_rank}
+              {elem.pr_rank === 1
+                ? 'st'
+                : elem.pr_rank === 2
+                ? 'nd'
+                : 'rd'}{' '}
+              fastest on
+            </Box>
+            <Link
+              type="button"
+              onClick={selectResult({
+                id: elem.id,
+                segmentId: elem.segment_id,
+              })(dispatch)}
+              color="blue.500"
+            >
+              {elem.name}
+            </Link>
+          </Flex>
         ))}
-      </Grid>
-    </Box>
+      </GridItem>
+    </Grid>
   );
 }

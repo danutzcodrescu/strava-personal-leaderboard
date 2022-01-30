@@ -1,3 +1,14 @@
-export function trophyColors(pr_rank: number | null) {
-  return pr_rank === 1 ? 'gold' : pr_rank === 2 ? 'silver' : '#cd7f32';
+interface Args {
+  prRank: number | null;
+  goldColor: string;
+  silverColor: string;
+  bronzeColor: string;
+}
+export function trophyColors({
+  prRank,
+  goldColor,
+  silverColor,
+  bronzeColor,
+}: Args) {
+  return prRank === 1 ? goldColor : prRank === 2 ? silverColor : bronzeColor;
 }

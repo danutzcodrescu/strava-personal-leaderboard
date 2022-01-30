@@ -1,7 +1,7 @@
-import { createTheme } from '@mui/material/styles';
+import { extendTheme, theme as baseTheme } from '@chakra-ui/react';
 
-export const theme = createTheme({
-  palette: {
+export const theme = extendTheme({
+  colors: {
     primary: {
       main: '#FC5200',
       light: '#FF853C',
@@ -12,41 +12,21 @@ export const theme = createTheme({
       light: '#ACFFEF',
       dark: '#46A58D',
     },
+    trophy: {
+      gold: 'yellow.400',
+      silver: 'gray.300',
+      bronze: 'orange.700',
+    },
   },
-  components: {
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          fontWeight: 'bold',
-          textDecoration: 'none',
-          color: 'black',
-          cursor: 'pointer',
-          '&:hover': {
-            textDecoration: 'underline',
-            color: '#007FB6',
-          },
-        },
+  styles: {
+    global: {
+      'html, body': {
+        backgroundColor: 'gray.100',
       },
     },
-    MuiAccordion: {
-      styleOverrides: {
-        root: {
-          '&::after': {
-            position: 'absolute',
-            height: 'calc(100% + 16px)',
-            top: '-16px',
-            left: 0,
-            zIndex: 1000,
-            content: '""',
-            width: '7px',
-          },
-          '&$expanded': {
-            '&::after': {
-              backgroundColor: '#FC5200',
-            },
-          },
-        },
-      },
-    },
+  },
+  fonts: {
+    heading: `Roboto, ${baseTheme.fonts.heading}`,
+    body: `Roboto, ${baseTheme.fonts.body}`,
   },
 });

@@ -1,12 +1,15 @@
 import { useLazyQuery } from '@apollo/client';
 import {
   Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  Box,
   Grid,
-  Paper,
-} from '@mui/material';
-import { EmojiEventsOutlined } from '@mui/icons-material';
+  GridItem,
+  AccordionItem,
+  AccordionPanel,
+  AccordionButton,
+  SimpleGrid,
+  useToken,
+} from '@chakra-ui/react';
 import * as React from 'react';
 import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
 import { distanceForSegment } from '../../toolbox/distance';
@@ -20,11 +23,13 @@ import {
   getSegmentLeaderboards,
   getSegmentLeaderboardsVariables,
 } from '../../types/getSegmentLeaderboards';
+import { TrophyIcon } from '../shared/Icons';
 import { SegmentDetails } from './SegmentDetails';
 import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
 import { useSegmentStore } from './store/segment.store';
-import { StyledGrid } from './styles/SegmentTable.styles';
 import { isAnyPartOfElementInViewport } from './utils';
+
+const templateColumns = '1fr 4fr repeat(4, 2fr)';
 
 interface Props {
   segments: getActivity_activities_by_pk_segment_efforts[];
@@ -41,25 +46,40 @@ interface ToggledSegment {
 export function SegmentsTable({ segments, activityLine }: Props) {
   const dispatch = useSegmentStore((state) => state.dispatch);
   const id = useSegmentStore((state) => state.id);
+  const indexRef = React.useRef(-1);
   const [loadLeaderboards, { data }] = useLazyQuery<
     getSegmentLeaderboards,
     getSegmentLeaderboardsVariables
   >(GET_SEGMENT_LEADERBOARDS);
+  const [goldColor, silverColor, bronzeColor] = useToken('colors', [
+    'trophy.gold',
+    'trophy.silver',
+    'trophy.bronze',
+  ]);
 
   const handleChange = React.useCallback(
-    (data: ToggledSegment) =>
-      (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
-        dispatch({ type: 'setSegment', payload: isExpanded ? data : null });
-        if (isExpanded) {
-          loadLeaderboards({
-            variables: {
-              segmentId: data.segmentId,
-              userId: parseInt(getUserInfo()!),
-            },
-          });
-        }
-      },
-    [dispatch, loadLeaderboards]
+    (index: number) => {
+      indexRef.current = index;
+      const segment: ToggledSegment | null =
+        index > -1
+          ? {
+              id: segments[index].id,
+              segmentId: segments[index].segment.external_id,
+              startPoint: segments[index].segment.start_point,
+              endPoint: segments[index].segment.end_point,
+            }
+          : null;
+      dispatch({ type: 'setSegment', payload: segment });
+      if (index > -1) {
+        loadLeaderboards({
+          variables: {
+            segmentId: segment?.segmentId,
+            userId: parseInt(getUserInfo()!),
+          },
+        });
+      }
+    },
+    [dispatch, loadLeaderboards, segments]
   );
 
   React.useLayoutEffect(() => {
@@ -75,151 +95,159 @@ export function SegmentsTable({ segments, activityLine }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  if (segments[indexRef.current]?.id !== id) {
+    indexRef.current = segments.findIndex((segment) => segment.id === id);
+  }
 
   return (
     <>
-      <TitleTypography>Segments</TitleTypography>
-      <Paper>
-        <StyledGrid container>
-          <StyledGrid item md={1}></StyledGrid>
-          <StyledGrid item md={3}>
+      <TitleTypography mb={6}>Segments</TitleTypography>
+      <Box role="table">
+        <Grid
+          gridTemplateColumns={templateColumns}
+          role="row"
+          bgColor="gray.100"
+          py={1.5}
+          textAlign="left"
+          width="100%"
+        >
+          <GridItem gridColumnStart={2} role="columnheader">
             <strong>Name</strong>
-          </StyledGrid>
-          <StyledGrid item md={2}>
+          </GridItem>
+          <GridItem role="columnheader">
             <strong>Time</strong>
-          </StyledGrid>
-          <StyledGrid item md={2}>
+          </GridItem>
+          <GridItem role="columnheader">
             <strong>Speed</strong>
-          </StyledGrid>
-          <StyledGrid item md={2}>
+          </GridItem>
+          <GridItem role="columnheader">
             <strong>Power</strong>
-          </StyledGrid>
-          <StyledGrid item md={2}>
+          </GridItem>
+          <GridItem role="columnheader">
             <strong>HR</strong>
-          </StyledGrid>
-        </StyledGrid>
-
-        {segments.map((segment) => {
-          return (
-            <Accordion
-              square
-              expanded={id === segment.id}
-              onChange={handleChange({
-                id: segment.id,
-                segmentId: segment.segment.external_id,
-                startPoint: segment.segment.start_point,
-                endPoint: segment.segment.end_point,
-              })}
-              key={segment.id}
-              TransitionProps={{ unmountOnExit: true }}
-              data-id={segment.id}
-            >
-              <AccordionSummary
-                aria-controls={`${segment.name}-content`}
-                id={`${segment.name}-header`}
-              >
-                <StyledGrid container>
-                  <StyledGrid
-                    item
-                    md={1}
-                    style={{
-                      color: trophyColors(segment.pr_rank),
-                    }}
+          </GridItem>
+        </Grid>
+        <Accordion allowToggle index={indexRef.current} onChange={handleChange}>
+          {segments.map((segment, index) => {
+            return (
+              <AccordionItem key={segment.id} data-id={segment.id}>
+                <AccordionButton
+                  px={0}
+                  width="100%"
+                  role="rowgroup"
+                  _hover={{ bgColor: 'gray.100' }}
+                >
+                  <Grid
+                    gridTemplateColumns={templateColumns}
+                    role="row"
+                    aria-rowindex={index + 1}
+                    textAlign="left"
+                    width="100%"
+                    alignItems="center"
                   >
-                    {segment.pr_rank ? <EmojiEventsOutlined /> : null}
-                  </StyledGrid>
-                  <StyledGrid item md={3}>
-                    {segment.name}
-                    <SubtitleTypography>
-                      <span title="Distance">
-                        {distanceForSegment(segment.segment.distance)}
-                      </span>
-                      &nbsp;
-                      <span title="Elevation difference">
-                        {(
-                          segment.segment.elevation_high -
-                          segment.segment.elevation_low
-                        ).toFixed(0)}
-                        m
-                      </span>
-                      &nbsp;
-                      <span title="Average grade">
-                        {segment.segment.average_grade.toFixed(0)}%
-                      </span>
-                    </SubtitleTypography>
-                  </StyledGrid>
-                  <StyledGrid item md={2}>
-                    {convertDurationForPR(segment.elapsed_time)}
-                  </StyledGrid>
-                  <StyledGrid item md={2}>
-                    {calculateSpeed(
-                      segment.segment.distance,
-                      segment.elapsed_time
-                    )}
-                  </StyledGrid>
-                  <StyledGrid item md={2}>
-                    {segment.average_watts}w
-                  </StyledGrid>
-                  <StyledGrid item md={2}>
-                    {segment.average_heartrate
-                      ? `${segment.average_heartrate}bpm`
-                      : '--'}
-                  </StyledGrid>
-                </StyledGrid>
-              </AccordionSummary>
-              <AccordionDetails>
-                <StyledGrid container>
-                  <Grid item container md={6}>
-                    <Grid item md={6}>
-                      <TitleTypography>
-                        {convertDurationForPR(segment.elapsed_time)}
-                      </TitleTypography>
-                      <SubtitleTypography>This effort</SubtitleTypography>
-                    </Grid>
-                    <Grid item md={6}>
+                    <GridItem
+                      role="cell"
+                      color={trophyColors({
+                        goldColor,
+                        silverColor,
+                        bronzeColor,
+                        prRank: segment.pr_rank,
+                      })}
+                      textAlign="center"
+                    >
+                      {segment.pr_rank ? <TrophyIcon /> : null}
+                    </GridItem>
+                    <GridItem role="cell">
+                      {segment.name}
                       <SubtitleTypography>
-                        {convertDurationForPR(segment.moving_time)}
+                        <span title="Distance">
+                          {distanceForSegment(segment.segment.distance)}
+                        </span>
+                        &nbsp;
+                        <span title="Elevation difference">
+                          {(
+                            segment.segment.elevation_high -
+                            segment.segment.elevation_low
+                          ).toFixed(0)}
+                          m
+                        </span>
+                        &nbsp;
+                        <span title="Average grade">
+                          {segment.segment.average_grade.toFixed(0)}%
+                        </span>
                       </SubtitleTypography>
-                      <SubtitleTypography>Moving effort</SubtitleTypography>
-                    </Grid>
-                    <Grid item md={6}>
-                      <SubtitleTypography>
-                        <b>AVG:</b> {segment.average_heartrate}bpm
-                      </SubtitleTypography>
-                    </Grid>
-                    <Grid item md={6}>
-                      <SubtitleTypography>
-                        <b>MAX</b> {segment.max_heartrate}bpm
-                      </SubtitleTypography>
-                    </Grid>
-                    <Grid item md={12}>
-                      {id ? (
-                        <SegmentDetails
-                          startPoint={segment.segment.start_point}
-                          endPoint={segment.segment.end_point}
-                          activityLine={activityLine}
-                          segmentId={segment.id}
-                          distance={segment.segment!.distance}
-                          weatherId={segment.weather_id}
+                    </GridItem>
+                    <GridItem role="cell">
+                      {convertDurationForPR(segment.elapsed_time)}
+                    </GridItem>
+                    <GridItem role="cell">
+                      {calculateSpeed(
+                        segment.segment.distance,
+                        segment.elapsed_time
+                      )}
+                    </GridItem>
+                    <GridItem role="cell">{segment.average_watts}w</GridItem>
+                    <GridItem role="cell">
+                      {segment.average_heartrate
+                        ? `${segment.average_heartrate}bpm`
+                        : '--'}
+                    </GridItem>
+                  </Grid>
+                </AccordionButton>
+                <AccordionPanel>
+                  <SimpleGrid columns={2}>
+                    <SimpleGrid columns={2} alignItems="flex-end" rowGap={2.5}>
+                      <Box>
+                        <TitleTypography mb={1.5}>
+                          {convertDurationForPR(segment.elapsed_time)}
+                        </TitleTypography>
+                        <SubtitleTypography>This effort</SubtitleTypography>
+                      </Box>
+                      <Box>
+                        <SubtitleTypography mb={1.5}>
+                          {convertDurationForPR(segment.moving_time)}
+                        </SubtitleTypography>
+                        <SubtitleTypography>Moving effort</SubtitleTypography>
+                      </Box>
+                      <Box>
+                        <SubtitleTypography>
+                          <b>AVG:</b> {segment.average_heartrate}bpm
+                        </SubtitleTypography>
+                      </Box>
+                      <Box>
+                        <SubtitleTypography>
+                          <b>MAX</b> {segment.max_heartrate}bpm
+                        </SubtitleTypography>
+                      </Box>
+                      <Box>
+                        {id ? (
+                          <SegmentDetails
+                            startPoint={segment.segment.start_point}
+                            endPoint={segment.segment.end_point}
+                            activityLine={activityLine}
+                            segmentId={segment.id}
+                            distance={segment.segment!.distance}
+                            weatherId={segment.weather_id}
+                          />
+                        ) : null}
+                      </Box>
+                    </SimpleGrid>
+                    <Box>
+                      {id === segment.id && data ? (
+                        <SegmentPersonalLeaderboard
+                          segment_efforts={data.segment_efforts}
+                          distance={segment.segment.distance}
+                          selectedId={id!}
                         />
                       ) : null}
-                    </Grid>
-                  </Grid>
-                  <StyledGrid item md={6}>
-                    {id === segment.id && data ? (
-                      <SegmentPersonalLeaderboard
-                        segment_efforts={data.segment_efforts}
-                        distance={segment.segment.distance}
-                        selectedId={id!}
-                      />
-                    ) : null}
-                  </StyledGrid>
-                </StyledGrid>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
-      </Paper>
+                    </Box>
+                  </SimpleGrid>
+                </AccordionPanel>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      </Box>
     </>
   );
 }

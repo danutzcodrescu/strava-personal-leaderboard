@@ -1,10 +1,10 @@
-import { CircularProgress, Grid } from '@mui/material';
+import { Center, CircularProgress } from '@chakra-ui/react';
 import * as React from 'react';
 
 export function Loading() {
   return (
-    <Grid container alignItems="center" justifyContent="center">
-      <CircularProgress />
-    </Grid>
+    <Center width="100vw" height="100vh">
+      <CircularProgress color="primary.main" isIndeterminate size="10em" />
+    </Center>
   );
 }
