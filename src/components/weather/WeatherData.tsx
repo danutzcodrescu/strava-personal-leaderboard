@@ -1,26 +1,7 @@
-import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import { Box } from '@chakra-ui/react';
 import * as React from 'react';
 import { WeatherIcon } from './WeatherIcon';
 import { WindData } from './WindData';
-
-const Root = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  left: '15px',
-  bottom: '15px',
-  backgroundColor: theme.palette.text.primary,
-  borderRadius: '25px',
-  height: '45px',
-  zIndex: (theme.zIndex as any).modal,
-  color: theme.palette.background.default,
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-  padding: theme.spacing(0, 1.5),
-  fontSize: '0.7rem',
-  fontWeight: 'bold',
-}));
 
 interface Props {
   windSpeed?: number | null;
@@ -31,7 +12,23 @@ interface Props {
 
 export function WeatherData(props: Props) {
   return (
-    <Root>
+    <Box
+      position="absolute"
+      left="15px"
+      bottom="15px"
+      backgroundColor="black"
+      borderRadius="25px"
+      height="45px"
+      zIndex="modal"
+      color="white"
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      gap="2"
+      paddingY="2"
+      fontSize="0.7rem"
+      fontWeight="bold"
+    >
       {props.temperature ? (
         <Box fontSize="1rem">
           {Math.round(props.temperature)}
@@ -43,6 +40,6 @@ export function WeatherData(props: Props) {
       {props.windSpeed || props.windDir ? (
         <WindData windDirection={props.windDir!} windSpeed={props.windSpeed!} />
       ) : null}
-    </Root>
+    </Box>
   );
 }

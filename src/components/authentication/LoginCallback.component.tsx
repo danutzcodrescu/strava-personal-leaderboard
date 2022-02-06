@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { CircularProgress } from '@chakra-ui/react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { parse } from 'url';

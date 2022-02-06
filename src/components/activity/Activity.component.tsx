@@ -1,6 +1,4 @@
 import { useQuery } from '@apollo/client';
-import { Box, Divider, Typography } from '@mui/material';
-import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
@@ -17,8 +15,9 @@ import { TopResults } from './TopResults.component';
 import { HoverMarker } from './HoverMarker';
 import { FitBounds } from './FitBounds';
 import { convertPostgresCoordsToLatLng } from './utils';
-import { ScreenWrapper } from '../../toolbox/ScreenWrapper';
+import { ScreenWrapper } from '../shared/ScreenWrapper';
 import { WeatherData } from '../weather/WeatherData';
+import { Box, Divider, Text, useToken } from '@chakra-ui/react';
 
 export interface Point {
   x: number;
@@ -26,7 +25,7 @@ export interface Point {
 }
 
 export function Spacer() {
-  return <Box component={Divider} my={4}></Box>;
+  return <Divider my={8} />;
 }
 
 export function ActivityComponent() {
@@ -38,14 +37,19 @@ export function ActivityComponent() {
     useQuery<getTopResults>(GET_TOP_RESULTS, {
       variables: { id },
     });
-  const { palette } = useTheme<Theme>();
+  const [mainColor] = useToken('colors', ['primary.main']);
   if (loading || loadingResults) return <Loading />;
   if (!data || !dataResults) {
-    return <Typography>Error</Typography>;
+    return <Text>Error</Text>;
   }
   const { line, bounds } = getLineData(data.activities_by_pk!.map.map);
   return (
-    <ScreenWrapper>
+    <ScreenWrapper
+      bgColor="white"
+      border="1px solid"
+      borderColor="gray.400"
+      p="5"
+    >
       <ActivityDetails activity={data.activities_by_pk!} key="details" />
       <Spacer />
       <TopResults results={dataResults.segment_efforts} key="topResults" />
@@ -74,7 +78,7 @@ export function ActivityComponent() {
             id="mapbox/light-v10"
             key="tiles"
           />
-          <Polyline color={palette.primary.main} positions={line} key="line" />
+          <Polyline color={mainColor} positions={line} key="line" />
           <Marker
             key="start"
             position={convertPostgresCoordsToLatLng(

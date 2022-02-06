@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, useToken } from '@chakra-ui/react';
 import { ECharts } from 'echarts';
 import * as React from 'react';
 import { useElevationStore } from './store/elevation.store';
@@ -19,7 +19,11 @@ export function ElevationChart({
   distance,
   mainMap,
 }: Props) {
-  const { palette } = useTheme();
+  const [gray500, gray300, black] = useToken('colors', [
+    'gray.500',
+    'gray.300',
+    'black',
+  ]);
   const dispatch = useElevationStore((state) => state.dispatch);
   const segmentLine = useSegmentStore((state) => state.segmentLine);
   const chartRef = React.useRef<HTMLDivElement>();
@@ -47,7 +51,7 @@ export function ElevationChart({
           : [];
         chartConfig.current = drawChart({
           ref: chartRef.current!,
-          palette,
+          palette: { lineColor: gray300, textColor: black },
           mainMap,
           onHover: (
             payload: {
@@ -82,16 +86,16 @@ export function ElevationChart({
               {
                 gte: start,
                 lte: end,
-                color: palette.grey[500],
+                color: gray500,
               },
               {
                 lt: start,
-                color: palette.grey[300],
+                color: gray300,
               },
 
               {
                 gt: end,
-                color: palette.grey[300],
+                color: gray300,
               },
             ],
           },
@@ -108,7 +112,7 @@ export function ElevationChart({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segmentLine]);
-  return <Box ref={chartRef} height={chartHeight} width="100%" />;
+  return <Box ref={chartRef as any} height={chartHeight} width="100%" />;
 }
 
 ElevationChart.defaultProps = {

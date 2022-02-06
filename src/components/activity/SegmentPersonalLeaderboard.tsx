@@ -1,4 +1,3 @@
-import { Link, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import * as React from 'react';
 import { calculateSpeed } from '../../toolbox/speed';
@@ -7,7 +6,7 @@ import {
   convertDurationForPR,
 } from '../../toolbox/time';
 import { getSegmentLeaderboards } from '../../types/getSegmentLeaderboards';
-import { SegmentLeaderBoardGrid } from './styles/SegmentTable.styles';
+import { Box, Grid, Link } from '@chakra-ui/react';
 
 interface Props extends getSegmentLeaderboards {
   distance: number;
@@ -19,73 +18,64 @@ export function SegmentPersonalLeaderboard({
   distance,
   selectedId,
 }: Props) {
-  const theme = useTheme();
   return (
-    <>
-      <SegmentLeaderBoardGrid
-        container
-        className="segmentHeader"
+    <Box role="table">
+      <Grid
+        gridTemplateColumns={'1fr 3fr 2fr 2fr 3fr'}
         justifyContent="space-around"
+        role="rowheader"
+        bgColor="gray.100"
+        py={1}
       >
-        <SegmentLeaderBoardGrid item md={1}></SegmentLeaderBoardGrid>
-        <SegmentLeaderBoardGrid item md={3}>
+        <Box role="columnheader" gridColumnStart={2}>
           Date
-        </SegmentLeaderBoardGrid>
-        <SegmentLeaderBoardGrid item md={2}>
-          Moving time
-        </SegmentLeaderBoardGrid>
-        <SegmentLeaderBoardGrid item md={2}>
-          Elapsed time
-        </SegmentLeaderBoardGrid>
-        <SegmentLeaderBoardGrid item md={3}>
-          Avg speed
-        </SegmentLeaderBoardGrid>
-      </SegmentLeaderBoardGrid>
+        </Box>
+        <Box role="columnheader">Moving time</Box>
+        <Box role="columnheader">Elapsed time</Box>
+        <Box role="columnheader">Avg speed</Box>
+      </Grid>
       {segment_efforts.map((segment, index) => (
-        <SegmentLeaderBoardGrid
-          container
+        <Grid
           key={segment.id}
-          justifyContent="space-between"
-          className={selectedId === segment.id ? 'segmentHeader' : ''}
+          gridTemplateColumns="1fr 3fr 2fr 2fr 3fr"
+          role="row"
+          bgColor={segment.id === selectedId ? 'gray.100' : 'transparent'}
         >
-          <SegmentLeaderBoardGrid item md={1}>
+          <Box role="cell" textAlign="center">
             {index + 1}
-          </SegmentLeaderBoardGrid>
-          <SegmentLeaderBoardGrid item md={3}>
+          </Box>
+          <Box role="cell">
             {activityDateForSegment(segment.start_date_local)}
-          </SegmentLeaderBoardGrid>
-          <SegmentLeaderBoardGrid item md={2}>
-            {convertDurationForPR(segment.moving_time)}
-          </SegmentLeaderBoardGrid>
-          <SegmentLeaderBoardGrid item md={2}>
-            {convertDurationForPR(segment.elapsed_time)}
-          </SegmentLeaderBoardGrid>
-          <SegmentLeaderBoardGrid item md={3}>
+          </Box>
+          <Box role="cell">{convertDurationForPR(segment.moving_time)}</Box>
+          <Box role="cell">{convertDurationForPR(segment.elapsed_time)}</Box>
+          <Box role="cell">
             {calculateSpeed(distance, segment.elapsed_time)}
-          </SegmentLeaderBoardGrid>
-        </SegmentLeaderBoardGrid>
+          </Box>
+        </Grid>
       ))}
       <Link
-        component={RouterLink}
+        as={RouterLink}
         to={`/segment/${segment_efforts[0].segment_id}`}
-        sx={{
-          textAlign: 'center',
-          width: '100%',
-          border: `1px solid ${theme.palette.grey[300]}`,
-          display: 'block',
-          padding: theme.spacing(1, 2),
-          marginTop: 1,
-          borderRadius: '5px',
-          '&:hover': {
-            textDecoration: 'underline',
-            // TODO add this color to theme
-            color: '#007FB6',
-            backgroundColor: 'grey.100',
-          },
+        textAlign="center"
+        width="100%"
+        border="1px solid"
+        borderColor="gray.300"
+        display="block"
+        paddingX={2}
+        paddingY={4}
+        mt={2}
+        fontWeight="bold"
+        borderRadius="5px"
+        _hover={{
+          textDecoration: 'underline',
+
+          color: 'blue.600',
+          backgroundColor: 'grey.100',
         }}
       >
         View full leaderboard
       </Link>
-    </>
+    </Box>
   );
 }

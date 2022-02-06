@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useLazyQuery } from '@apollo/client';
-import { Theme, useTheme, Box } from '@mui/material';
+import { Box, useToken } from '@chakra-ui/react';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { GET_WEATHER_FOR_SEGMENT } from '../../queries/segment';
@@ -31,7 +31,7 @@ export const SegmentDetails = React.memo(function ({
   segmentId,
   weatherId,
 }: Props) {
-  const { palette } = useTheme<Theme>();
+  const [primary, blue] = useToken('colors', ['primary.main', 'blue.600']);
   const dispatch = useSegmentStore((state) => state.dispatch);
   const [getWeather, { data }] = useLazyQuery<
     getWeatherForSegment,
@@ -82,8 +82,8 @@ export const SegmentDetails = React.memo(function ({
             accessToken={process.env.REACT_APP_MAPBOX}
             id="mapbox/light-v10"
           />
-          <Polyline color={palette.primary.main} positions={activityLine} />
-          <Polyline color="blue" positions={segmentLine} />
+          <Polyline color={primary} positions={activityLine} />
+          <Polyline color={blue} positions={segmentLine} />
           <HoverMarker />
         </MapContainer>
       </Box>

@@ -1,4 +1,3 @@
-import { Palette } from '@mui/material/styles';
 import { distance, lineOverlap, lineString, point, simplify } from '@turf/turf';
 import * as eCharts from 'echarts';
 import { LatLngTuple } from 'leaflet';
@@ -11,7 +10,7 @@ interface DrawChartArgs {
     y: number;
     location: [number, number];
   }[];
-  palette: Palette;
+  palette: { lineColor: string; textColor: string };
   mainMap: boolean;
   onHover: (obj: { location: [number, number] } | null) => void;
 }
@@ -31,14 +30,14 @@ export function drawChart({
     dataset: {
       source: values,
     },
-    color: [palette.grey[400]],
+    color: [palette.lineColor],
     xAxis: {
       type: 'category',
       boundaryGap: false,
       splitLine: {
         show: true,
         lineStyle: {
-          color: palette.grey[300],
+          color: palette.lineColor,
         },
       },
       axisLabel: {
@@ -58,7 +57,7 @@ export function drawChart({
       splitLine: {
         show: true,
         lineStyle: {
-          color: palette.grey[300],
+          color: palette.lineColor,
         },
       },
       triggerEvent: true,
@@ -81,7 +80,7 @@ export function drawChart({
         axis: 'x',
         type: 'line',
         lineStyle: {
-          color: palette.text.primary,
+          color: palette.textColor,
           type: 'solid',
         },
       },
@@ -107,7 +106,7 @@ export function drawChart({
         },
         emphasis: {
           areaStyle: {
-            color: palette.grey[300],
+            color: palette.lineColor,
           },
         },
         smooth: true,

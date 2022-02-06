@@ -1,16 +1,19 @@
-import { EmojiEventsOutlined } from '@mui/icons-material';
-import { Grid } from '@mui/material';
+import { Box, Link, SimpleGrid, Text } from '@chakra-ui/react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouteLink } from 'react-router-dom';
 import { convertDistance, distanceElevation } from '../../toolbox/distance';
 import {
   activityDate,
   convertDurationForActivityTitle,
   convertDurationForPR,
 } from '../../toolbox/time';
-import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
+import {
+  SubtitleTypography,
+  TitleTypography,
+  ValueTypography,
+} from '../../toolbox/typograpies';
 import { getRecentActivities_activities } from '../../types/getRecentActivities';
-import { ValueTypography } from './styles/RecentActivities.styles';
+import { TrophyIcon } from '../shared/Icons';
 
 interface Props {
   activity: getRecentActivities_activities;
@@ -19,63 +22,76 @@ interface Props {
 export function RecentActivityCard({ activity }: Props) {
   return (
     <>
-      <TitleTypography gutterBottom>
-        <Link to={`/activity/${activity.external_id}`}>
-          <span>{activity.name}</span>
+      <TitleTypography mb={4}>
+        <Link as={RouteLink} to={`/activity/${activity.external_id}`}>
+          {activity.name}
         </Link>
-        {/* @ts-ignore */}
-        <SubtitleTypography component="span">
+        <SubtitleTypography
+          fontSize="0.65em"
+          fontWeight="650"
+          display="flex"
+          alignSelf="center"
+        >
           {activityDate(activity.start_date_local)}
         </SubtitleTypography>
       </TitleTypography>
-      <Grid container sx={{ marginBlock: 2, marginInline: 0 }}>
-        <Grid item sm={3}>
-          <SubtitleTypography>Distance</SubtitleTypography>
-          <ValueTypography>
+      <SimpleGrid my={6} columns={4}>
+        <Text>
+          <SubtitleTypography as="span">Distance</SubtitleTypography>
+          <ValueTypography as="span">
             {convertDistance(activity.distance)}
           </ValueTypography>
-        </Grid>
-        <Grid item sm={3}>
-          <SubtitleTypography>Elev gain</SubtitleTypography>
-          <ValueTypography>
+        </Text>
+        <Text
+          borderInline="1px"
+          borderColor="gray.300"
+          px={4}
+          width="max-content"
+        >
+          <SubtitleTypography as="span">Elev gain</SubtitleTypography>
+          <ValueTypography as="span">
             {distanceElevation(activity.total_elevation_gain)}
           </ValueTypography>
-        </Grid>
-        <Grid item sm={3}>
-          <SubtitleTypography>Time</SubtitleTypography>
-          <ValueTypography>
+        </Text>
+        <Text>
+          <SubtitleTypography as="span">Time</SubtitleTypography>
+          <ValueTypography as="span">
             {convertDurationForActivityTitle(activity.moving_time)}
             &nbsp;/&nbsp;
             {convertDurationForActivityTitle(activity.elapsed_time)}
           </ValueTypography>
-        </Grid>
-        <Grid item sm={3}>
+        </Text>
+        <Text>
           {activity.achievement_count ? (
             <>
-              <SubtitleTypography align="right">
+              <SubtitleTypography align="right" as="span">
                 Achievements
               </SubtitleTypography>
               <ValueTypography align="right">
-                <EmojiEventsOutlined sx={{ marginBlock: 2, marginInline: 0 }} />
-                {activity.achievement_count}
+                <TrophyIcon role="img" />
+                <Box as="span" ml={2}>
+                  {activity.achievement_count}
+                </Box>
               </ValueTypography>
             </>
           ) : null}
-        </Grid>
-      </Grid>
-      {activity.segment_efforts.map((effort) => {
-        const movingTime = convertDurationForPR(effort.moving_time);
-        const totalTime = convertDurationForPR(effort.elapsed_time);
-        return (
-          <SubtitleTypography key={effort.id} sx={{ fontSize: '0.65rem' }}>
-            {effort.name} <strong>PR</strong> (
-            {movingTime === totalTime
-              ? movingTime
-              : movingTime + ' / ' + totalTime}
-            )
-          </SubtitleTypography>
-        );
-      })}
+        </Text>
+      </SimpleGrid>
+      <Box mb="6">
+        {activity.segment_efforts.map((effort) => {
+          const movingTime = convertDurationForPR(effort.moving_time);
+          const totalTime = convertDurationForPR(effort.elapsed_time);
+          return (
+            <SubtitleTypography key={effort.id}>
+              {effort.name} <strong>PR</strong> (
+              {movingTime === totalTime
+                ? movingTime
+                : movingTime + ' / ' + totalTime}
+              )
+            </SubtitleTypography>
+          );
+        })}
+      </Box>
     </>
   );
 }
