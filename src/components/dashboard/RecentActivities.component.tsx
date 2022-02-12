@@ -3,19 +3,16 @@ import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { Link as RouteLink } from 'react-router-dom';
 import { getLineData } from '../../toolbox/map';
-import { getRecentActivities_activities } from '../../types/getRecentActivities';
 import { Card } from '../shared/Card';
 import { BikingIcon, RunningIcon } from '../shared/Icons';
+import { useDashboardData } from './hooks';
 import { RecentActivityCard } from './RecentActivity.component';
 
-interface Props {
-  activities: getRecentActivities_activities[];
-}
-
-export function RecentActivities({ activities }: Props) {
+export function RecentActivities() {
+  const { data } = useDashboardData();
   return (
     <>
-      {activities.map((activity) => {
+      {data?.recentActivities.map((activity) => {
         // TODO move this into a serverless function and display it as image
         const { line, bounds } = getLineData(activity.map.map);
         return (

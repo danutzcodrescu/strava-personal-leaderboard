@@ -1,0 +1,18 @@
+overwrite: true
+schema:
+  - http://localhost:8080/v1/graphql:
+      headers:
+        'X-Hasura-Admin-Secret': 'myadminsecretkey'
+        'Content-Type': 'application/json'
+documents: 'src/**/*.graphql'
+generates:
+  src/types/graphql.ts:
+    plugins:
+      - add:
+          content: "import { fetcher} from '../toolbox/client';"
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-query'
+    config:
+      fetcher:
+        func: fetcher

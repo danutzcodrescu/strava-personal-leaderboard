@@ -1,23 +1,18 @@
-import { useQuery } from '@apollo/client';
+import { Box, Divider, Text, useToken } from '@chakra-ui/react';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
-import { useParams } from 'react-router-dom';
-import { GET_ACTIVITY, GET_TOP_RESULTS } from '../../queries/activity';
 import { getLineData } from '../../toolbox/map';
-import { getActivity } from '../../types/getActivity';
-import { getTopResults } from '../../types/getTopResults';
+import { ScreenWrapper } from '../shared/ScreenWrapper';
 import { Loading } from '../utilities/Loading';
+import { WeatherData } from '../weather/WeatherData';
 import { ActivityDetails } from './ActivityDetails.component';
 import { ElevationChart } from './ElevationChart.component';
-import { SegmentsTable } from './SegmentTable.component';
-
-import { TopResults } from './TopResults.component';
-import { HoverMarker } from './HoverMarker';
 import { FitBounds } from './FitBounds';
+import { useActivityData } from './hooks';
+import { HoverMarker } from './HoverMarker';
+import { SegmentsTable } from './SegmentTable.component';
+import { TopResults } from './TopResults.component';
 import { convertPostgresCoordsToLatLng } from './utils';
-import { ScreenWrapper } from '../shared/ScreenWrapper';
-import { WeatherData } from '../weather/WeatherData';
-import { Box, Divider, Text, useToken } from '@chakra-ui/react';
 
 export interface Point {
   x: number;
@@ -29,17 +24,10 @@ export function Spacer() {
 }
 
 export function ActivityComponent() {
-  const { id } = useParams<{ id: string }>();
-  const { data, loading } = useQuery<getActivity>(GET_ACTIVITY, {
-    variables: { id },
-  });
-  const { data: dataResults, loading: loadingResults } =
-    useQuery<getTopResults>(GET_TOP_RESULTS, {
-      variables: { id },
-    });
+  const { data, isLoading } = useActivityData();
   const [mainColor] = useToken('colors', ['primary.main']);
-  if (loading || loadingResults) return <Loading />;
-  if (!data || !dataResults) {
+  if (isLoading) return <Loading />;
+  if (!data) {
     return <Text>Error</Text>;
   }
   const { line, bounds } = getLineData(data.activities_by_pk!.map.map);
@@ -50,9 +38,9 @@ export function ActivityComponent() {
       borderColor="gray.400"
       p="5"
     >
-      <ActivityDetails activity={data.activities_by_pk!} key="details" />
+      <ActivityDetails key="details" />
       <Spacer />
-      <TopResults results={dataResults.segment_efforts} key="topResults" />
+      <TopResults key="topResults" />
       <Spacer />
       <Box position="relative">
         {data.activities_by_pk?.weather ? (
@@ -82,12 +70,12 @@ export function ActivityComponent() {
           <Marker
             key="start"
             position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk!.start_point
+              data.activities_by_pk?.start_point as string
             )}
           ></Marker>
           <Marker
             position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk!.end_point
+              data.activities_by_pk?.end_point as string
             )}
             key="end"
           ></Marker>
@@ -98,7 +86,7 @@ export function ActivityComponent() {
 
       <ElevationChart
         line={line}
-        distance={data.activities_by_pk!.distance}
+        distance={data.activities_by_pk?.distance as number}
         key="elevation-chart"
         mainMap
       />

@@ -7,13 +7,14 @@ import { Login } from './components/authentication/Login.component';
 import { LoginCallback } from './components/authentication/LoginCallback.component';
 import { Dashboard } from './components/dashboard/Dashboard.component';
 import { SegmentComponent } from './components/segment/SegmentComponent';
-import { client } from './graphql';
 import { theme } from './theme';
 import { ChakraProvider } from '@chakra-ui/react';
+import { QueryClientProvider } from 'react-query';
+import { queryClient } from './toolbox/client';
 
 function App() {
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Router>
           <Switch>
@@ -33,7 +34,7 @@ function App() {
           </Switch>
         </Router>
       </ChakraProvider>
-    </ApolloProvider>
+    </QueryClientProvider>
   );
 }
 
