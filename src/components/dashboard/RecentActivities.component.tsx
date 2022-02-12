@@ -1,21 +1,30 @@
-import { Box, HStack, Link } from '@chakra-ui/react';
+import { Box, HStack, Link, Skeleton, SkeletonText } from '@chakra-ui/react';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { Link as RouteLink } from 'react-router-dom';
 import { getLineData } from '../../toolbox/map';
-import { getRecentActivities_activities } from '../../types/getRecentActivities';
 import { Card } from '../shared/Card';
 import { BikingIcon, RunningIcon } from '../shared/Icons';
+import { useDashboardData } from './hooks';
 import { RecentActivityCard } from './RecentActivity.component';
 
-interface Props {
-  activities: getRecentActivities_activities[];
-}
-
-export function RecentActivities({ activities }: Props) {
+export function RecentActivities() {
+  const { data, isLoading } = useDashboardData();
+  if (isLoading) {
+    <>
+      <Card boxShadow="md" mb={4} px={8} py={6}>
+        <SkeletonText />
+        <Skeleton h={70} />
+      </Card>
+      <Card boxShadow="md" mb={4} px={8} py={6}>
+        <SkeletonText />
+        <Skeleton h={70} />
+      </Card>
+    </>;
+  }
   return (
     <>
-      {activities.map((activity) => {
+      {data?.recentActivities.map((activity) => {
         // TODO move this into a serverless function and display it as image
         const { line, bounds } = getLineData(activity.map.map);
         return (

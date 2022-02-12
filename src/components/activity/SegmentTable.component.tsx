@@ -1,29 +1,30 @@
-import { useLazyQuery } from '@apollo/client';
 import {
   Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Grid,
   GridItem,
-  AccordionItem,
-  AccordionPanel,
-  AccordionButton,
   SimpleGrid,
   useToken,
 } from '@chakra-ui/react';
 import * as React from 'react';
-import { GET_SEGMENT_LEADERBOARDS } from '../../queries/activity';
+import { useQueryClient } from 'react-query';
+import { fetcher } from '../../toolbox/client';
 import { distanceForSegment } from '../../toolbox/distance';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import { convertDurationForPR } from '../../toolbox/time';
 import { trophyColors } from '../../toolbox/trophyColors';
 import { SubtitleTypography, TitleTypography } from '../../toolbox/typograpies';
-import { getActivity_activities_by_pk_segment_efforts } from '../../types/getActivity';
 import {
-  getSegmentLeaderboards,
-  getSegmentLeaderboardsVariables,
-} from '../../types/getSegmentLeaderboards';
+  GetSegmentLeaderboardsDocument,
+  GetSegmentLeaderboardsQuery,
+  GetSegmentLeaderboardsQueryVariables,
+} from '../../types/graphql';
 import { TrophyIcon } from '../shared/Icons';
+import { useActivityData } from './hooks';
 import { SegmentDetails } from './SegmentDetails';
 import { SegmentPersonalLeaderboard } from './SegmentPersonalLeaderboard';
 import { useSegmentStore } from './store/segment.store';
@@ -32,7 +33,6 @@ import { isAnyPartOfElementInViewport } from './utils';
 const templateColumns = '1fr 4fr repeat(4, 2fr)';
 
 interface Props {
-  segments: getActivity_activities_by_pk_segment_efforts[];
   activityLine: any;
 }
 
@@ -43,14 +43,12 @@ interface ToggledSegment {
   endPoint: string;
 }
 
-export function SegmentsTable({ segments, activityLine }: Props) {
+export function SegmentsTable({ activityLine }: Props) {
+  const queryClient = useQueryClient();
+  const { data } = useActivityData();
   const dispatch = useSegmentStore((state) => state.dispatch);
   const id = useSegmentStore((state) => state.id);
   const indexRef = React.useRef(-1);
-  const [loadLeaderboards, { data }] = useLazyQuery<
-    getSegmentLeaderboards,
-    getSegmentLeaderboardsVariables
-  >(GET_SEGMENT_LEADERBOARDS);
   const [goldColor, silverColor, bronzeColor] = useToken('colors', [
     'trophy.gold',
     'trophy.silver',
@@ -63,23 +61,20 @@ export function SegmentsTable({ segments, activityLine }: Props) {
       const segment: ToggledSegment | null =
         index > -1
           ? {
-              id: segments[index].id,
-              segmentId: segments[index].segment.external_id,
-              startPoint: segments[index].segment.start_point,
-              endPoint: segments[index].segment.end_point,
+              id: data?.activities_by_pk?.segment_efforts[index].id!,
+              segmentId:
+                data?.activities_by_pk?.segment_efforts[index].segment_id,
+              startPoint:
+                data?.activities_by_pk?.segment_efforts[index].segment
+                  .start_point!,
+              endPoint:
+                data?.activities_by_pk?.segment_efforts[index].segment
+                  .end_point!,
             }
           : null;
       dispatch({ type: 'setSegment', payload: segment });
-      if (index > -1) {
-        loadLeaderboards({
-          variables: {
-            segmentId: segment?.segmentId,
-            userId: parseInt(getUserInfo()!),
-          },
-        });
-      }
     },
-    [dispatch, loadLeaderboards, segments]
+    [dispatch, data?.activities_by_pk?.segment_efforts]
   );
 
   React.useLayoutEffect(() => {
@@ -95,8 +90,10 @@ export function SegmentsTable({ segments, activityLine }: Props) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  if (segments[indexRef.current]?.id !== id) {
-    indexRef.current = segments.findIndex((segment) => segment.id === id);
+  if (data?.activities_by_pk?.segment_efforts[indexRef.current]?.id !== id) {
+    indexRef.current = data?.activities_by_pk?.segment_efforts.findIndex(
+      (segment) => segment.id === id
+    ) as number;
   }
 
   return (
@@ -128,9 +125,30 @@ export function SegmentsTable({ segments, activityLine }: Props) {
           </GridItem>
         </Grid>
         <Accordion allowToggle index={indexRef.current} onChange={handleChange}>
-          {segments.map((segment, index) => {
+          {data?.activities_by_pk?.segment_efforts.map((segment, index) => {
             return (
-              <AccordionItem key={segment.id} data-id={segment.id}>
+              <AccordionItem
+                key={segment.id}
+                data-id={segment.id}
+                onMouseOver={() =>
+                  queryClient.prefetchQuery(
+                    [
+                      'getSegmentLeaderboards',
+                      {
+                        segmentId: segment.segment_id,
+                        userId: parseInt(getUserInfo() as string),
+                      },
+                    ],
+                    fetcher<
+                      GetSegmentLeaderboardsQuery,
+                      GetSegmentLeaderboardsQueryVariables
+                    >(GetSegmentLeaderboardsDocument, {
+                      userId: parseInt(getUserInfo() as string),
+                      segmentId: segment.segment_id,
+                    })
+                  )
+                }
+              >
                 <AccordionButton
                   px={0}
                   width="100%"
@@ -151,7 +169,7 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                         goldColor,
                         silverColor,
                         bronzeColor,
-                        prRank: segment.pr_rank,
+                        prRank: segment.pr_rank!,
                       })}
                       textAlign="center"
                     >
@@ -220,12 +238,11 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                         </SubtitleTypography>
                       </Box>
                       <Box>
-                        {id ? (
+                        {id === segment.id ? (
                           <SegmentDetails
                             startPoint={segment.segment.start_point}
                             endPoint={segment.segment.end_point}
                             activityLine={activityLine}
-                            segmentId={segment.id}
                             distance={segment.segment!.distance}
                             weatherId={segment.weather_id}
                           />
@@ -233,11 +250,10 @@ export function SegmentsTable({ segments, activityLine }: Props) {
                       </Box>
                     </SimpleGrid>
                     <Box>
-                      {id === segment.id && data ? (
+                      {id === segment.id ? (
                         <SegmentPersonalLeaderboard
-                          segment_efforts={data.segment_efforts}
                           distance={segment.segment.distance}
-                          selectedId={id!}
+                          selectedId={segment.segment_id}
                         />
                       ) : null}
                     </Box>

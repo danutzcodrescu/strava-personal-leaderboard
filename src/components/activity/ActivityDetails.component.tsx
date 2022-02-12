@@ -11,13 +11,10 @@ import {
   TitleTypography,
   ValueTypography,
 } from '../../toolbox/typograpies';
-import { getActivity_activities_by_pk } from '../../types/getActivity';
+import { useActivityData } from './hooks';
 
-interface Props {
-  activity: getActivity_activities_by_pk;
-}
-
-export function ActivityDetails({ activity }: Props) {
+export function ActivityDetails() {
+  const { data } = useActivityData();
   return (
     <Grid
       templateColumns={{
@@ -27,36 +24,42 @@ export function ActivityDetails({ activity }: Props) {
       gridGap={2}
     >
       <Box>
-        <TitleTypography>{activity.name}</TitleTypography>
+        <TitleTypography>{data?.activities_by_pk?.name}</TitleTypography>
         <SubtitleTypography>
-          {activityDate(activity.start_date_local)}
+          {activityDate(data?.activities_by_pk?.start_date_local)}
         </SubtitleTypography>
       </Box>
       <Box>
         <SimpleGrid columns={3}>
           <Box>
             <ValueTypography>
-              {convertDistance(activity.distance)}
+              {convertDistance(data?.activities_by_pk?.distance)}
             </ValueTypography>
             <SubtitleTypography>Distance</SubtitleTypography>
           </Box>
           <Box>
             <ValueTypography>
-              {convertDurationForActivityTitle(activity.elapsed_time)}
+              {convertDurationForActivityTitle(
+                data?.activities_by_pk?.elapsed_time as number
+              )}
             </ValueTypography>
             <SubtitleTypography>elapsed time</SubtitleTypography>
           </Box>
           <Box>
             <ValueTypography>
-              {convertDurationForActivityTitle(activity.moving_time)}
+              {convertDurationForActivityTitle(
+                data?.activities_by_pk?.moving_time as number
+              )}
             </ValueTypography>
             <SubtitleTypography>moving time</SubtitleTypography>
           </Box>
         </SimpleGrid>
         <SimpleGrid columns={3} as={Text}>
           <Box as="span">Speed</Box>
-          <Box as="span">{convertSpeed(activity.average_speed)}</Box>
-          <Box>{convertSpeed(activity.max_speed)}</Box>
+          <Box as="span">
+            {convertSpeed(data?.activities_by_pk?.average_speed as number)}
+          </Box>
+          <Box>{convertSpeed(data?.activities_by_pk?.max_speed as number)}</Box>
         </SimpleGrid>
       </Box>
     </Grid>

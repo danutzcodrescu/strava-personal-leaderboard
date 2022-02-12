@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { chartHeight } from '../activity/ElevationChart.component';
 import * as eCharts from 'echarts';
-import { getDetailedSegmentLeaderboards_segment_efforts } from '../../types/getDetailedSegmentLeaderboards';
 import {
   activityDateForSegment,
   convertDurationForPR,
@@ -9,9 +8,10 @@ import {
 import { sortByDate } from './utils';
 import { calculateSpeed } from '../../toolbox/speed';
 import { Box, useToken } from '@chakra-ui/react';
+import { GetDetailedSegmentLeaderboardsQuery } from '../../types/graphql';
 
 interface Props {
-  data: getDetailedSegmentLeaderboards_segment_efforts[];
+  data: GetDetailedSegmentLeaderboardsQuery['segment_efforts'];
 }
 
 export function SegmentLeaderboardsChart({ data }: Props) {
@@ -51,7 +51,7 @@ export function SegmentLeaderboardsChart({ data }: Props) {
       tooltip: {
         trigger: 'axis',
         formatter: function (params: any) {
-          const data: getDetailedSegmentLeaderboards_segment_efforts =
+          const data: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0] =
             params[0].data;
           return `
           Date: <b>${activityDateForSegment(data.start_date_local)}</b><br />
