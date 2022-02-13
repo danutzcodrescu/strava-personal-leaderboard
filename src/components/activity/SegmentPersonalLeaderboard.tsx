@@ -22,7 +22,7 @@ export function SegmentPersonalLeaderboard({ distance, selectedId }: Props) {
   if (isLoading) {
     return (
       <>
-        {[...Array(10).keys()].map((val) => (
+        {Array.from(Array(10).keys()).map((val) => (
           <Skeleton key={val} spacing="1" />
         ))}
       </>

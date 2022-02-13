@@ -34,6 +34,7 @@ export const SegmentDetails = React.memo(function ({
     });
     const bounds = getBounds(segmentLine);
     return { segmentLine, bounds };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   React.useEffect(() => {
     dispatch({ type: 'setSegmentLine', payload: segmentLine });
