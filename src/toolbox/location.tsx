@@ -26,9 +26,11 @@ export const routePreloadTime = 1000 * 60 * 60;
 export const loaderPreload = 1000 * 60 * 60 * 10;
 
 export const routes: Route<LocationGenerics>[] = [
+  { path: 'callback', element: <LoginCallback /> },
   {
     element: <AuthGuard />,
     pendingElement: async () => <Loading />,
+    loaderMaxAge: loaderPreload,
     loader: async (_, { dispatch }) => {
       const user = localStorage.getItem('user');
       if (!user)
@@ -43,10 +45,6 @@ export const routes: Route<LocationGenerics>[] = [
         }
       ).then((resp) => resp.json());
       setUserInfo(data);
-      dispatch({
-        type: 'maxAge',
-        maxAge: loaderPreload,
-      });
       return {
         isLoggedIn: true,
       };
@@ -72,5 +70,4 @@ export const routes: Route<LocationGenerics>[] = [
       },
     ],
   },
-  { path: 'callback', element: <LoginCallback /> },
 ];

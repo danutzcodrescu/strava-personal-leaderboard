@@ -66,7 +66,7 @@ export function RecentActivityCard({ activity }: Props) {
             {convertDurationForActivityTitle(activity.elapsed_time)}
           </ValueTypography>
         </Text>
-        <Text>
+        <Box>
           {activity.achievement_count ? (
             <>
               <SubtitleTypography align="right" as="span">
@@ -80,7 +80,7 @@ export function RecentActivityCard({ activity }: Props) {
               </ValueTypography>
             </>
           ) : null}
-        </Text>
+        </Box>
       </SimpleGrid>
       <Box mb="6">
         {activity.segment_efforts.map((effort) => {
