@@ -14,7 +14,7 @@ module.exports = {
         );
         if (isFound) {
           match.options.emitError = false;
-          match.options.emitWarnings = false;
+          match.options.emitWarning = false;
         }
       }
       return webpackConfig;
