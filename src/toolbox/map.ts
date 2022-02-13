@@ -52,3 +52,5 @@ export function getSegmentLine({
   }
   return line.slice(end.properties.index, start.properties.index);
 }
+
+export const mapHeight = '270px';

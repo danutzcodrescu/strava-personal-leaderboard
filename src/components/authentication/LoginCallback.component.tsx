@@ -1,25 +1,25 @@
 import { CircularProgress } from '@chakra-ui/react';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { parse } from 'url';
+import { useNavigate, useSearch } from 'react-location';
+import { LocationGenerics } from '../../toolbox/location';
 import { setUserInfo } from '../../toolbox/setUserToken';
 
 export function LoginCallback() {
-  const { query } = parse(window.location.href, true);
-  const { replace } = useHistory();
+  const { code, scope } = useSearch<LocationGenerics>();
+  const navigate = useNavigate();
   React.useEffect(() => {
     fetch(
       `${process.env.REACT_APP_URL!}/.netlify/functions/authenticate-user`,
       {
         method: 'POST',
-        body: JSON.stringify({ code: query.code, scope: query.scope }),
+        body: JSON.stringify({ code, scope }),
       }
     )
       .then((resp) => resp.json())
       .then((resp) => {
         setUserInfo(resp);
-        replace('/');
+        navigate({ to: '/', replace: true });
       });
-  }, [query.code, query.scope, replace]);
+  }, [code, scope, navigate]);
   return <CircularProgress />;
 }

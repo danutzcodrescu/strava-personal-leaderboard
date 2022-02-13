@@ -1,12 +1,16 @@
-import { Box, useToken } from '@chakra-ui/react';
+import { Box, Skeleton } from '@chakra-ui/react';
 import * as React from 'react';
-import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
 import { useGetWeatherForSegmentQuery } from '../../types/graphql';
 import { WeatherData } from '../weather/WeatherData';
 import { ElevationChart } from './ElevationChart.component';
-import { HoverMarker } from './HoverMarker';
 import { useSegmentStore } from './store/segment.store';
+
+const Map = React.lazy(() =>
+  import('./SegmentDetailsMap').then((mod) => ({
+    default: mod.SegmentDetailsMap,
+  }))
+);
 
 interface Props {
   startPoint: string;
@@ -23,7 +27,6 @@ export const SegmentDetails = React.memo(function ({
   distance,
   weatherId,
 }: Props) {
-  const [primary, blue] = useToken('colors', ['primary.main', 'blue.600']);
   const dispatch = useSegmentStore((state) => state.dispatch);
   const { data } = useGetWeatherForSegmentQuery({ weatherId });
   const { segmentLine, bounds } = React.useMemo(() => {
@@ -56,24 +59,13 @@ export const SegmentDetails = React.memo(function ({
             conditions={data.weather_by_pk?.conditions}
           />
         ) : null}
-
-        <MapContainer
-          style={{ height: '170px' }}
-          bounds={bounds}
-          attributionControl={false}
-          zoomControl={false}
-          scrollWheelZoom={false}
-        >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-            maxZoom={18}
-            accessToken={process.env.REACT_APP_MAPBOX}
-            id="mapbox/light-v10"
+        <React.Suspense fallback={<Skeleton height="170px" />}>
+          <Map
+            bounds={bounds}
+            activityLine={activityLine}
+            segmentLine={segmentLine}
           />
-          <Polyline color={primary} positions={activityLine} />
-          <Polyline color={blue} positions={segmentLine} />
-          <HoverMarker />
-        </MapContainer>
+        </React.Suspense>
       </Box>
     </>
   );
