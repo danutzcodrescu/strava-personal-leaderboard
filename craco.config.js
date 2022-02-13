@@ -6,13 +6,15 @@ module.exports = {
   },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
+      console.log(env);
       if (env === 'production') {
-        let { isFound, match } = getPlugin(
+        const { isFound, match } = getPlugin(
           webpackConfig,
           pluginByName('ESLintWebpackPlugin')
         );
         if (isFound) {
           match.options.emitError = false;
+          match.options.emitWarnings = false;
         }
       }
       return webpackConfig;
