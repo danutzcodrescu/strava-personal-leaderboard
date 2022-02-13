@@ -1,23 +1,33 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, Grid, Link, Skeleton } from '@chakra-ui/react';
 import * as React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import {
   activityDateForSegment,
   convertDurationForPR,
 } from '../../toolbox/time';
-import { getSegmentLeaderboards } from '../../types/getSegmentLeaderboards';
-import { Box, Grid, Link } from '@chakra-ui/react';
+import { useGetSegmentLeaderboardsQuery } from '../../types/graphql';
 
-interface Props extends getSegmentLeaderboards {
+interface Props {
   distance: number;
   selectedId: number;
 }
 
-export function SegmentPersonalLeaderboard({
-  segment_efforts,
-  distance,
-  selectedId,
-}: Props) {
+export function SegmentPersonalLeaderboard({ distance, selectedId }: Props) {
+  const { data, isLoading } = useGetSegmentLeaderboardsQuery({
+    segmentId: selectedId,
+    userId: parseInt(getUserInfo() as string),
+  });
+  if (isLoading) {
+    return (
+      <>
+        {Array.from(Array(10).keys()).map((val) => (
+          <Skeleton key={val} spacing="1" />
+        ))}
+      </>
+    );
+  }
   return (
     <Box role="table">
       <Grid
@@ -34,7 +44,7 @@ export function SegmentPersonalLeaderboard({
         <Box role="columnheader">Elapsed time</Box>
         <Box role="columnheader">Avg speed</Box>
       </Grid>
-      {segment_efforts.map((segment, index) => (
+      {data?.segment_efforts.map((segment, index) => (
         <Grid
           key={segment.id}
           gridTemplateColumns="1fr 3fr 2fr 2fr 3fr"
@@ -56,7 +66,7 @@ export function SegmentPersonalLeaderboard({
       ))}
       <Link
         as={RouterLink}
-        to={`/segment/${segment_efforts[0].segment_id}`}
+        to={`/segment/${data?.segment_efforts[0].segment_id}`}
         textAlign="center"
         width="100%"
         border="1px solid"

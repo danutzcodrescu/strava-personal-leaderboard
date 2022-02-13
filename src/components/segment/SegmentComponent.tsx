@@ -1,31 +1,24 @@
-import { useQuery } from '@apollo/client';
 import { useToken } from '@chakra-ui/react';
 import * as React from 'react';
 import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
-import { useParams } from 'react-router-dom';
-import { GET_SEGMENT_LEADERBOARD } from '../../queries/segment';
 import { getLineData } from '../../toolbox/map';
-import { getUserInfo } from '../../toolbox/setUserToken';
 import { TitleTypography } from '../../toolbox/typograpies';
-import { getDetailedSegmentLeaderboards } from '../../types/getDetailedSegmentLeaderboards';
 import { Spacer } from '../activity/Activity.component';
 import { ElevationChart } from '../activity/ElevationChart.component';
 import { HoverMarker } from '../activity/HoverMarker';
 import { convertPostgresCoordsToLatLng } from '../activity/utils';
 import { ScreenWrapper } from '../shared/ScreenWrapper';
+import { useSegmentData } from './hooks';
 import { SegmentLeaderboardsChart } from './SegmentChart';
 import { SegmentInfo } from './SegmentInfo';
 import { SegmentTable } from './SegmentTable';
 
 export function SegmentComponent() {
   const [main] = useToken('colors', ['primary.main']);
-  const { id } = useParams<{ id: string }>();
-  const { data } = useQuery<getDetailedSegmentLeaderboards>(
-    GET_SEGMENT_LEADERBOARD,
-    {
-      variables: { segmentId: id, userId: getUserInfo() },
-    }
-  );
+  const { data, isLoading } = useSegmentData();
+  if (isLoading) {
+    return <p>Loading</p>;
+  }
   if (!data || !data.segment_efforts?.length) return <p>No data</p>;
   const { line, bounds } = getLineData(
     data.segment_efforts[0].segment.map?.map

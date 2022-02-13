@@ -4,17 +4,17 @@ import {
   Grid,
   GridItem,
   Link,
-  useToken,
   Text,
+  useToken,
 } from '@chakra-ui/react';
-import { getTopResults_segment_efforts } from '../../types/getTopResults';
+import { trophyColors } from '../../toolbox/trophyColors';
+import { TrophyIcon } from '../shared/Icons';
+import { useActivityData } from './hooks';
 import {
+  SetSegmentAction,
   SetSegmentPayload,
   useSegmentStore,
-  SetSegmentAction,
 } from './store/segment.store';
-import { TrophyIcon } from '../shared/Icons';
-import { trophyColors } from '../../toolbox/trophyColors';
 
 const selectResult =
   (obj: SetSegmentPayload) =>
@@ -24,11 +24,8 @@ const selectResult =
     fn({ type: 'setSegment', payload: obj });
   };
 
-interface Props {
-  results: getTopResults_segment_efforts[];
-}
-
-export function TopResults({ results }: Props) {
+export function TopResults() {
+  const { data } = useActivityData();
   const [gold, silver, bronze] = useToken('colors', [
     'trophy.gold',
     'trophy.silver',
@@ -41,11 +38,11 @@ export function TopResults({ results }: Props) {
         TOP RESULTS
       </GridItem>
       <GridItem colSpan={10}>
-        {results.map((elem) => (
+        {data?.topResults.map((elem) => (
           <Flex key={elem.id} gap={2} alignItems="center" as={Text}>
             <Box
               color={trophyColors({
-                prRank: elem.pr_rank,
+                prRank: elem.pr_rank as number,
                 goldColor: gold,
                 silverColor: silver,
                 bronzeColor: bronze,

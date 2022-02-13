@@ -1,0 +1,52 @@
+fragment Effort on segment_efforts {
+  id
+  elapsed_time
+  moving_time
+  name
+  average_watts
+  average_heartrate
+  max_heartrate
+  segment_id
+}
+query getDetailedSegmentLeaderboards($segmentId: bigint!, $userId: Int!) {
+  segment_efforts(
+    where: {
+      _and: [{ segment_id: { _eq: $segmentId } }, { user_id: { _eq: $userId } }]
+    }
+    order_by: { elapsed_time: asc }
+  ) {
+    ...Effort
+    start_date_local
+    segment {
+      average_grade
+      climb_category
+      elevation_high
+      elevation_low
+      end_point
+      total_elevation_gain
+      start_point
+      map {
+        map
+      }
+      distance
+      maximum_grade
+    }
+    weather {
+      temperature
+      conditions
+      wind_dir
+      wind_gust
+      wind_chill
+      wind_speed
+    }
+  }
+}
+
+query getWeatherForSegment($weatherId: uuid!) {
+  weather_by_pk(id: $weatherId) {
+    temperature
+    wind_dir
+    wind_speed
+    conditions
+  }
+}

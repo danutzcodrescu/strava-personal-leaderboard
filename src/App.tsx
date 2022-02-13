@@ -1,5 +1,6 @@
-import { ApolloProvider } from '@apollo/client';
+import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
+import { QueryClientProvider } from 'react-query';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ActivityComponent } from './components/activity/Activity.component';
 import { AuthGuard } from './components/authentication/AuthGuard.component';
@@ -7,13 +8,13 @@ import { Login } from './components/authentication/Login.component';
 import { LoginCallback } from './components/authentication/LoginCallback.component';
 import { Dashboard } from './components/dashboard/Dashboard.component';
 import { SegmentComponent } from './components/segment/SegmentComponent';
-import { client } from './graphql';
 import { theme } from './theme';
-import { ChakraProvider } from '@chakra-ui/react';
+import { queryClient } from './toolbox/client';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 function App() {
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Router>
           <Switch>
@@ -33,7 +34,8 @@ function App() {
           </Switch>
         </Router>
       </ChakraProvider>
-    </ApolloProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

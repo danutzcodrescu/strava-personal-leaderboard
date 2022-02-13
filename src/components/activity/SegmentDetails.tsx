@@ -1,14 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useLazyQuery } from '@apollo/client';
 import { Box, useToken } from '@chakra-ui/react';
 import * as React from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
-import { GET_WEATHER_FOR_SEGMENT } from '../../queries/segment';
 import { getBounds, getSegmentLine } from '../../toolbox/map';
-import {
-  getWeatherForSegment,
-  getWeatherForSegmentVariables,
-} from '../../types/getWeatherForSegment';
+import { useGetWeatherForSegmentQuery } from '../../types/graphql';
 import { WeatherData } from '../weather/WeatherData';
 import { ElevationChart } from './ElevationChart.component';
 import { HoverMarker } from './HoverMarker';
@@ -19,7 +13,6 @@ interface Props {
   endPoint: string;
   activityLine: any;
   distance: number;
-  segmentId: number;
   weatherId: number;
 }
 
@@ -28,15 +21,11 @@ export const SegmentDetails = React.memo(function ({
   endPoint,
   activityLine,
   distance,
-  segmentId,
   weatherId,
 }: Props) {
   const [primary, blue] = useToken('colors', ['primary.main', 'blue.600']);
   const dispatch = useSegmentStore((state) => state.dispatch);
-  const [getWeather, { data }] = useLazyQuery<
-    getWeatherForSegment,
-    getWeatherForSegmentVariables
-  >(GET_WEATHER_FOR_SEGMENT);
+  const { data } = useGetWeatherForSegmentQuery({ weatherId });
   const { segmentLine, bounds } = React.useMemo(() => {
     const segmentLine = getSegmentLine({
       startPoint: startPoint,
@@ -45,13 +34,12 @@ export const SegmentDetails = React.memo(function ({
     });
     const bounds = getBounds(segmentLine);
     return { segmentLine, bounds };
-  }, [segmentId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   React.useEffect(() => {
     dispatch({ type: 'setSegmentLine', payload: segmentLine });
-  }, [segmentId]);
-  React.useEffect(() => {
-    getWeather({ variables: { weatherId } });
-  }, [weatherId]);
+  }, [segmentLine, dispatch]);
+
   return (
     <>
       <ElevationChart

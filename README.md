@@ -7,7 +7,7 @@ Strava hidden the personal leaderboards behind the paywall in July 2020. I was m
 - serverless functions running on [Netlify](https://www.netlify.com/) to fetch data and authenticate the user against the [Strava API](https://developers.strava.com/)
 - data fetched from Strava is dumped into a [PostgreDB](https://www.postgresql.org/)
 - [Hasura Graphql](https://hasura.io/) to act as a backend-for-frontend
-- frontend written in React, Typescript, Apollo Client and Chakra-UI; maps are created using [Leaflet](https://leafletjs.com/) and [Mapbox tiles](https://www.mapbox.com/maps); the charts are created using [Echarts](https://echarts.apache.org/en/index.html).
+- frontend written in React, Typescript, React Query and Chakra-UI; maps are created using [Leaflet](https://leafletjs.com/) and [Mapbox tiles](https://www.mapbox.com/maps); the charts are created using [Echarts](https://echarts.apache.org/en/index.html).
 - weather data is collected using [Visual crossing API](https://www.visualcrossing.com/)
 
 ### Local development

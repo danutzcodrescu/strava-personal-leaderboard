@@ -12,11 +12,11 @@ import {
   TitleTypography,
   ValueTypography,
 } from '../../toolbox/typograpies';
-import { getRecentActivities_activities } from '../../types/getRecentActivities';
+import { GetUserDataQuery } from '../../types/graphql';
 import { TrophyIcon } from '../shared/Icons';
 
 interface Props {
-  activity: getRecentActivities_activities;
+  activity: GetUserDataQuery['recentActivities'][0];
 }
 
 export function RecentActivityCard({ activity }: Props) {

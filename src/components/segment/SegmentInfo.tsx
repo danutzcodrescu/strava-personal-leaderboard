@@ -2,10 +2,10 @@ import { SimpleGrid, GridItem, Text } from '@chakra-ui/react';
 import * as React from 'react';
 import { convertDistance } from '../../toolbox/distance';
 import { SubtitleTypography } from '../../toolbox/typograpies';
-import { getDetailedSegmentLeaderboards_segment_efforts_segment } from '../../types/getDetailedSegmentLeaderboards';
+import { GetDetailedSegmentLeaderboardsQuery } from '../../types/graphql';
 
 interface Props {
-  segment: getDetailedSegmentLeaderboards_segment_efforts_segment;
+  segment: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]['segment'];
 }
 
 export function SegmentInfo({ segment }: Props) {

@@ -1,0 +1,65 @@
+query getActivity($id: bigint!) {
+  activities_by_pk(external_id: $id) {
+    ...ActivityDetails
+    average_speed
+    max_speed
+    start_point
+    end_point
+    elapsed_time
+    moving_time
+    total_elevation_gain
+    segment_efforts {
+      segment {
+        external_id
+        distance
+        average_grade
+        elevation_high
+        elevation_low
+        start_point
+        end_point
+      }
+      ...Effort
+      pr_rank
+      weather_id
+    }
+    weather {
+      wind_speed
+      wind_dir
+      conditions
+      temperature
+    }
+  }
+
+  topResults: segment_efforts(
+    where: {
+      _and: [{ activity_id: { _eq: $id } }, { pr_rank: { _is_null: false } }]
+    }
+    order_by: { pr_rank: asc }
+    limit: 5
+  ) {
+    id
+    name
+    pr_rank
+    segment_id
+    segment {
+      start_point
+      end_point
+    }
+  }
+}
+
+query getSegmentLeaderboards($segmentId: bigint!, $userId: Int!) {
+  segment_efforts(
+    where: {
+      _and: [{ segment_id: { _eq: $segmentId } }, { user_id: { _eq: $userId } }]
+    }
+    order_by: { elapsed_time: asc }
+    limit: 10
+  ) {
+    start_date_local
+    moving_time
+    elapsed_time
+    id
+    segment_id
+  }
+}

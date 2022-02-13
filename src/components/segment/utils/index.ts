@@ -1,8 +1,8 @@
-import { getDetailedSegmentLeaderboards_segment_efforts } from '../../../types/getDetailedSegmentLeaderboards';
+import { GetDetailedSegmentLeaderboardsQuery } from '../../../types/graphql';
 
 export function sortByDate(
-  a: getDetailedSegmentLeaderboards_segment_efforts,
-  b: getDetailedSegmentLeaderboards_segment_efforts
+  a: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0],
+  b: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
 ) {
   return new Date(a.start_date_local).getTime() >
     new Date(b.start_date_local).getTime()

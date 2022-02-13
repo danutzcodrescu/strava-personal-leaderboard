@@ -23,7 +23,7 @@ import {
   activityDateForSegment,
   convertDurationForPR,
 } from '../../toolbox/time';
-import { getDetailedSegmentLeaderboards_segment_efforts } from '../../types/getDetailedSegmentLeaderboards';
+import { GetDetailedSegmentLeaderboardsQuery } from '../../types/graphql';
 import {
   ArrowDown,
   ArrowUp,
@@ -51,8 +51,9 @@ const columns: Column[] = [
   {
     Header: 'Speed',
     // @ts-ignore
-    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
-      calculateSpeedValue(row.segment.distance, row.elapsed_time),
+    accessor: (
+      row: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    ) => calculateSpeedValue(row.segment.distance, row.elapsed_time),
     id: 'speed',
     Cell: (param) => `${param.value} km/h`,
     canSort: true,
@@ -60,8 +61,9 @@ const columns: Column[] = [
   {
     Header: 'Moving',
     // @ts-ignore
-    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
-      calculateSpeedValue(row.segment.distance, row.moving_time),
+    accessor: (
+      row: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    ) => calculateSpeedValue(row.segment.distance, row.moving_time),
     id: 'moving_speed',
     Cell: (param) => `${param.value} km/h`,
     canSort: true,
@@ -76,7 +78,9 @@ const columns: Column[] = [
   {
     Header: 'Wind',
     // @ts-ignore
-    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) => ({
+    accessor: (
+      row: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    ) => ({
       windSpeed: row.weather?.wind_speed,
       windDir: row.weather?.wind_dir,
     }),
@@ -88,8 +92,9 @@ const columns: Column[] = [
   {
     Header: 'Gusts',
     // @ts-ignore
-    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
-      row.weather?.wind_gust,
+    accessor: (
+      row: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    ) => row.weather?.wind_gust,
     id: 'wind-gusts',
     Cell: (param) => `${param.value} km/h`,
     canSort: true,
@@ -97,13 +102,16 @@ const columns: Column[] = [
   {
     Header: 'Temp',
     // @ts-ignore
-    accessor: (row: getDetailedSegmentLeaderboards_segment_efforts) =>
-      row.weather?.temperature,
+    accessor: (
+      row: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    ) => row.weather?.temperature,
     id: 'temperature',
     Cell: ({
       value,
       row,
-    }: CellProps<getDetailedSegmentLeaderboards_segment_efforts>) => {
+    }: CellProps<
+      GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]
+    >) => {
       return (
         <Box display="flex" alignItems="center" as="span" gap="10px">
           {Math.round(value)}&deg;{' '}
@@ -124,7 +132,7 @@ const columns: Column[] = [
 ];
 
 interface Props {
-  segments: getDetailedSegmentLeaderboards_segment_efforts[];
+  segments: GetDetailedSegmentLeaderboardsQuery['segment_efforts'];
 }
 
 export function SegmentTable({ segments }: Props) {
