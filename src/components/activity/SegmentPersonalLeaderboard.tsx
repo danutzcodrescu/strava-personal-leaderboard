@@ -1,6 +1,7 @@
 import { Box, Grid, Link, Skeleton } from '@chakra-ui/react';
 import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-location';
+import { routePreloadTime } from '../../toolbox/location';
 import { getUserInfo } from '../../toolbox/setUserToken';
 import { calculateSpeed } from '../../toolbox/speed';
 import {
@@ -75,6 +76,7 @@ export function SegmentPersonalLeaderboard({ distance, selectedId }: Props) {
         paddingX={2}
         paddingY={4}
         mt={2}
+        preload={routePreloadTime}
         fontWeight="bold"
         borderRadius="5px"
         _hover={{

@@ -1,19 +1,18 @@
-import { Box, Divider, Text, useToken } from '@chakra-ui/react';
+import { Box, Divider, Skeleton, Text } from '@chakra-ui/react';
 import * as React from 'react';
-import { MapContainer, Marker, Polyline, TileLayer } from 'react-leaflet';
-import { getLineData } from '../../toolbox/map';
+import { getLineData, mapHeight } from '../../toolbox/map';
 import { ScreenWrapper } from '../shared/ScreenWrapper';
 import { Loading } from '../utilities/Loading';
 import { WeatherData } from '../weather/WeatherData';
 import { ActivityDetails } from './ActivityDetails.component';
 import { ElevationChart } from './ElevationChart.component';
-import { FitBounds } from './FitBounds';
 import { useActivityData } from './hooks';
-import { HoverMarker } from './HoverMarker';
 import { SegmentsTable } from './SegmentTable.component';
 import { TopResults } from './TopResults.component';
-import { convertPostgresCoordsToLatLng } from './utils';
 
+const Map = React.lazy(() =>
+  import('./ActivityMap').then((mod) => ({ default: mod.ActivityMap }))
+);
 export interface Point {
   x: number;
   y: number;
@@ -25,7 +24,7 @@ export function Spacer() {
 
 export function ActivityComponent() {
   const { data, isLoading } = useActivityData();
-  const [mainColor] = useToken('colors', ['primary.main']);
+
   if (isLoading) return <Loading />;
   if (!data) {
     return <Text>Error</Text>;
@@ -51,39 +50,15 @@ export function ActivityComponent() {
             conditions={data.activities_by_pk!.weather.conditions}
           />
         ) : null}
-
-        <MapContainer
-          style={{ height: '270px' }}
-          bounds={bounds}
-          attributionControl={false}
-          scrollWheelZoom={false}
-          key="map"
-        >
-          <TileLayer
-            url={`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`}
-            maxZoom={18}
-            accessToken={process.env.REACT_APP_MAPBOX}
-            id="mapbox/light-v10"
-            key="tiles"
-          />
-          <Polyline color={mainColor} positions={line} key="line" />
-          <Marker
-            key="start"
-            position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk?.start_point as string
-            )}
-          ></Marker>
-          <Marker
-            position={convertPostgresCoordsToLatLng(
-              data.activities_by_pk?.end_point as string
-            )}
-            key="end"
-          ></Marker>
-          <HoverMarker />
-          <FitBounds bounds={bounds} />
-        </MapContainer>
       </Box>
-
+      <React.Suspense fallback={<Skeleton height={mapHeight} />}>
+        <Map
+          line={line}
+          bounds={bounds}
+          startPoint={data.activities_by_pk?.start_point}
+          endPoint={data.activities_by_pk?.end_point}
+        />
+      </React.Suspense>
       <ElevationChart
         line={line}
         distance={data.activities_by_pk?.distance as number}

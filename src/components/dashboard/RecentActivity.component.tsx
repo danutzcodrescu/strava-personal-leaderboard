@@ -1,7 +1,8 @@
 import { Box, Link, SimpleGrid, Text } from '@chakra-ui/react';
 import * as React from 'react';
-import { Link as RouteLink } from 'react-router-dom';
+import { Link as RouteLink } from 'react-location';
 import { convertDistance, distanceElevation } from '../../toolbox/distance';
+import { routePreloadTime } from '../../toolbox/location';
 import {
   activityDate,
   convertDurationForActivityTitle,
@@ -23,7 +24,11 @@ export function RecentActivityCard({ activity }: Props) {
   return (
     <>
       <TitleTypography mb={4}>
-        <Link as={RouteLink} to={`/activity/${activity.external_id}`}>
+        <Link
+          as={RouteLink}
+          to={`/activity/${activity.external_id}`}
+          preload={routePreloadTime}
+        >
           {activity.name}
         </Link>
         <SubtitleTypography
