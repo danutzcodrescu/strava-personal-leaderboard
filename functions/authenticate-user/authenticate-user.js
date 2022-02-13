@@ -21,14 +21,8 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const {
-      athlete,
-      refresh_token,
-      token_type,
-      expires_at,
-      access_token,
-    } = await authenticateOnStrava(request.code);
-    console.log(JSON.stringify(athlete));
+    const { athlete, refresh_token, token_type, expires_at, access_token } =
+      await authenticateOnStrava(request.code);
     const existingUser = await checkForExistingUser(
       athlete.id,
       access_token,
