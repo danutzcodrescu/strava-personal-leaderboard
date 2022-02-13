@@ -9,7 +9,7 @@
   "dependencies": {
     "@turf/center": "^6.3.0",
     "@turf/midpoint": "^6.3.0",
-    "axios": "^0.21.1",
+    "axios": "^0.26.0",
     "polyline-encoded": "^0.0.9",
     "turf-multipoint": "^1.0.0",
     "turf-point": "^2.0.1"
