@@ -154,6 +154,7 @@ export function SegmentsTable({ activityLine }: Props) {
                   width="100%"
                   role="rowgroup"
                   _hover={{ bgColor: 'gray.100' }}
+                  {...(id === segment.id ? { bgColor: 'gray.100' } : {})}
                 >
                   <Grid
                     gridTemplateColumns={templateColumns}
@@ -237,7 +238,7 @@ export function SegmentsTable({ activityLine }: Props) {
                           <b>MAX</b> {segment.max_heartrate}bpm
                         </SubtitleTypography>
                       </Box>
-                      <Box>
+                      <Box gridColumn={'1 / -1'} pr={5}>
                         {id === segment.id ? (
                           <SegmentDetails
                             startPoint={segment.segment.start_point}
@@ -253,7 +254,8 @@ export function SegmentsTable({ activityLine }: Props) {
                       {id === segment.id ? (
                         <SegmentPersonalLeaderboard
                           distance={segment.segment.distance}
-                          selectedId={segment.segment_id}
+                          segmentId={segment.segment_id}
+                          selectedId={segment.id}
                         />
                       ) : null}
                     </Box>

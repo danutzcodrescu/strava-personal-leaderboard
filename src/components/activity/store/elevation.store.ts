@@ -1,6 +1,6 @@
-import create from 'zustand';
-import { combine } from 'zustand/middleware';
 import produce from 'immer';
+import create from 'zustand';
+import { redux, subscribeWithSelector } from 'zustand/middleware';
 
 interface ElevationChartState {
   elevationPoint: [number, number] | null;
@@ -21,14 +21,9 @@ const reducer = produce((draft: ElevationChartState, action: Action) => {
 });
 
 export const useElevationStore = create(
-  combine(
-    {
+  subscribeWithSelector(
+    redux(reducer, {
       elevationPoint: null,
-      data: [],
-    },
-    (set) => ({
-      // @ts-ignore
-      dispatch: (action: Action) => set((state) => reducer(state, action)),
     })
   )
 );

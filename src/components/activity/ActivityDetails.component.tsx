@@ -59,7 +59,9 @@ export function ActivityDetails() {
           <Box as="span">
             {convertSpeed(data?.activities_by_pk?.average_speed as number)}
           </Box>
-          <Box>{convertSpeed(data?.activities_by_pk?.max_speed as number)}</Box>
+          <Box as="span">
+            {convertSpeed(data?.activities_by_pk?.max_speed as number)}
+          </Box>
         </SimpleGrid>
       </Box>
     </Grid>

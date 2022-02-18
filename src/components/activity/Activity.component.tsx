@@ -39,8 +39,12 @@ export function ActivityComponent() {
     >
       <ActivityDetails key="details" />
       <Spacer />
-      <TopResults key="topResults" />
-      <Spacer />
+      {data.topResults?.length ? (
+        <>
+          <TopResults key="topResults" /> <Spacer />
+        </>
+      ) : null}
+
       <Box position="relative">
         {data.activities_by_pk?.weather ? (
           <WeatherData
@@ -50,15 +54,15 @@ export function ActivityComponent() {
             conditions={data.activities_by_pk!.weather.conditions}
           />
         ) : null}
+        <React.Suspense fallback={<Skeleton height={mapHeight} />}>
+          <Map
+            line={line}
+            bounds={bounds}
+            startPoint={data.activities_by_pk?.start_point}
+            endPoint={data.activities_by_pk?.end_point}
+          />
+        </React.Suspense>
       </Box>
-      <React.Suspense fallback={<Skeleton height={mapHeight} />}>
-        <Map
-          line={line}
-          bounds={bounds}
-          startPoint={data.activities_by_pk?.start_point}
-          endPoint={data.activities_by_pk?.end_point}
-        />
-      </React.Suspense>
       <ElevationChart
         line={line}
         distance={data.activities_by_pk?.distance as number}

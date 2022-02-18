@@ -30,6 +30,14 @@ export function drawChart({
     dataset: {
       source: values,
     },
+    ...(!mainMap
+      ? {
+          grid: {
+            right: 0,
+            left: 50,
+          },
+        }
+      : {}),
     color: [palette.lineColor],
     xAxis: {
       type: 'category',
@@ -128,7 +136,7 @@ export function drawChart({
           onHover({ location: item.location });
         }
       }
-    }, 20)
+    }, 8)
   );
   chart.getZr().on('mouseout', () => {
     onHover(null);

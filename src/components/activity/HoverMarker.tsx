@@ -12,6 +12,7 @@ export function HoverMarker({ mainMap }: Props) {
   const markerRef = React.useRef<Marker | null>(null);
   React.useEffect(() => {
     useElevationStore.subscribe(
+      (state) => state.elevationPoint,
       (point: [number, number] | null) => {
         if (!point) {
           map.removeLayer(markerRef.current!);
@@ -23,8 +24,7 @@ export function HoverMarker({ mainMap }: Props) {
         } else {
           markerRef.current = markerRef.current.setLatLng(point);
         }
-      },
-      (state) => state.elevationPoint
+      }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

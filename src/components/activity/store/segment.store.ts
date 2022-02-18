@@ -1,6 +1,6 @@
-import create from 'zustand';
-import { combine } from 'zustand/middleware';
 import produce from 'immer';
+import create from 'zustand';
+import { redux } from 'zustand/middleware';
 
 interface SelectedSegmentState {
   id: number | undefined;
@@ -39,19 +39,9 @@ const reducer = produce(
 );
 
 export const useSegmentStore = create(
-  combine(
-    {
-      id: undefined,
-      segmentId: undefined,
-      segmentLine: undefined,
-    } as {
-      id: number | undefined;
-      segmentId: string | undefined;
-      segmentLine: [number, number][] | undefined;
-    },
-    (set) => ({
-      dispatch: (action: SetSegmentAction) =>
-        set((state) => reducer(state, action)),
-    })
-  )
+  redux(reducer, {
+    id: undefined,
+    segmentId: undefined,
+    segmentLine: undefined,
+  })
 );

@@ -13,11 +13,16 @@ import { useGetSegmentLeaderboardsQuery } from '../../types/graphql';
 interface Props {
   distance: number;
   selectedId: number;
+  segmentId: number;
 }
 
-export function SegmentPersonalLeaderboard({ distance, selectedId }: Props) {
+export function SegmentPersonalLeaderboard({
+  distance,
+  selectedId,
+  segmentId,
+}: Props) {
   const { data, isLoading } = useGetSegmentLeaderboardsQuery({
-    segmentId: selectedId,
+    segmentId,
     userId: parseInt(getUserInfo() as string),
   });
   if (isLoading) {

@@ -17,7 +17,12 @@ export function SegmentDetailsMap({
   activityLine,
   segmentLine,
 }: Props) {
+  const [isRendered, setRenderMode] = React.useState(false);
   const [primary, blue] = useToken('colors', ['primary.main', 'blue.600']);
+  React.useEffect(() => {
+    setRenderMode(true);
+  }, []);
+  if (!isRendered) return null;
   return (
     <MapContainer
       style={{ height: '170px' }}

@@ -13,18 +13,18 @@ export function FitBounds({ bounds }: Props) {
   const lineRef = React.useRef<Polyline<any> | undefined>(undefined);
 
   React.useEffect(() => {
+    if (lineRef.current) {
+      map.removeLayer(lineRef.current!);
+      lineRef.current = undefined;
+    }
     if (segmentLine) {
       lineRef.current = polyline(segmentLine, {
         color: 'blue',
       }).addTo(map);
       map.fitBounds(lineRef.current.getBounds());
-    }
-    if (!segmentLine && lineRef.current) {
-      map.removeLayer(lineRef.current!);
+    } else {
       map.fitBounds(bounds);
-      lineRef.current = undefined;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segmentLine]);
+  }, [segmentLine, bounds, map]);
   return null;
 }
