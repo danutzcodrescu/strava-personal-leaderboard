@@ -1,6 +1,6 @@
 import { Box, Icon } from '@chakra-ui/react';
 import * as React from 'react';
-import { ArrowDown, ArrowUp } from '../shared/Icons';
+import { ArrowDown } from '../shared/Icons';
 
 interface Props {
   windSpeed: number | null;
@@ -10,11 +10,11 @@ interface Props {
 export function WindData(props: Props) {
   return (
     <Box
-      width="27px"
-      height="27px"
+      width="30px"
+      height="30px"
       lineHeight="25px"
       textAlign="center"
-      fontSize="0.5rem"
+      fontSize="0.45rem"
       fontWeight="bold"
       border="3px solid"
       borderColor="white"
@@ -28,7 +28,7 @@ export function WindData(props: Props) {
         zIndex="modal"
         transform={`rotate(${props.windDirection}deg)`}
         width="100%"
-        height="100%"
+        height="125%"
         display="grid"
         placeItems="flex-start center"
         fontSize="2em"

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useNavigate, useSearch } from 'react-location';
 import { LocationGenerics } from '../../toolbox/location';
 import { setUserInfo } from '../../toolbox/setUserToken';
-import { Loading } from '../utilities/Loading';
+import { Loading } from '../shared/Loading';
 
 export function LoginCallback() {
   const { code, scope } = useSearch<LocationGenerics>();

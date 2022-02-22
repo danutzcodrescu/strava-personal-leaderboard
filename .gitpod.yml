@@ -16,7 +16,11 @@ tasks:
 
   - name: functions
     before: |
+      FILE=".env"
+      if [ ! -f "$FILE" ]
+      then
       echo $LOCAL_ENV_STRAVA | base64 -d >> .env
+      fi
       printf "\n[settings]\napi_key = $WAKATIME\n" > ~/.wakatime.cfg
     init: cd functions && yarn install
 

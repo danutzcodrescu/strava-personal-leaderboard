@@ -1,5 +1,5 @@
 schema:
   - http://localhost:8080/v1/graphql:
       headers:
-        X-Hasura-Admin-Secret: myadminsecretkey
+        X-Hasura-Admin-Secret: ${HASURA_ADMIN_SECRET}
 documents: 'src/**/*.graphql'
