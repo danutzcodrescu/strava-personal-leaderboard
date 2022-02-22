@@ -11,18 +11,19 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useToken } from '@chakra-ui/react';
 
-// TODO check these fills and how color is passed
-function Icon(conditions: string, color: string) {
+function Icon(conditions: string, color: string, gray: string) {
   switch (conditions) {
     case 'Rain':
     case 'Rain, Overcast':
-      return <FontAwesomeIcon icon={faCloudShowersHeavy} fill="pink" />;
+      return (
+        <FontAwesomeIcon icon={faCloudShowersHeavy} color={gray} size="2x" />
+      );
     case 'Overcast':
-      return <FontAwesomeIcon icon={faCloud} fill="pink" />;
+      return <FontAwesomeIcon icon={faCloud} color={gray} size="2x" />;
     case 'Partially cloudy':
-      return <FontAwesomeIcon icon={faCloudSun} fill="pink" />;
+      return <FontAwesomeIcon icon={faCloudSun} size="2x" />;
     case 'Rain, Partially cloudy':
-      return <FontAwesomeIcon icon={faCloudSunRain} fill="pink" size="lg" />;
+      return <FontAwesomeIcon icon={faCloudSunRain} size="2x" />;
     case 'Clear':
       return <FontAwesomeIcon icon={faSun} color={color} size="2x" />;
   }
@@ -33,6 +34,6 @@ interface Props {
 }
 
 export function WeatherIcon({ conditions }: Props) {
-  const [main] = useToken('colors', ['primary.main']);
-  return Icon(conditions, main)!;
+  const [main, gray] = useToken('colors', ['primary.main', 'gray.400']);
+  return Icon(conditions, main, gray)!;
 }

@@ -1,8 +1,13 @@
-import { MakeGenerics, ReactLocation, Route } from 'react-location';
+import {
+  MakeGenerics,
+  ReactLocation,
+  Route,
+  createBrowserHistory,
+} from 'react-location';
 import { AuthGuard } from '../components/authentication/AuthGuard.component';
 import { LoginCallback } from '../components/authentication/LoginCallback.component';
 import { Dashboard } from '../components/dashboard/Dashboard.component';
-import { Loading } from '../components/utilities/Loading';
+import { Loading } from '../components/shared/Loading';
 import { setUserInfo } from './setUserToken';
 
 export type LocationGenerics = MakeGenerics<{
@@ -19,7 +24,9 @@ export type LocationGenerics = MakeGenerics<{
   };
 }>;
 
-export const location = new ReactLocation<LocationGenerics>();
+export const history = createBrowserHistory();
+
+export const location = new ReactLocation<LocationGenerics>({ history });
 
 export const routePreloadTime = 1000 * 60 * 60;
 
@@ -51,6 +58,7 @@ export const routes: Route<LocationGenerics>[] = [
     },
     children: [
       {
+        id: 'activity',
         path: 'activity/:activityId',
         element: () =>
           import('../components/activity/Activity.component').then((mod) => (
@@ -58,6 +66,7 @@ export const routes: Route<LocationGenerics>[] = [
           )),
       },
       {
+        id: 'segment',
         path: 'segment/:segmentId',
         element: () =>
           import('../components/segment/SegmentComponent').then((mod) => (

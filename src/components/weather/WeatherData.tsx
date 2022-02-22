@@ -25,7 +25,8 @@ export function WeatherData(props: Props) {
       justifyContent="space-between"
       alignItems="center"
       gap="2"
-      paddingY="2"
+      paddingY={2}
+      px={3}
       fontSize="0.7rem"
       fontWeight="bold"
     >

@@ -2,7 +2,7 @@ import { Box, Divider, Skeleton, Text } from '@chakra-ui/react';
 import * as React from 'react';
 import { getLineData, mapHeight } from '../../toolbox/map';
 import { ScreenWrapper } from '../shared/ScreenWrapper';
-import { Loading } from '../utilities/Loading';
+import { Loading } from '../shared/Loading';
 import { WeatherData } from '../weather/WeatherData';
 import { ActivityDetails } from './ActivityDetails.component';
 import { ElevationChart } from './ElevationChart.component';
@@ -25,7 +25,22 @@ export function Spacer() {
 export function ActivityComponent() {
   const { data, isLoading } = useActivityData();
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <>
+        <ScreenWrapper
+          bgColor="white"
+          border="1px solid"
+          borderColor="gray.400"
+          p="5"
+        >
+          <ActivityDetails />
+          <Spacer />
+          <Skeleton height={mapHeight} />
+          <Skeleton height={mapHeight} mt={4} />
+        </ScreenWrapper>
+      </>
+    );
   if (!data) {
     return <Text>Error</Text>;
   }

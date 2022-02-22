@@ -15,16 +15,26 @@ const Map = React.lazy(() =>
 export function RecentActivities() {
   const { data, isLoading } = useDashboardData();
   if (isLoading) {
-    <>
-      <Card boxShadow="md" mb={4} px={8} py={6}>
-        <SkeletonText />
-        <Skeleton h={70} />
-      </Card>
-      <Card boxShadow="md" mb={4} px={8} py={6}>
-        <SkeletonText />
-        <Skeleton h={70} />
-      </Card>
-    </>;
+    return (
+      <>
+        <Card boxShadow="md" mb={4} px={8} py={6}>
+          <SkeletonText />
+          <Skeleton h={70} />
+        </Card>
+        <Card boxShadow="md" mb={4} px={8} py={6}>
+          <SkeletonText />
+          <Skeleton h={70} />
+        </Card>
+        <Card boxShadow="md" mb={4} px={8} py={6}>
+          <SkeletonText />
+          <Skeleton h={70} />
+        </Card>
+        <Card boxShadow="md" mb={4} px={8} py={6}>
+          <SkeletonText />
+          <Skeleton h={70} />
+        </Card>
+      </>
+    );
   }
   return (
     <>

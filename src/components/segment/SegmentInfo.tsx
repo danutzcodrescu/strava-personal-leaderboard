@@ -1,40 +1,73 @@
-import { SimpleGrid, GridItem, Text } from '@chakra-ui/react';
+import { SimpleGrid, GridItem, Text, SkeletonText } from '@chakra-ui/react';
 import * as React from 'react';
 import { convertDistance } from '../../toolbox/distance';
 import { SubtitleTypography } from '../../toolbox/typograpies';
-import { GetDetailedSegmentLeaderboardsQuery } from '../../types/graphql';
+import { useSegmentData } from './hooks';
 
-interface Props {
-  segment: GetDetailedSegmentLeaderboardsQuery['segment_efforts'][0]['segment'];
-}
-
-export function SegmentInfo({ segment }: Props) {
+export function SegmentInfo() {
+  const { data, isLoading } = useSegmentData();
+  const segment = data?.segment_efforts?.[0].segment;
   return (
     <>
       <SimpleGrid columns={5}>
         <GridItem as={Text}>
-          <SubtitleTypography>Distance:</SubtitleTypography>
-          <SubtitleTypography>
-            {convertDistance(segment.distance)}
-          </SubtitleTypography>
+          {isLoading ? (
+            <SkeletonText noOfLines={2} maxW="25%" />
+          ) : (
+            <>
+              {' '}
+              <SubtitleTypography>Distance:</SubtitleTypography>
+              <SubtitleTypography>
+                {convertDistance(segment!.distance)}
+              </SubtitleTypography>
+            </>
+          )}
         </GridItem>
         <GridItem as={Text}>
-          <SubtitleTypography>Avg grade:</SubtitleTypography>
-          <SubtitleTypography>{segment.average_grade}%</SubtitleTypography>
+          {isLoading ? (
+            <SkeletonText noOfLines={2} maxW="25%" />
+          ) : (
+            <>
+              {' '}
+              <SubtitleTypography>Avg grade:</SubtitleTypography>
+              <SubtitleTypography>{segment!.average_grade}%</SubtitleTypography>
+            </>
+          )}
         </GridItem>
         <GridItem as={Text}>
-          <SubtitleTypography>Lowest elev:</SubtitleTypography>
-          <SubtitleTypography>{segment.elevation_low}m</SubtitleTypography>
+          {isLoading ? (
+            <SkeletonText noOfLines={2} maxW="25%" />
+          ) : (
+            <>
+              <SubtitleTypography>Lowest elev:</SubtitleTypography>
+              <SubtitleTypography>{segment!.elevation_low}m</SubtitleTypography>
+            </>
+          )}
         </GridItem>
         <GridItem as={Text}>
-          <SubtitleTypography>Highest elev:</SubtitleTypography>
-          <SubtitleTypography>{segment.elevation_high}m</SubtitleTypography>
+          {isLoading ? (
+            <SkeletonText noOfLines={2} maxW="25%" />
+          ) : (
+            <>
+              {' '}
+              <SubtitleTypography>Highest elev:</SubtitleTypography>
+              <SubtitleTypography>
+                {segment!.elevation_high}m
+              </SubtitleTypography>
+            </>
+          )}
         </GridItem>
         <GridItem as={Text}>
-          <SubtitleTypography>Elev difference:</SubtitleTypography>
-          <SubtitleTypography>
-            {segment.total_elevation_gain}m
-          </SubtitleTypography>
+          {isLoading ? (
+            <SkeletonText noOfLines={2} maxW="25%" />
+          ) : (
+            <>
+              <SubtitleTypography>Elev difference:</SubtitleTypography>
+              <SubtitleTypography>
+                {segment!.total_elevation_gain}m
+              </SubtitleTypography>
+            </>
+          )}
         </GridItem>
       </SimpleGrid>
     </>

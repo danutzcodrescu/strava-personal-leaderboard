@@ -18,7 +18,7 @@ services:
       FETCH_SEGMENT_DATA: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-segment-data
       FETCH_WEATHER_DATA_ACTIVITY: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-activity
       FETCH_WEATHER_DATA_SEGMENT: ${DOCKER_GATEWAY_HOST:-host.docker.internal}:8888/.netlify/functions/fetch-weather-data-segment
-      HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLED_LOG_TYPES:
         startup, http-log, webhook-log, websocket-log,
